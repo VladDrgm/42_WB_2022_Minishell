@@ -163,6 +163,7 @@ int	lexor(t_list **list, char *args)
 	i = 0;
 	begining = 0;
 	last = FT_SPACE;
+	flag = 0;
 	while (args[i] != '\0')
 	{
 		if (last == FT_SPACE && args[i] != FT_SPACE)
@@ -198,10 +199,8 @@ int	lexor(t_list **list, char *args)
 				break;
 				// return (-1); //here the function was working
 			}
-
 			i = i + flag + 1;
 			begining = i + 1;
-
 		}
 		if (args[i] == FT_DOUBLE_QUOTE)
 		{
@@ -230,6 +229,7 @@ int	lexor(t_list **list, char *args)
 		// free(args);
 		ft_free_list(*list);
 	}
+	free(args);
 	return flag;
 }
 
