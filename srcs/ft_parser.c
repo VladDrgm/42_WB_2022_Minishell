@@ -1,6 +1,6 @@
 #include "../incl/minishell.h"
 
-void parser(void)
+int	parser(void)
 {
-	;
+	return (0);
 }

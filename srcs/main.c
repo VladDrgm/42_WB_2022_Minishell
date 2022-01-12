@@ -1,20 +1,27 @@
 #include "../incl/minishell.h"
 
-int main(int argc, char **argv)
+int	main(void)
 {
-	char *args;
+	char	*args;
+	t_list	*list;
+	int		temp;
 
 	args = NULL;
-	argc++;
-	argv++;
-	args++;
-
+	// args++;
+	temp = 0;
+	list = NULL;
 	while (1)
 	{
-		args =  readline(">");
-		lexor();
-		parser();
-		executor();
+		args = readline(">");
+		temp = lexor(&list, args);
+		if (temp == 0)
+		{
+			temp = parser();
+			if (temp != 0)
+				break ;
+			executor();
+		}
 	}
-	return 0;
+	// free(args);
+	return (0);
 }

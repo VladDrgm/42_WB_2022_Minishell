@@ -1,6 +1,6 @@
 #include "../incl/minishell.h"
 
-void executor(void)
+void	executor(void)
 {
 	;
 }

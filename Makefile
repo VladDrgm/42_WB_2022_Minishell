@@ -1,6 +1,6 @@
 CC			= gcc
 #CFLAGS		= -g3
-CFLAGS		= -Wall -Wextra -Werror
+CFLAGS		= -g -Wall -Wextra -Werror
 #CFLAGS		=
 RM			= rm -f
 SRCD		= ./srcs/
