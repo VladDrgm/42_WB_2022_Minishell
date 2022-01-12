@@ -16,7 +16,7 @@ int	main(void)
 	{
 		args = readline(">");
 		temp = lexor(&lexer2parser_list, args);
-		if (temp == 0)
+		if (temp != -1)
 		{
 			temp = parser(&lexer2parser_list, &parser2executor_list);
 			if (temp != 0)
