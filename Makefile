@@ -14,7 +14,7 @@ BUILD		= $(OBJF:$(OBJD)%.o)
 
 NAME		= minishell
 HEADD		= ./incl/
-HEADF		= minishell.h
+HEADF		= minishell.h minishe11.h
 
 LIBFTD		= ./libft/
 LIBFT_OBJD	= objs
@@ -52,6 +52,7 @@ fclean:		clean
 			${RM} ${NAME}
 			${RM} ${LIBFTD}${LIBFTL}
 			@${RM} ${HEADD}minishell.h.gch
+			@${RM} ${HEADD}minishe11.h.gch
 
 re:			fclean all
 
