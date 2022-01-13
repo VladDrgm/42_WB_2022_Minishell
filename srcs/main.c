@@ -11,11 +11,12 @@ int	main(int argc, char **argv, char**envp)
 	if (!argv[1])
 		printf("%s\n", envp[1]);
 
-	shell = NULL;
+	shell = malloc(sizeof(t_shell) * 1);
 	args = NULL;
 	// args++;
 	temp = 0;
 	list = NULL;
+	ft_initiator_exc(&(shell), envp);
 	while (1)
 	{
 		args = readline(">");
@@ -25,7 +26,7 @@ int	main(int argc, char **argv, char**envp)
 			temp = parser();
 			if (temp != 0)
 				break ;
-			// executor(shell, envp);
+			executor(shell);
 		}
 	}
 	// free(args);

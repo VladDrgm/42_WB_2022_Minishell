@@ -36,6 +36,6 @@ typedef struct s_word
 void	ft_signal_setup(void);
 int		lexor(t_list **list, char *args);
 int		parser(void);
-void	executor(void);
+// void	executor(t_shell *shell);
 
 #endif
