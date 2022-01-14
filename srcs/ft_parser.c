@@ -48,7 +48,8 @@ int ft_command_check(char *str, char **cmd_path)
 	char	*temp_path;
 	int		i;
 
-	if (!ft_strcmp(str, "pwd") || !ft_strcmp(str, "cd") || !ft_strcmp(str, "cd")  || !ft_strcmp(str, "export") || !ft_strcmp(str, "unset") ||
+	printf("In check :%s\n", str);
+	if (!ft_strcmp(str, "pwd") || !ft_strcmp(str, "cd") || !ft_strcmp(str, "echo")  || !ft_strcmp(str, "export") || !ft_strcmp(str, "unset") ||
 		!ft_strcmp(str, "env") || !ft_strcmp(str, "exit") || !ft_strcmp(str, "<<") || !ft_strcmp(str, "<") || !ft_strcmp(str, ">>") || !ft_strcmp(str, ">"))
  	{
  		*cmd_path = 0;
@@ -60,27 +61,26 @@ int ft_command_check(char *str, char **cmd_path)
 	i = 0;
 	while (split[i])
 	{
-		temp_path = ft_strjoin_free(split[i], ft_strjoin("/", str));
+		temp_path = ft_strjoin(split[i], ft_strjoin("/", str));
+		printf("PATH: %s\n", temp_path);
 		if (access(temp_path, F_OK) == 0)
 		{
 			*cmd_path = temp_path;
 			ft_free_split(split);
-			free(path);
 			return (0);
 		}
 		else if (access(temp_path, F_OK) == -1)
 		{
 			free((void *)temp_path);
-			ft_free_split(split);
-			free(path);
-			temp_path = NULL;
-			return (-1);
+			//ft_free_split(split);
+			//temp_path = NULL;
+			//return (-1);
 		}
 		i++;
 	}
 	ft_free_split(split);
-	free(path);
-	return (0);
+	//free((void *)temp_path);
+	return (-1);
 }
 
 
@@ -234,6 +234,8 @@ int	parser(t_list **lex_list, t_list **executor_list)
 		cmd->comm_table = cmd_line;
 		cmd->path = NULL;
 		cmd->index = index_counter;
+		ft_command_check(cmd->comm_table[0], &(cmd->path));
+		printf("PATH in main :%s\n", cmd->path);
 		executor_element = ft_lstnew((void * ) cmd);
 		ft_lstadd_back(executor_list, executor_element);
 		index_counter++;
