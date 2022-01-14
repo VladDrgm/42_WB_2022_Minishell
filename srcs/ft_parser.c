@@ -15,53 +15,63 @@ char	*ft_strjoin_free(char *s1, char const *s2)
 	return (return_s);
 }
 
+int    ft_strcmp(char *s1, char *s2)
+{
+    int i;
+
+    i = 0;
+    while (s1[i] == s2[i] && s1[i] != '\0' && s2[i] != '\0')
+        i++;
+    return (s1[i] - s2[i]);
+
+
+
 /*
 **	pwd cd echo export unset env exit << < >> >
 */
 
-// int ft_command_check(char *str, char *cmd_path)
-// {
-// 	char	*path;
-// 	char	**split;
-// 	char	*temp_path;
-// 	int		i;
+int ft_command_check(char *str, char *cmd_path)
+{
+	char	*path;
+	char	**split;
+	char	*temp_path;
+	int		i;
 
-// 	path = getenv("PATH");
-// 	split = ft_split(ft_strchr(path, '/'), ':');
-// 	temp_path = NULL;
-// 	i = 0;
-// 	while (split[i])
-// 	{
-// 		if (split[i] == "pwd" || split[i] == "cd" || split[i] == "echo"  || split[i] == "export" || split[i] == "unset" ||
-// 			split[i] == "env" || split[i] == "exit" || split[i] == "<<" || split[i] == "<" || split[i] == ">>" || split[i] == ">")
-// 		{
-// 			free(path);
-// 			ft_free_split(split);
-// 			*cmd_path = 0;
-// 			return 0;
-// 		}
-// 		temp_path = ft_strjoin_free(split[i], ft_strjoin("/", str));
-// 		if (access(temp_path, F_OK) == 0)
-// 		{
-// 			*cmd_path = temp_path;
-// 			ft_free_split(split);
-// 			free(path);
-// 			return (0);
-// 		}
-// 		else if (access(temp_path, F_OK) == -1)
-// 		{
-// 			free((void *)temp_path);
-// 			ft_free_split(split);
-// 			free(path);
-// 			temp_path = NULL;
-// 			return (-1);
-// 		}
-// 		i++;
-// 	}
-// 	ft_free_split(split);
-// 	free(path);
-// 	return (0);
-// }
+	if (!ft_strcmp(str, "pwd") || !ft_strcmp(str, "cd") || !ft_strcmp(str, "cd")  || !ft_strcmp(str, "export") || !ft_strcmp(str, "unset") ||
+		!ft_strcmp(str, "env") || !ft_strcmp(str, "exit") || !ft_strcmp(str, "<<") || !ft_strcmp(str, "<") || !ft_strcmp(str, ">>") || !ft_strcmp(str, ">"))
+ 	{
+ 		*cmd_path = 0;
+ 		return 0;
+ 	}
+	path = getenv("PATH");
+	split = ft_split(ft_strchr(path, '/'), ':');
+	temp_path = NULL;
+	i = 0;
+	while (split[i])
+	{
+		temp_path = ft_strjoin_free(split[i], ft_strjoin("/", str));
+		if (access(temp_path, F_OK) == 0)
+		{
+			*cmd_path = temp_path;
+			ft_free_split(split);
+			free(path);
+			return (0);
+		}
+		else if (access(temp_path, F_OK) == -1)
+		{
+			free((void *)temp_path);
+			ft_free_split(split);
+			free(path);
+			temp_path = NULL;
+			return (-1);
+		}
+		i++;
+	}
+	ft_free_split(split);
+	free(path);
+	return (0);
+}
+
 
 void error_fun(void)
 {
