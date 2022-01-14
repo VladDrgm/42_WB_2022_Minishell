@@ -6,6 +6,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <unistd.h>
+# include <errno.h>
 # include <string.h>
 # define FT_CHAR 1
 # define FT_STRING 2
@@ -34,9 +35,16 @@ typedef struct s_word
 	int		type;
 }			t_word;
 
+typedef struct s_command
+{
+	char	**comm_table ;
+	int		index;
+	char	*path;
+}			t_command;
+
 void	ft_signal_setup(void);
 int		lexor(t_list **list, char *args);
-int		parser(void);
-// void	executor(t_shell *shell);
+int		parser(t_list **lex_list, t_list **executor_list);
+void	executor(void);
 
 #endif

@@ -4,9 +4,13 @@
 int	main(int argc, char **argv, char**envp)
 {
 
+
 // ************************************Part 1******************************
 /* 	char	*args;
 	t_list	*list;
+  char	*args;
+	t_list	*lexer2parser_list;
+	t_list	*parser2executor_list;
 	int		temp;
 	if (argc > 1)
 		printf("Invalid number of arguments for %s with %s\n", argv[0], envp[0]);
@@ -14,14 +18,15 @@ int	main(int argc, char **argv, char**envp)
 	args = NULL;
 	// args++;
 	temp = 0;
-	list = NULL;
+	lexer2parser_list = NULL;
+	parser2executor_list = NULL;
 	while (1)
 	{
 		args = readline(">");
-		temp = lexor(&list, args);
-		if (temp == 0)
+		temp = lexor(&lexer2parser_list, args);
+		if (temp != -1)
 		{
-			temp = parser();
+			temp = parser(&lexer2parser_list, &parser2executor_list);
 			if (temp != 0)
 				break ;
 			//executor(shell);
