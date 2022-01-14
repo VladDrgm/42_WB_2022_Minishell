@@ -1,5 +1,18 @@
 #include "../incl/minishell.h"
 
+void    ft_free_split(char **split)
+{
+    int    i;
+
+    i = 0;
+    while (split[i] != NULL)
+    {
+        free(split[i]);
+        i++;
+    }
+    free(split);
+}
+
 char	*ft_strjoin_free(char *s1, char const *s2)
 {
 	char	*return_s;
@@ -23,14 +36,12 @@ int    ft_strcmp(char *s1, char *s2)
     while (s1[i] == s2[i] && s1[i] != '\0' && s2[i] != '\0')
         i++;
     return (s1[i] - s2[i]);
-
-
-
+}
 /*
 **	pwd cd echo export unset env exit << < >> >
 */
 
-int ft_command_check(char *str, char *cmd_path)
+int ft_command_check(char *str, char **cmd_path)
 {
 	char	*path;
 	char	**split;
@@ -133,7 +144,6 @@ void	print_list_lex(t_list *el)
 
 int	parser(t_list **lex_list, t_list **executor_list)
 {
-	print_list_lex(*lex_list);
 	int		index_counter;
 	t_list	*lex_element;
 	t_list	*executor_element;
@@ -146,35 +156,57 @@ int	parser(t_list **lex_list, t_list **executor_list)
 	index_counter = 0;
 	lex_element = *lex_list;
 	cmd = NULL;
+	first_redirect = 0;
 	while (1)
 	{
 		cmd_line = 0;
 		cmd_len = 0;
-		if (lex_element == 0)
+		if (lex_element == NULL)
 			break;
 		while (1)
-		{		
-			if (lex_element == 0)
+		{	if (lex_element == NULL)
 				break;
+			if (first_redirect != 0)
+			{
+				if (((t_word *)(lex_element->content))->type == FT_STRING || *((char *)((t_word *)(lex_element->content))->address) != first_redirect)
+				{
+					str = (char *)ft_calloc(2, sizeof(char));
+					str[0] = first_redirect;
+				}
+				else
+				{
+					str = (char *)ft_calloc(3, sizeof(char));
+					str[0] = first_redirect;
+					str[1] = first_redirect;
+					lex_element = lex_element->next;
+				}
+				cmd_line = add_to_line(cmd_line, str, &cmd_len);
+				first_redirect = 0;
+			}
 			if (((t_word *)(lex_element->content))->type == FT_CHAR)
 			{
-				if (*((char *)((t_word *)(lex_element->content))->address) == FT_GREATER || *((char *)((t_word *)(lex_element->content))->address) == FT_LESSER)
+				if (*((char *)((t_word *)(lex_element->content))->address) == FT_GREATER || *((char *)((t_word *)(lex_element->content))->address) == FT_LESSER || first_redirect != 0)
 				{
-					first_redirect = *((char *)((t_word *)(lex_element->content))->address);
-					lex_element = lex_element->next;
-					if (((t_word *)(lex_element->content))->type == FT_CHAR && *((char *)((t_word *)(lex_element->content))->address) == first_redirect)
+					if (first_redirect == 0)
 					{
-						str = (char *)ft_calloc(3, sizeof(char));
-						str[0] = first_redirect;
-						str[1] = first_redirect;
-						lex_element = lex_element->next;
-					}
-					else
-					{
-						str = (char *)ft_calloc(2, sizeof(char));
-						str[0] = first_redirect;
+						first_redirect = *((char *)((t_word *)(lex_element->content))->address);
+						if (cmd_len != 0)
+							break;
+						if (*((char *)((t_word *)((lex_element->next)->content))->address) == first_redirect)
+						{
+							str = (char *)ft_calloc(3, sizeof(char));
+							str[0] = first_redirect;
+							str[1] = first_redirect;
+							lex_element = lex_element->next;
+						}
+						else
+						{
+							str = (char *)ft_calloc(2, sizeof(char));
+							str[0] = first_redirect;
+						}
 					}
 					cmd_line = add_to_line(cmd_line, str, &cmd_len);
+					first_redirect = 0;
 				}
 				if (*((char *)((t_word *)(lex_element->content))->address) == FT_PIPE)
 				{
@@ -213,3 +245,4 @@ int	parser(t_list **lex_list, t_list **executor_list)
 	ft_free_lex_list(*lex_list);
 	return (0);
 }
+

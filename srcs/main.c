@@ -6,9 +6,7 @@ int	main(int argc, char **argv, char**envp)
 
 
 // ************************************Part 1******************************
-/* 	char	*args;
-	t_list	*list;
-  char	*args;
+ 	/*char	*args;
 	t_list	*lexer2parser_list;
 	t_list	*parser2executor_list;
 	int		temp;
@@ -18,11 +16,11 @@ int	main(int argc, char **argv, char**envp)
 	args = NULL;
 	// args++;
 	temp = 0;
-	lexer2parser_list = NULL;
-	parser2executor_list = NULL;
 	while (1)
 	{
 		args = readline(">");
+		lexer2parser_list = NULL;
+		parser2executor_list = NULL;
 		temp = lexor(&lexer2parser_list, args);
 		if (temp != -1)
 		{
@@ -31,8 +29,7 @@ int	main(int argc, char **argv, char**envp)
 				break ;
 			//executor(shell);
 		}
-
-	} */
+	} */1
 // ************************************Part 2******************************
 	t_shell *shell;
 	char	*line;
