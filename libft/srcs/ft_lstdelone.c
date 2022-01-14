@@ -21,11 +21,18 @@ RETURN VALUE
 
 #include "libft.h"
 
+void		*del(void *content)
+{
+	free(content);
+	return NULL;
+}
+
 void	ft_lstdelone(t_list *lst, void (*del)(void*))
 {
 	if (lst && del)
 	{
 		del(lst->content);
+		lst = NULL;
 		free(lst);
 	}
 }

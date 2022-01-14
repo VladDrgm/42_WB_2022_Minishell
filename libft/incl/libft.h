@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vdragomi <vdragomi@student.42wolfsburg.de> +#+  +:+       +#+        */
+/*   By: vdragomi <vdragomi@42student.wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/14 14:52:24 by vdragomi          #+#    #+#             */
-/*   Updated: 2021/12/14 14:52:26 by vdragomi         ###   ########.fr       */
+/*   Updated: 2022/01/14 16:32:47 by vdragomi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ typedef struct s_list
 	struct s_list	*next;
 }				t_list;
 
+void		*del(void *content);
 int			ft_atoi(const char *str);
 void		ft_bzero(void *s, size_t n);
 void		*ft_calloc(size_t nmemb, size_t size);
