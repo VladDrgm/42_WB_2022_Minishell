@@ -16,7 +16,10 @@ int	minishell_env(char **args, t_shell *shell)
 	while (ptr != NULL)
 	{
 		printf("%s\n", (char *)(ptr->content));
-		ptr = ptr->next;
+		if (ptr->next != NULL)
+			ptr = ptr->next;
+		else
+			break;
 	}
 	ft_update_env(shell, "_=", "_=env");
 	return (1);
@@ -86,6 +89,9 @@ int minishell_pwd(char **args, t_shell *shell)
 	declare -x XPC_FLAGS="0x0"
 	declare -x XPC_SERVICE_NAME="0"
 	=> export keys must ONLY be alphanumerical
+	@todo add to ENVP ONLY if varable has EQUAL sign
+	@todo only alphanum for key; doesn't matter for value; first character of key only alpha;
+	@todo multiple arguments;
  */
 int minishell_export(char **args, t_shell *shell)
 {
@@ -103,7 +109,6 @@ int minishell_export(char **args, t_shell *shell)
 	@brief Builtin command: unset.
 	@param args List of args.	Not examined. (and no need to)
 	@return Always returns 1, to continue execution.
-	@todo fix unset
  */
 int minishell_unset(char **args, t_shell *shell)
 {
@@ -122,21 +127,34 @@ int minishell_unset(char **args, t_shell *shell)
 		shell->env = ptr->next;
 		free(ptr->content);
 		free(ptr);
+		return (1);
 	}
-	while(ptr != NULL)
+	while(ptr->next != NULL)
 	{
 		if (!strncmp(args[1], ptr->next->content, strlen(args[1])))
 		{
-			temp = ptr->next;
-			ptr->next = ptr->next->next;
-			free(temp->content);
-			free(temp);
+			if (ptr->next->next != NULL)
+			{
+				temp = ptr->next;
+				ptr->next = ptr->next->next;
+				ft_lstdelone(temp, del(temp->content));
+				// free(temp->content);
+				// free(temp);
+				// printf("%s\n", (char *)ptr->content);
+				return (1);
+			}
+			else
+			{
+				ft_lstdelone(ptr->next, del(ptr->next->content));
+				// free(ptr->next->content);
+				// free(ptr->next);
+				ptr->next = NULL;
+				return (1);
+			}
 		}
-		if (ptr == NULL)
-			break;
-		printf("%s\n", (char *)ptr->content);
-		if (ptr != NULL && ptr->next != NULL)
+		else
 			ptr = ptr->next;
+		// printf("%s\n", (char *)ptr->content);
 	}
 
 	return (1);
