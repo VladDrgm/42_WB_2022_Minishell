@@ -28,12 +28,11 @@ Create Branch
 			099 - Vlad
 			007 - Domen
 			549 - Deki
-	2) Use Issue Hash number
-	3) Action: Add, Create, Implement, Modify, Debug, Close
-	4) Feature / Function / File name
-	Example:	007-069-Implement History
-				005-555-Add Makefile
-				001-969-Create s_to_l()**
+	2) Action: Add, Create, Implement, Modify, Debug, Close
+	3) Feature / Function / File name
+	Example:	        007-Implement History
+				005-Add Makefile
+				001-Create s_to_l()**
 
 Move commit from overmind to new branch (for dummys)
 	Creat new branch:
