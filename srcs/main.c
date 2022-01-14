@@ -29,7 +29,7 @@ int	main(int argc, char **argv, char**envp)
 				break ;
 			//executor(shell);
 		}
-	} */1
+	} */
 // ************************************Part 2******************************
 	t_shell *shell;
 	char	*line;
