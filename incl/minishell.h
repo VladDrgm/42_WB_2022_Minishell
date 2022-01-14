@@ -7,6 +7,7 @@
 # include <readline/history.h>
 # include <unistd.h>
 # include <errno.h>
+# include <string.h>
 # define FT_CHAR 1
 # define FT_STRING 2
 # define FT_TAB 9

@@ -4,7 +4,7 @@ CFLAGS		= -g3 -Wall -Wextra -Werror
 #CFLAGS		=
 RM			= rm -f
 SRCD		= ./srcs/
-SRC			= main.c ft_lexor.c ft_parser.c ft_executor.c
+SRC			= main.c ft_lexor.c ft_parser.c ft_executor.c ft_initiator.c ft_builtins.c ft_builtins2.c
 # Command to add the source folder prefix (instead of having it added manually to SRC)
 SRCF		= $(addprefix $(SRCD),$(SRC))
 OBJD		= ./objs/
@@ -14,7 +14,7 @@ BUILD		= $(OBJF:$(OBJD)%.o)
 
 NAME		= minishell
 HEADD		= ./incl/
-HEADF		= minishell.h
+HEADF		= minishell.h minishe11.h
 
 LIBFTD		= ./libft/
 LIBFT_OBJD	= objs
@@ -52,6 +52,7 @@ fclean:		clean
 			${RM} ${NAME}
 			${RM} ${LIBFTD}${LIBFTL}
 			@${RM} ${HEADD}minishell.h.gch
+			@${RM} ${HEADD}minishe11.h.gch
 
 re:			fclean all
 
