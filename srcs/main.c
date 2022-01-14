@@ -3,20 +3,18 @@
 
 int	main(int argc, char **argv, char**envp)
 {
-	char	*args;
+
+// ************************************Part 1******************************
+/* 	char	*args;
 	t_list	*list;
 	int		temp;
-	t_shell *shell;
-	argc++;
-	if (!argv[1])
-		printf("%s\n", envp[1]);
+	if (argc > 1)
+		printf("Invalid number of arguments for %s with %s\n", argv[0], envp[0]);
 
-	shell = malloc(sizeof(t_shell) * 1);
 	args = NULL;
 	// args++;
 	temp = 0;
 	list = NULL;
-	ft_initiator_exc(&(shell), envp);
 	while (1)
 	{
 		args = readline(">");
@@ -26,8 +24,36 @@ int	main(int argc, char **argv, char**envp)
 			temp = parser();
 			if (temp != 0)
 				break ;
-			executor(shell);
+			//executor(shell);
 		}
+
+	} */
+// ************************************Part 2******************************
+	t_shell *shell;
+	char	*line;
+	char	**args;
+	int		status;
+
+	if (argc > 1)
+		printf("Invalid number of arguments for %s\n", argv[0]);
+	shell = malloc(sizeof(t_shell) * 1);
+	line = NULL;
+	status = 1;
+	// int i = 0;
+	// while (envp[i])
+	// {
+	// 	printf("%s\n", envp[i]);
+	// 	i++;
+	// }
+	ft_initiator_exc(&(shell), envp);
+	// Run command loop.
+	while (status)
+	{
+		line = readline(">");
+		args = minishell_split_line(line); // !!!!!!!!!! Lexor/Parser Part !!!!!!!!!!!
+		status = minishell_execute(args, shell); // !!!!!!!!!! Execution Part !!!!!!!!!!!
+		free(line);
+		free(args);
 	}
 	// free(args);
 	return (0);
