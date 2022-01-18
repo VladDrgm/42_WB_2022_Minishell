@@ -52,7 +52,6 @@ void	add_substring(t_list **list, int end, char *str)
 	word->address = (void *)sub_str;
 	new_el = ft_lstnew((void *)word);
 	ft_lstadd_back(list, new_el);
-	// free(word);
 }
 
 /*
@@ -72,8 +71,6 @@ void	add_specialchar(t_list **list, char ch)
 	word->address = (void *)cp;
 	new_el = ft_lstnew((void *)word);
 	ft_lstadd_back(list, new_el);
-	// free(cp);
-	// free(word);
 }
 
 /*
@@ -116,20 +113,17 @@ int	double_q_handler(t_list **list, char *str)
 		if (str[i] == FT_DOUBLE_QUOTE)
 		{
 			add_substring(list, i - beginning, &(str[beginning]));
-			//add_specialchar(list, FT_DOUBLE_QUOTE);
 			return (i);
 		}
 		else if (str[i] == FT_DOLLAR_SIGN)
 		{
 			add_substring(list, i - beginning, &(str[beginning]));
-			//add_specialchar(list, FT_DOLLAR_SIGN);
 			beginning = i;
 			env = 1;
 		}
 		else if (str[i] == FT_SPACE && env == 1)
 		{
 			add_substring(list, i - beginning, &(str[beginning]));
-			//add_specialchar(list, FT_DOLLAR_SIGN);
 			beginning = i;
 			env = 0;
 		}
@@ -179,16 +173,10 @@ int	lexor(t_list **list, char *args)
 		if (last == FT_SPACE && args[i] != FT_SPACE)
 		{
 			begining = i;
-			/*if (args[i] == FT_MINUS || args[i] == FT_HASHTAG)
-			{
-				add_specialchar(list, args[i]);
-				begining++;
-			}*/
 		}
 		else if (last != FT_SPACE && args[i] == FT_SPACE)
 		{
 			add_substring(list, i - begining, &(args[begining]));
-			//add_specialchar(list, FT_SPACE);
 		}
 		if (args[i] == FT_PIPE || args[i] == FT_GREATER || \
 			args[i] == FT_LESSER)
@@ -200,20 +188,17 @@ int	lexor(t_list **list, char *args)
 		else if (args[i] == FT_DOLLAR_SIGN)
 		{
 			add_substring(list, i - begining, &(args[begining]));
-			//add_specialchar(list, args[i]);
 			begining = i;
 		}
 		if (args[i] == FT_SINGLE_QUOTE)
 		{
 			add_substring(list, i - begining, &(args[begining]));
-			//add_specialchar(list, FT_SINGLE_QUOTE);
 			flag = single_q_handler(list, &(args[i + 1]));
 			if (flag == -1)
 			{
 				errorfun();
 				printf("Unfinsihed single quote\n");
 				break;
-				// return (-1); //here the function was working
 			}
 			i = i + flag + 1;
 			begining = i + 1;
@@ -221,7 +206,6 @@ int	lexor(t_list **list, char *args)
 		if (args[i] == FT_DOUBLE_QUOTE)
 		{
 			add_substring(list, i - begining, &(args[begining]));
-			//add_specialchar(list, FT_DOUBLE_QUOTE);
 			flag = double_q_handler(list, &(args[i + 1]));
 			if (flag == -1)
 			{
@@ -236,18 +220,14 @@ int	lexor(t_list **list, char *args)
 		i++;
 	}
 	add_substring(list, i - begining, &(args[begining]));
-	//print_list(*list);
-	printf("We are in lexor %s\n", args);
-	printf("Flag is %d\n", flag);
-	if (flag == -1)
+	if (FT_LEXOR_COMMENT)
 	{
-		// printf("Clean the list\n");
-		// free(args);
-		ft_free_list(*list);
+		printf("We are in lexor %s\n", args);
+		print_list(*list);
+		printf("Flag is %d\n", flag);
 	}
+	if (flag == -1)
+		ft_free_list(*list);
 	free(args);
 	return flag;
 }
-
-//add flags
-//free "exit"

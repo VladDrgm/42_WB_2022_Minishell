@@ -1,5 +1,7 @@
 #include "../incl/minishell.h"
 
+
+
 void    ft_free_split(char **split)
 {
     int    i;
@@ -13,21 +15,6 @@ void    ft_free_split(char **split)
     free(split);
 }
 
-char	*ft_strjoin_free(char *s1, char const *s2)
-{
-	char	*return_s;
-
-	if (!s1 || !s2)
-		return (NULL);
-	return_s = ft_calloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2)) + 1, 1);
-	if (return_s == NULL)
-		return (NULL);
-	ft_memcpy(return_s, s1, ft_strlen(s1));
-	ft_memcpy(return_s + ft_strlen(s1), s2, ft_strlen(s2));
-	free (s1);
-	return (return_s);
-}
-
 int    ft_strcmp(char *s1, char *s2)
 {
     int i;
@@ -37,57 +24,11 @@ int    ft_strcmp(char *s1, char *s2)
         i++;
     return (s1[i] - s2[i]);
 }
+
 /*
 **	pwd cd echo export unset env exit << < >> >
 */
 
-int ft_command_check(char *str, char **cmd_path)
-{
-	char	*path;
-	char	**split;
-	char	*temp_path;
-	int		i;
-
-	printf("In check :%s\n", str);
-	if (!ft_strcmp(str, "pwd") || !ft_strcmp(str, "cd") || !ft_strcmp(str, "echo")  || !ft_strcmp(str, "export") || !ft_strcmp(str, "unset") ||
-		!ft_strcmp(str, "env") || !ft_strcmp(str, "exit") || !ft_strcmp(str, "<<") || !ft_strcmp(str, "<") || !ft_strcmp(str, ">>") || !ft_strcmp(str, ">"))
- 	{
- 		*cmd_path = 0;
- 		return 0;
- 	}
-	path = getenv("PATH");
-	split = ft_split(ft_strchr(path, '/'), ':');
-	temp_path = NULL;
-	i = 0;
-	while (split[i])
-	{
-		temp_path = ft_strjoin(split[i], ft_strjoin("/", str));
-		// printf("PATH: %s\n", temp_path);
-		if (access(temp_path, F_OK) == 0)
-		{
-			*cmd_path = temp_path;
-			ft_free_split(split);
-			return (0);
-		}
-		else if (access(temp_path, F_OK) == -1)
-		{
-			free((void *)temp_path);
-			//ft_free_split(split);
-			//temp_path = NULL;
-			//return (-1);
-		}
-		i++;
-	}
-	ft_free_split(split);
-	//free((void *)temp_path);
-	return (-1);
-}
-
-
-void error_fun(void)
-{
-	;
-}
 
 void	ft_free_lex_list(t_list *head)
 {
@@ -122,25 +63,32 @@ char** add_to_line(char **line, char *new_str, int *line_len)
 	return new_line;
 }
 
-void	print_element_lex(void *input)
+void	print_element_parser(void *input)
 {
-	t_word	*word;
+	t_command	*cmd;
+	int 		test_c;
 
-	word = (t_word *)input;
-	if (word->type == FT_STRING)
-		printf("string: %s\n", (char *)(word->address));
-	else if (word->type == FT_CHAR)
-		printf("char: %c\n", *((char *)(word->address)));
+	cmd = (t_command *)input;
+	test_c = 0;
+	// printf("Len is %d\n", cmd->comm_len);
+	while(test_c < (cmd->comm_len))
+	{
+		// printf("1\n");
+		printf("%s\n", cmd->comm_table[test_c]);
+		// printf("Len is %d\n", cmd->comm_len);
+		// printf("2\n");
+		test_c++;
+	}
+	printf("*****************************************************\n");
 }
 
 /*
 **	printslinked list
 */
 
-void	print_list_lex(t_list *el)
+void	print_list_parse(t_list *el)
 {
-	ft_lstiter(el, print_element_lex);
-
+	ft_lstiter(el, print_element_parser);
 }
 
 void ft_comment_check(char ***cmd_table, int *cmd_len)
@@ -149,17 +97,11 @@ void ft_comment_check(char ***cmd_table, int *cmd_len)
 	int new_len;
 	char **new_line;
 
-
 	i = 0;
 	new_line = NULL;
 	new_len = 0;
-	// cmd_table++;
-	printf("\n________________We are in comment check_____________\n");
-	printf("CMD LEN IS : %d\n", *cmd_len);
-
 	while (i < *cmd_len)
 	{
-		printf("CMD IS %s\n", (*cmd_table)[i]);
 		if((*cmd_table)[i][0] == FT_HASHTAG)
 		{
 			new_len = i;
@@ -174,7 +116,6 @@ void ft_comment_check(char ***cmd_table, int *cmd_len)
 	while (i < new_len)
 	{
 		new_line[i] = ft_strdup((*cmd_table)[i]);
-		printf("New Line is %s\n", new_line[i]);
 		i++;
 	}
 	i = 0;
@@ -183,24 +124,32 @@ void ft_comment_check(char ***cmd_table, int *cmd_len)
 		free((*cmd_table)[i]);
 		i++;
 	}
-	printf("testing'n\n");
 	free(*cmd_table);
 	*cmd_table = new_line;
 	*cmd_len = new_len;
-	int k = 0;
-	while (k < new_len)
-	{
-		printf("While check %s\n", (*cmd_table)[k]);
-		k++;
-	}
+}
 
-	printf("I is gonna be : %d\n", new_len);
+void ft_free_parser(void *parser)
+{
+	int i;
+	t_command *cmd;
 
+	i = 0;
+	cmd = (t_command *)parser;
+    while (i < cmd->comm_len)
+    {
+        free(cmd->comm_table[i]);
+        i++;
+    }
+	free(cmd->comm_table);
+	free(parser);
+}
 
-	// char *str = "deki";
-	// printf("%s\b\b", str);
-
-
+void error_fun(t_list **list, t_list **lexor_list)
+{
+	ft_lstclear(list, ft_free_parser);
+	ft_free_lex_list(*lexor_list);
+	*lexor_list = NULL;
 }
 
 int	parser(t_list **lex_list, t_list **executor_list)
@@ -272,43 +221,29 @@ int	parser(t_list **lex_list, t_list **executor_list)
 				if (*((char *)((t_word *)(lex_element->content))->address) == FT_PIPE)
 				{
 					if (cmd_len == 0)
-						error_fun();
+						error_fun(executor_list, lex_list);
 					break ;
 				}
 			}
 			if (((t_word *)(lex_element->content))->type == FT_STRING)
 			{
-				str = (char *)malloc(sizeof(char) * ft_strlen((char *)((t_word *)(lex_element->content))->address) + 1);
-				ft_strlcpy(str, (char *)((t_word *)(lex_element->content))->address, ft_strlen((char *)((t_word *)(lex_element->content))->address) + 1);
-				cmd_line = add_to_line(cmd_line, str, &cmd_len);
+				if (ft_strlen((char *)((t_word *)(lex_element->content))->address) != 0)
+				{
+					str = (char *)malloc(sizeof(char) * ft_strlen((char *)((t_word *)(lex_element->content))->address) + 1);
+					ft_strlcpy(str, (char *)((t_word *)(lex_element->content))->address, ft_strlen((char *)((t_word *)(lex_element->content))->address) + 1);
+					cmd_line = add_to_line(cmd_line, str, &cmd_len);
+				}
 			}
 			lex_element = lex_element->next;
 		}
-		int test_c = 0;
-		while(test_c < cmd_len)
-		{
-			printf("%s\n", cmd_line[test_c]);
-			test_c++;
-		}
-		printf("_______________________\n");
 		cmd = (t_command *)malloc(sizeof(t_command));
 		cmd->comm_table = cmd_line;
 		cmd->path = NULL;
 		cmd->index = index_counter;
-		ft_command_check(cmd->comm_table[0], &(cmd->path));
-		ft_comment_check(&(cmd->comm_table), &cmd_len);
-		// printf("PATH in main :%s\n", cmd->path);
+		cmd->comm_len = cmd_len;
+		ft_comment_check(&(cmd->comm_table), &cmd->comm_len);
 		executor_element = ft_lstnew((void * ) cmd);
 		ft_lstadd_back(executor_list, executor_element);
-		test_c = 0;
-		printf("After Comment Check Initialization\n");
-		printf("CMD LEN IS %d \n", cmd_len);
-		while(test_c < cmd_len)
-		{
-			printf("%s\n", (cmd->comm_table)[test_c]);
-			test_c++;
-		}
-		// printf("_______________________\n");
 		index_counter++;
 		if (lex_element == 0)
 			break;
@@ -316,6 +251,9 @@ int	parser(t_list **lex_list, t_list **executor_list)
 			lex_element = lex_element->next;
 	}
 	ft_free_lex_list(*lex_list);
+	*lex_list = NULL;
+	if (FT_PARSER_COMMENT)
+		print_list_parse(*executor_list);
 	return (0);
 }
 
