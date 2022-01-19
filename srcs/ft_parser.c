@@ -91,43 +91,43 @@ void	print_list_parse(t_list *el)
 	ft_lstiter(el, print_element_parser);
 }
 
-void ft_comment_check(char ***cmd_table, int *cmd_len)
-{
-	int i;
-	int new_len;
-	char **new_line;
+// void ft_comment_check(char ***cmd_table, int *cmd_len)
+// {
+// 	int i;
+// 	int new_len;
+// 	char **new_line;
 
-	i = 0;
-	new_line = NULL;
-	new_len = 0;
-	while (i < *cmd_len)
-	{
-		if((*cmd_table)[i][0] == FT_HASHTAG)
-		{
-			new_len = i;
-			break;
-		}
-		i++;
-	}
-	if (*cmd_len == i)
-		return ;
-	i = 0;
-	new_line = (char **)malloc (sizeof(char *) * new_len);
-	while (i < new_len)
-	{
-		new_line[i] = ft_strdup((*cmd_table)[i]);
-		i++;
-	}
-	i = 0;
-	while (i < *cmd_len)
-	{
-		free((*cmd_table)[i]);
-		i++;
-	}
-	free(*cmd_table);
-	*cmd_table = new_line;
-	*cmd_len = new_len;
-}
+// 	i = 0;
+// 	new_line = NULL;
+// 	new_len = 0;
+// 	while (i < *cmd_len)
+// 	{
+// 		if((*cmd_table)[i][0] == FT_HASHTAG)
+// 		{
+// 			new_len = i;
+// 			break;
+// 		}
+// 		i++;
+// 	}
+// 	if (*cmd_len == i)
+// 		return ;
+// 	i = 0;
+// 	new_line = (char **)malloc (sizeof(char *) * new_len);
+// 	while (i < new_len)
+// 	{
+// 		new_line[i] = ft_strdup((*cmd_table)[i]);
+// 		i++;
+// 	}
+// 	i = 0;
+// 	while (i < *cmd_len)
+// 	{
+// 		free((*cmd_table)[i]);
+// 		i++;
+// 	}
+// 	free(*cmd_table);
+// 	*cmd_table = new_line;
+// 	*cmd_len = new_len;
+// }
 
 void ft_free_parser(void *parser)
 {
@@ -241,7 +241,7 @@ int	parser(t_list **lex_list, t_list **executor_list)
 		cmd->path = NULL;
 		cmd->index = index_counter;
 		cmd->comm_len = cmd_len;
-		ft_comment_check(&(cmd->comm_table), &cmd->comm_len);
+		//ft_comment_check(&(cmd->comm_table), &cmd->comm_len);
 		executor_element = ft_lstnew((void * ) cmd);
 		ft_lstadd_back(executor_list, executor_element);
 		index_counter++;

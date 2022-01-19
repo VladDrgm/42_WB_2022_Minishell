@@ -157,6 +157,47 @@ void	errorfun(void)
 **	Every
 */
 
+/*
+**	element beforehand
+**	if double quoute, single quote,
+**	if space == thats a comment
+**	if redirect
+**	if pipe
+*/
+
+void ft_comment_check(char **args)
+{
+	int i;
+	int s_quote_flag;
+	int d_quote_flag;
+	char *temp;
+
+	i = 0;
+	s_quote_flag = 0;
+	d_quote_flag = 0;
+	while ((*args)[i])
+	{
+		if ((*args)[i] == FT_SINGLE_QUOTE)
+			s_quote_flag++;
+		if ((*args)[i] == FT_DOUBLE_QUOTE)
+			d_quote_flag++;
+		if ((*args)[i] == FT_HASHTAG)
+		{
+			if (i == 0)
+				break;
+			if (s_quote_flag % 2 == 0 && d_quote_flag % 2 == 0)
+				if ((*args)[i - 1] == FT_SPACE || (*args)[i - 1] == FT_PIPE || (*args)[i - 1] == FT_LESSER || (*args)[i - 1] == FT_GREATER)
+					break;
+		}
+		i++;
+	}
+	temp = ft_substr(*args, 0, i);
+	free(*args);
+	*args = temp;
+
+	// (*args)[i] = '\0';
+}
+
 int	lexor(t_list **list, char *args)
 {
 	int		i;
@@ -164,10 +205,18 @@ int	lexor(t_list **list, char *args)
 	char	last;
 	int		flag;
 
+
 	i = 0;
 	begining = 0;
 	last = FT_SPACE;
 	flag = 0;
+	if (FT_LEXOR_COMMENT)
+		printf("\n***********BEFORE COMMENT CHECK********** \n%s\n and the length is %ld", args, ft_strlen(args));
+	ft_comment_check(&args);
+	if (FT_LEXOR_COMMENT)
+		printf("\n************AFTER COMMENT CHECK********** \n%s\n and the length is %ld", args, ft_strlen(args));
+	//env check
+	//command check
 	while (args[i] != '\0')
 	{
 		if (last == FT_SPACE && args[i] != FT_SPACE)
@@ -219,7 +268,8 @@ int	lexor(t_list **list, char *args)
 		last = args[i];
 		i++;
 	}
-	add_substring(list, i - begining, &(args[begining]));
+	if(args[i - 1] != FT_SPACE && i > 0)
+		add_substring(list, i - begining, &(args[begining]));
 	if (FT_LEXOR_COMMENT)
 	{
 		printf("We are in lexor %s\n", args);
