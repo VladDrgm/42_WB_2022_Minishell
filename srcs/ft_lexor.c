@@ -194,8 +194,79 @@ void ft_comment_check(char **args)
 	temp = ft_substr(*args, 0, i);
 	free(*args);
 	*args = temp;
+}
 
-	// (*args)[i] = '\0';
+char *ft_getenv(char *str)
+{
+	// return NULL;
+	printf("Input in getenv is: .%s.\n", str);
+	// str++;
+	// return "dejan";
+	if (!str)
+	{
+		return "";
+	}
+
+	// return "/home/dejan/Desktop/projects/42curs/work_area/minishell/minishell/srcs";
+	return "dejan";
+}
+/*
+**	env variables can be alphanumberic characters, it can be underscore,
+**	equal  sign can be inside the value, but cant be inside the name
+*/
+void ft_env_check(char **args)
+{
+	int i;
+	int j;
+	int s_quote_flag;
+	char *temp1;
+	char *temp0;
+
+	i = 0;
+	j = 0;
+	s_quote_flag = 0;
+	while ((*args)[i])
+	{
+		if ((*args)[i] == FT_SINGLE_QUOTE)
+			s_quote_flag++;
+		if ((*args)[i] == FT_DOLLAR_SIGN)
+		{
+			if (s_quote_flag % 2 == 0)
+			{
+				j = i + 1;
+				while (ft_isalnum((*args)[j]) || (*args)[j] == FT_UNDERSCORE)
+				{
+					j++;
+					if (ft_isdigit((*args)[j - 1]))
+						break;
+				}
+				if (j == i + 1)
+				{
+					if ((*args)[j] == '*' || (*args)[j] == '@' || (*args)[j] == '#' ||
+					 	(*args)[j] == '?' || (*args)[j] == '-' || (*args)[j] == '$' ||
+						(*args)[j] == '!')
+						j++;
+					else
+					{
+						i++;
+						continue;
+					}
+				}
+				temp1 = ft_substr(*args, i + 1, j - i - 1);
+				temp0 = ft_getenv(temp1);
+				free(temp1);
+				(*args)[i] = '\0';
+				temp1 = ft_strjoin(*args, temp0);
+				temp0 = ft_strjoin(temp1, &((*args)[j]));
+				i = ft_strlen(temp1);
+				free(*args);
+				*args = temp0;
+				free(temp1);
+				i--;
+			}
+		}
+		i++;
+	}
 }
 
 int	lexor(t_list **list, char *args)
@@ -215,6 +286,7 @@ int	lexor(t_list **list, char *args)
 	ft_comment_check(&args);
 	if (FT_LEXOR_COMMENT)
 		printf("\n************AFTER COMMENT CHECK********** \n%s\n and the length is %ld", args, ft_strlen(args));
+	ft_env_check(&args);
 	//env check
 	//command check
 	while (args[i] != '\0')
