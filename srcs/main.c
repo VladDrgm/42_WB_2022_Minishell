@@ -10,9 +10,10 @@ int	main(int argc, char **argv, char**envp)
 	t_list	*lexer2parser_list;
 	t_list	*parser2executor_list;
 	int		temp;
+
 	if (argc > 1)
 		printf("Invalid number of arguments for %s with %s\n", argv[0], envp[0]);
-
+	init_global();
 	args = NULL;
 	// args++;
 	temp = 0;
