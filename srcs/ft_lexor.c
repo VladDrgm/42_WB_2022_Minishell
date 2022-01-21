@@ -87,7 +87,7 @@ int	single_q_handler(t_list **list, char *str)
 		if (str[i] == FT_SINGLE_QUOTE)
 		{
 			add_substring(list, i, str);
-			add_specialchar(list, FT_SINGLE_QUOTE);
+			//add_specialchar(list, FT_SINGLE_QUOTE);
 			return (i);
 		}
 		i++;
@@ -198,37 +198,55 @@ void ft_comment_check(char **args)
 
 char *ft_getenv(char *str)
 {
-	// return NULL;
-	printf("Input in getenv is: .%s.\n", str);
-	// str++;
-	// return "dejan";
-	if (!str)
-	{
-		return "";
-	}
+	int	search_len;
+	t_env_var *temp_env;
+	t_list *temp;
 
-	// return "/home/dejan/Desktop/projects/42curs/work_area/minishell/minishell/srcs";
-	return "dejan";
+	search_len = ft_strlen(str);
+	if (str[0] == '?' && search_len == 1)
+	{
+		return g_access.last_return;
+	}
+	temp = (t_list *)(*(g_access.env));
+	if (!str)
+		return "NOINPUT";
+	while (temp)
+	{
+		temp_env = (t_env_var *)(temp->content);
+		if (search_len == (int)(ft_strlen(temp_env->name) - 1))
+			if (!(ft_strncmp(str, temp_env->name, search_len)))
+				return (temp_env->value);
+		temp = temp->next;
+	}
+	return "NOSTRING";
 }
 /*
 **	env variables can be alphanumberic characters, it can be underscore,
 **	equal  sign can be inside the value, but cant be inside the name
 */
+
 void ft_env_check(char **args)
 {
 	int i;
 	int j;
 	int s_quote_flag;
+	int d_quote_flag;
 	char *temp1;
 	char *temp0;
+	char *temp2;
 
 	i = 0;
 	j = 0;
 	s_quote_flag = 0;
+	d_quote_flag = 0;
 	while ((*args)[i])
 	{
 		if ((*args)[i] == FT_SINGLE_QUOTE)
-			s_quote_flag++;
+			if (d_quote_flag % 2 == 0)
+				s_quote_flag++;
+		if ((*args)[i] == FT_DOUBLE_QUOTE)
+			if (s_quote_flag % 2 == 0)
+				d_quote_flag++;
 		if ((*args)[i] == FT_DOLLAR_SIGN)
 		{
 			if (s_quote_flag % 2 == 0)
@@ -256,7 +274,11 @@ void ft_env_check(char **args)
 				temp0 = ft_getenv(temp1);
 				free(temp1);
 				(*args)[i] = '\0';
-				temp1 = ft_strjoin(*args, temp0);
+				temp1 = ft_strjoin(*args, "\"");
+				temp2 = ft_strjoin(temp1, temp0);
+				free(temp1);
+				temp1 = ft_strjoin(temp2, "\"");
+				free(temp2);
 				temp0 = ft_strjoin(temp1, &((*args)[j]));
 				i = ft_strlen(temp1);
 				free(*args);
@@ -313,6 +335,7 @@ int	lexor(t_list **list, char *args)
 		}
 		if (args[i] == FT_SINGLE_QUOTE)
 		{
+			printf("i executed\n");
 			add_substring(list, i - begining, &(args[begining]));
 			flag = single_q_handler(list, &(args[i + 1]));
 			if (flag == -1)

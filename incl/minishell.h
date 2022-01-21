@@ -52,7 +52,7 @@ typedef struct s_global
 	int		signals;
 	t_list	**env;
 	t_list	**builtins;
-	int		last_return; //for $?
+	char	*last_return; //for $?
 }				t_global;
 
 typedef struct s_env_var
