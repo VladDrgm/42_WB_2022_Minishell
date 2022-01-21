@@ -1,4 +1,4 @@
-#include "../incl/minishe11.h"
+#include "../incl/minishell.h"
 
 /**
 	 @brief Bultin command: env.
@@ -41,6 +41,7 @@ int	minishell_exit(char **args, int len)
 {
 	len++; //TO ELIMINATE ERRORS
 	len--; //TO ELIMINATE ERRORS
+	write(1, "exit\n", 5);
 	if (ft_strncmp(args[0], "exit", 4))
 		return (0);
 	//WE NEED TO LINK THIS WITH FREE

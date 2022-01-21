@@ -1,4 +1,4 @@
-#include "../incl/minishe11.h"
+#include "../incl/minishell.h"
 
 void echo_print(char **str, int starter, int size)
 {

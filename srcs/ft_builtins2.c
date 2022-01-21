@@ -1,4 +1,4 @@
-#include "../incl/minishe11.h"
+#include "../incl/minishell.h"
 
 /**
 	@brief Functionality: ft_update_env.
