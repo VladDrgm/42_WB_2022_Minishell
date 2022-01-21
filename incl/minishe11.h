@@ -31,7 +31,7 @@ int 	minishell_unset(char **args, t_shell *shell);
 int		minishell_execute(char **args, t_shell *shell);
 int		minishell_launch(char **args);
 void	ft_update_env(t_shell *shell, char *to_search, char *to_replace);
-
-
+void	echo_print(char **str, int starter, int size);
+int		echo_flag(char *str);
 
 #endif

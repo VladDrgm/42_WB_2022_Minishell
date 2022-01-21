@@ -58,46 +58,96 @@ int	minishell_cd(char **args, t_shell *shell)
  */
 int	minishell_echo(char **args, t_shell *shell)
 {
+	size_t j;
 	int i;
+	int flag;
 
-	int k = 0;
+	flag = 0;
+	int k = 0; // NUMBER OF ARGS
 	while (args[k])
 	 k++;
+	// write(1, args[1], ft_strlen(args[1]));
 
 	if (args[1] == NULL)
 		write(2, "minishell: expected argument to \"echo\"\n", 40);
-	else
+	else 
 	{
-		if (args[1][0] == '-' && args[1][1] == 'n')
+		i = 1;
+		// go through each arg (starting from 1) and check if it's "-n" or "-nnnnnnn"
+		while (args[i])
 		{
-			if (args[2][0] == '-'  && args[2][1] == 'n')
-				return (1);
-			if (ft_strlen(args[1]) > 2)
-				return (1);
-			i = 2;
-			while(i < k)
-			{
-				write(1, args[i], ft_strlen(args[i]));
-				write(1, " ", 1);
-				i++;
-			}
-		}
-		else
-		{
-			// if (ft_strncmp(args[1], "$_", 2))
+			// if (i == 1)
+			// 	flag = echo_flag(args[i]);
+			// if (flag == 0) //print normally
 			// {
-
+			// 	echo_print(args, i, k);
+			// 	write(1, "\n", 1);
+			// 	break;
 			// }
-			i = 1;
-			while(i < k)
+			// else //print without \n
+			// {
+			// 	echo_print(args, i, k);
+			// 	break;
+			// }
+			// -nnnnn -nnnnn
+			if ((args[i][0] == '-') && (ft_strlen(args[i]) >= 2)) //check first if we have the mandatory '-' sign
 			{
-				write(1, args[i], ft_strlen(args[i]));
-				write(1, " ", 1);
-				i++;
+				if (args[i][1] == 'n') //check if the next char is 'n'
+				{
+					j = 1;
+					while (j < ft_strlen(args[i]) && args[i][j] == 'n') // keep going to pass through all n's
+					{
+						j++;
+					}
+					if (j == ft_strlen(args[i])) // check if all elements were n OR if we have some other char different fron n
+					{
+						i++;
+						flag = 1; //based on this flag, we either print with a \n or not
+						continue;
+					}
+					else
+					{
+						if (flag == 0) //print normally
+						{
+							echo_print(args, i, k);
+							write(1, "\n", 1);
+						}
+						else //print without \n
+						{
+							echo_print(args, i, k);
+						}
+						break;
+					}
+				}
+				else
+				{
+					if (flag == 0)
+					{
+						echo_print(args, i, k);
+						write(1, "\n", 1);
+					}
+					else
+					{
+						echo_print(args, i, k);
+					}
+					break;
+				}
 			}
-			write(1, "\n", 1);
-		}
+			else
+			{
+				if (flag == 0)
+				{
+					echo_print(args, i, k);
+					write(1, "\n", 1);
+				}
+				else
+				{
+					echo_print(args, i, k);
+				}
+				break;
+			}
 
+		}
 	}
 	ft_update_env(shell, "_=", "_=echo");
 	return (1);
