@@ -16,6 +16,7 @@ int	main(int argc, char **argv, char**envp)
 	if (argc > 1)
 		printf("Invalid number of arguments for %s with %s\n", argv[0], envp[0]);
 	init_global();
+	ft_initiator_exc(envp);
 	args = NULL;
 	// args++;
 	temp = 0;
@@ -33,7 +34,9 @@ int	main(int argc, char **argv, char**envp)
 				break ;
 			//executor(shell);
 		}
-	}*/
+	}
+	free_global();
+	*/
 // ************************************Part 2******************************
 	t_shell *shell;
 	char	*line;
@@ -51,7 +54,9 @@ int	main(int argc, char **argv, char**envp)
 	// 	printf("%s\n", envp[i]);
 	// 	i++;
 	// }
+	init_global();
 	ft_initiator_exc(envp);
+
 	// Run command loop.
 	while (status)
 	{
@@ -61,6 +66,7 @@ int	main(int argc, char **argv, char**envp)
 		free(line);
 		free(args);
 	}
+	free_global();
 	// free(args);
 	return (0);
 }

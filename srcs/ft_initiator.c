@@ -75,11 +75,22 @@ void ft_init_builtins(void)
 
 void ft_create_envlist(char **envp)
 {
-	int i;
+	int i, j;
+	t_env_var *env_var;
+
 	i = 0;
 	while (envp[i])
 	{
-		ft_lstadd_back(g_access.env, ft_lstnew(ft_strdup(envp[i])));
+		j = 0;
+		while (envp[i][j] != '=' && envp[i][j] != '\0')
+			j++;
+		if (envp[i][j] == '=')
+		{
+			env_var = (t_env_var *)malloc(sizeof(t_env_var));
+			env_var->name = ft_substr(envp[i], 0, j + 1);
+			env_var->value = ft_strdup(&(envp[i][j + 1]));
+			ft_lstadd_back(g_access.env, ft_lstnew(env_var));
+		}
 		i++;
 	}
 }
