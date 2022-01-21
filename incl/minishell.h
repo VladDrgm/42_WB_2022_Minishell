@@ -47,6 +47,14 @@ typedef struct s_command
 	char	*path;
 }			t_command;
 
+typedef struct s_builtin_content
+{
+	char	*cmd;
+	int	(* minishell_fct)(char **args, int len);
+	int		index;
+}	t_builtin_content;
+
+
 typedef struct s_global
 {
 	int		signals;
@@ -70,5 +78,22 @@ void 	init_global(void);
 void	ft_signal_setup(void);
 int		lexor(t_list **list, char *args);
 int		parser(t_list **lex_list, t_list **executor_list);
+void	ft_initiator_exc(char **envp);
+void	ft_init_builtins(void);
+t_builtin_content	*ft_init_builtin_content(char *cmd, int (*minishell_fct)(char **args, int len), int i);
+int		minishell_cd(char **args, int len);
+int		minishell_env(char **args, int len);
+int		minishell_echo(char **args, int len);
+int		minishell_exit(char **args, int len);
+int		minishell_pwd(char **args, int len);
+int		minishell_export(char **args, int len);
+int 	minishell_unset(char **args, int len);
+int		minishell_execute(void);
+int		minishell_launch(char **args);
+void	ft_update_env(char *to_search, char *to_replace);
+void	echo_print(char **str, int starter, int size);
+int		echo_flag(char *str);
+void	*delone(void *content);
+
 
 #endif

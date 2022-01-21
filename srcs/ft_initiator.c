@@ -1,45 +1,44 @@
-#include "../incl/minishe11.h"
 #include "../incl/minishell.h"
 
 /** !!!!!!!!!! Remove as soon as replacement with Lexer/Parser return value possible !!!!!!!!!!! **/
-char	**minishell_split_line(char *line)
-{
-	int		buffer;
-	int		bufsize;
-	int		position;
-	char	**tokens;
-	char	*token;
+// char	**minishell_split_line(char *line)
+// {
+// 	int		buffer;
+// 	int		bufsize;
+// 	int		position;
+// 	char	**tokens;
+// 	char	*token;
 
-	buffer = 64;
-	bufsize = buffer;
-	position = 0;
-	tokens = malloc(bufsize * sizeof(char*));
-	if (!tokens)
-	{
-		write(2, "minishell: allocation error\n", 28);
-		exit(EXIT_FAILURE);
-	}
-	token = strtok(line, " \t\r\n\a");
-	while (token != NULL)
-	{
-		tokens[position] = token;
-		position++;
+// 	buffer = 64;
+// 	bufsize = buffer;
+// 	position = 0;
+// 	tokens = malloc(bufsize * sizeof(char*));
+// 	if (!tokens)
+// 	{
+// 		write(2, "minishell: allocation error\n", 28);
+// 		exit(EXIT_FAILURE);
+// 	}
+// 	token = strtok(line, " \t\r\n\a");
+// 	while (token != NULL)
+// 	{
+// 		tokens[position] = token;
+// 		position++;
 
-		if (position >= bufsize)
-		{
-			bufsize += buffer;
-			tokens = realloc(tokens, bufsize * sizeof(char*));
-			if (!tokens)
-			{
-				write(2, "minishell: allocation error\n", 28);
-				exit(EXIT_FAILURE);
-			}
-		}
-		token = strtok(NULL, " \t\r\n\a");
-	}
-	tokens[position] = NULL;
-	return (tokens);
-}
+// 		if (position >= bufsize)
+// 		{
+// 			bufsize += buffer;
+// 			tokens = realloc(tokens, bufsize * sizeof(char*));
+// 			if (!tokens)
+// 			{
+// 				write(2, "minishell: allocation error\n", 28);
+// 				exit(EXIT_FAILURE);
+// 			}
+// 		}
+// 		token = strtok(NULL, " \t\r\n\a");
+// 	}
+// 	tokens[position] = NULL;
+// 	return (tokens);
+// }
 
 
 /*Functions to keep*/

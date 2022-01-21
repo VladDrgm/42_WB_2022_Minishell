@@ -1,5 +1,4 @@
 #include "../incl/minishell.h"
-#include "../incl/minishe11.h"
 
 int	minishell_execute(void)
 {
