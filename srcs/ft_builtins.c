@@ -6,22 +6,27 @@
 	 @return Always returns 1, to continue executing.
 	 @todo check after adding two times with export => checked; V.
  */
-int	minishell_env(char **args, t_shell *shell)
+int	minishell_env(char **args, int len)
 {
+	len = 0; //TO ELIMINATE ERRORS
 	t_list *ptr;
 
 	if (ft_strncmp(args[0], "env", 3))
 		return (0);
-	ptr = shell->env;
+	ptr = *g_access.env;
 	while (ptr != NULL)
 	{
-		printf("%s\n", (char *)(ptr->content));
+		write(1, ((t_env_var*)(ptr->content))->name, \
+			ft_strlen(((t_env_var*)(ptr->content))->name));
+		write(1, ((t_env_var*)(ptr->content))->value, \
+			ft_strlen(((t_env_var*)(ptr->content))->value));
+		write(1, "\n", 1);
 		if (ptr->next != NULL)
 			ptr = ptr->next;
 		else
 			break;
 	}
-	ft_update_env(shell, "_=", "_=env");
+	ft_update_env("_=", "env");
 	return (1);
 }
 
@@ -31,11 +36,14 @@ int	minishell_env(char **args, t_shell *shell)
 	 @return Always returns 0, to terminate execution.
 	 @todo free linked lists etc properly; fix arguments that need to be passed!
  */
-int	minishell_exit(char **args, t_shell *shell)
+int	minishell_exit(char **args, int len)
 {
+	len = 0; //TO ELIMINATE ERRORS
 	if (ft_strncmp(args[0], "exit", 4))
 		return (0);
-	free(shell->env->content);
+	//WE NEED TO LINK THIS WITH FREE
+	//DISCUSS THIS AS A TEAM -> MUST BE CONNECTED \
+	// TO SIGNALS SO WE ALL HAVE TO SEE HOW TO FREE MEMORY
 	return (0);
 }
 
@@ -44,8 +52,9 @@ int	minishell_exit(char **args, t_shell *shell)
 	@param args List of args.	Not examined. (and no need to)
 	@return Always returns 1, to continue execution.
  */
-int minishell_pwd(char **args, t_shell *shell)
+int minishell_pwd(char **args, int len)
 {
+	len = 0; //TO ELIMINATE ERRORS
 	char *buf;
 	int i = 1;
 	if (ft_strncmp(args[0], "pwd", 3))
@@ -56,7 +65,7 @@ int minishell_pwd(char **args, t_shell *shell)
 	write(1, buf, ft_strlen(buf));
 	write(1, "\n", 1);
 	free(buf);
-	ft_update_env(shell, "_=", "_=pwd");
+	ft_update_env("_=", "pwd");
 	return (1);
 }
 
@@ -93,15 +102,27 @@ int minishell_pwd(char **args, t_shell *shell)
 	@todo only alphanum for key; doesn't matter for value; first character of key only alpha;
 	@todo multiple arguments;
  */
-int minishell_export(char **args, t_shell *shell)
+int minishell_export(char **args, int len)
 {
+	t_env_var *env_var;
+	len = 0; //TO ELIMINATE ERRORS
 	if (args[1] == NULL)
 	{
 		write(1, "minishell: Too few arguments for export command\n", 49);
 		return (1);
 	}
-	ft_lstadd_back(&(shell->env), ft_lstnew(ft_strdup(args[1])));
-	ft_update_env(shell, "_=", "_=export");
+	
+	int j = 0;
+	while (args[1][j] != '=' && args[1][j] != '\0')
+		j++;
+	if (args[1][j] == '=')
+	{
+		env_var = (t_env_var *)malloc(sizeof(t_env_var));
+		env_var->name = ft_substr(args[1], 0, j + 1);
+		env_var->value = ft_strdup(&(args[1][j + 1]));
+		ft_lstadd_back(g_access.env, ft_lstnew(env_var));
+	}
+	ft_update_env("_=", "export");
 	return (1);
 }
 
@@ -110,8 +131,9 @@ int minishell_export(char **args, t_shell *shell)
 	@param args List of args.	Not examined. (and no need to)
 	@return Always returns 1, to continue execution.
  */
-int minishell_unset(char **args, t_shell *shell)
+int minishell_unset(char **args, int len)
 {
+	len = 0; //TO ELIMINATE ERRORS
 	t_list *ptr;
 	t_list *temp;
 	temp = NULL;
@@ -120,41 +142,39 @@ int minishell_unset(char **args, t_shell *shell)
 		write(1, "minishell: Too few arguments for unset command\n", 49);
 		return (1);
 	}
-	ft_update_env(shell, "_=", "_=unset");
-	ptr = shell->env;
-	if (!strncmp(args[1], ptr->content, strlen(args[1])))
+	ft_update_env("_=", "unset");
+	ptr = *g_access.env;
+	if (ft_strlen(args[1]) == ft_strlen(((t_env_var*)(ptr->content))->name) - 1)
 	{
-		shell->env = ptr->next;
-		free(ptr->content);
-		free(ptr);
-		return (1);
+		if (!ft_strncmp(args[1], ((t_env_var*)(ptr->content))->name, ft_strlen(args[1])))
+		{
+			*g_access.env = ptr->next;
+			ft_lstdelone(ptr, delone(ptr->content));
+			return (1);
+		}
 	}
 	while(ptr->next != NULL)
 	{
-		if (!strncmp(args[1], ptr->next->content, strlen(args[1])))
+		if (ft_strlen(args[1]) == ft_strlen(((t_env_var*)(ptr->next->content))->name) - 1)
 		{
-			if (ptr->next->next != NULL)
+			if (!ft_strncmp(args[1], ((t_env_var*)(ptr->next->content))->name, ft_strlen(args[1])))
 			{
-				temp = ptr->next;
-				ptr->next = ptr->next->next;
-				ft_lstdelone(temp, del(temp->content));
-				// free(temp->content);
-				// free(temp);
-				// printf("%s\n", (char *)ptr->content);
-				return (1);
-			}
-			else
-			{
-				ft_lstdelone(ptr->next, del(ptr->next->content));
-				// free(ptr->next->content);
-				// free(ptr->next);
-				ptr->next = NULL;
-				return (1);
+				if (ptr->next->next != NULL)
+				{
+					temp = ptr->next;
+					ptr->next = ptr->next->next;
+					ft_lstdelone(temp, delone(temp->content));
+					return (1);
+				}
+				else
+				{
+					ft_lstdelone(ptr->next, delone(ptr->next->content));
+					ptr->next = NULL;
+					return (1);
+				}
 			}
 		}
-		else
-			ptr = ptr->next;
-		// printf("%s\n", (char *)ptr->content);
+		ptr = ptr->next;
 	}
 
 	return (1);

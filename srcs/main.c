@@ -8,10 +8,11 @@ int	main(int argc, char **argv, char**envp)
 
 
 // ************************************Part 1******************************
- 	/*char	*args;
+ 	char	*args;
 	t_list	*lexer2parser_list;
 	t_list	*parser2executor_list;
 	int		temp;
+
 
 	if (argc > 1)
 		printf("Invalid number of arguments for %s with %s\n", argv[0], envp[0]);
@@ -32,41 +33,43 @@ int	main(int argc, char **argv, char**envp)
 			temp = parser(&lexer2parser_list, &parser2executor_list);
 			if (temp != 0)
 				break ;
-			//executor(shell);
+			g_access.parser2exec = &parser2executor_list;
+			temp = minishell_execute();
+			if (temp == 0)
+				break;
 		}
 	}
-	free_global();
-	*/
+	// free_global();
 // ************************************Part 2******************************
-	t_shell *shell;
-	char	*line;
-	char	**args;
-	int		status;
+	// t_shell *shell;
+	// char	*line;
+	// char	**args;
+	// int		status;
 
-	if (argc > 1)
-		printf("Invalid number of arguments for %s\n", argv[0]);
-	shell = malloc(sizeof(t_shell) * 1);
-	line = NULL;
-	status = 1;
-	// int i = 0;
-	// while (envp[i])
+	// if (argc > 1)
+	// 	printf("Invalid number of arguments for %s\n", argv[0]);
+	// shell = malloc(sizeof(t_shell) * 1);
+	// line = NULL;
+	// status = 1;
+	// // int i = 0;
+	// // while (envp[i])
+	// // {
+	// // 	printf("%s\n", envp[i]);
+	// // 	i++;
+	// // }
+	// init_global();
+	// ft_initiator_exc(envp);
+
+	// // Run command loop.
+	// while (status)
 	// {
-	// 	printf("%s\n", envp[i]);
-	// 	i++;
+	// 	line = readline(">");
+	// 	args = minishell_split_line(line); // !!!!!!!!!! Lexor/Parser Part !!!!!!!!!!!
+	// 	status = minishell_execute(args, shell); // !!!!!!!!!! Execution Part !!!!!!!!!!!
+	// 	free(line);
+	// 	free(args);
 	// }
-	init_global();
-	ft_initiator_exc(envp);
-
-	// Run command loop.
-	while (status)
-	{
-		line = readline(">");
-		args = minishell_split_line(line); // !!!!!!!!!! Lexor/Parser Part !!!!!!!!!!!
-		status = minishell_execute(args, shell); // !!!!!!!!!! Execution Part !!!!!!!!!!!
-		free(line);
-		free(args);
-	}
-	free_global();
+	// free_global();
 	// free(args);
 	return (0);
 }

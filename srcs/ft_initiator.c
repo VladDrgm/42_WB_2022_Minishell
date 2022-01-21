@@ -44,7 +44,7 @@ char	**minishell_split_line(char *line)
 
 /*Functions to keep*/
 
-t_builtin_content *ft_init_builtin_content(char *cmd, int (*minishell_fct)(char **args, t_shell *shell), int i)
+t_builtin_content *ft_init_builtin_content(char *cmd, int (*minishell_fct)(char **args, int len), int i)
 {
 	t_builtin_content	*content;
 
