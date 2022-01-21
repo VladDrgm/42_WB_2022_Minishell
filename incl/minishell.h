@@ -51,10 +51,17 @@ typedef struct s_global
 {
 	int		signals;
 	t_list	**env;
+	t_list	**builtins;
 	int		last_return; //for $?
 }				t_global;
 
-t_global g_access;
+typedef struct s_env_var
+{
+	char	*name;
+	char	*value;
+}				t_env_var;
+
+extern t_global g_access;
 
 void	free_global(void);
 void 	init_global(void);

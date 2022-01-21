@@ -1,12 +1,14 @@
 #include "../incl/minishell.h"
 #include "../incl/minishe11.h"
 
+t_global g_access;
+
 int	main(int argc, char **argv, char**envp)
 {
 
 
 // ************************************Part 1******************************
- 	char	*args;
+ 	/*char	*args;
 	t_list	*lexer2parser_list;
 	t_list	*parser2executor_list;
 	int		temp;
@@ -14,6 +16,7 @@ int	main(int argc, char **argv, char**envp)
 	if (argc > 1)
 		printf("Invalid number of arguments for %s with %s\n", argv[0], envp[0]);
 	init_global();
+	ft_initiator_exc(envp);
 	args = NULL;
 	// args++;
 	temp = 0;
@@ -32,8 +35,10 @@ int	main(int argc, char **argv, char**envp)
 			//executor(shell);
 		}
 	}
+	free_global();
+	*/
 // ************************************Part 2******************************
-/*	t_shell *shell;
+	t_shell *shell;
 	char	*line;
 	char	**args;
 	int		status;
@@ -49,7 +54,9 @@ int	main(int argc, char **argv, char**envp)
 	// 	printf("%s\n", envp[i]);
 	// 	i++;
 	// }
-	ft_initiator_exc(&(shell), envp);
+	init_global();
+	ft_initiator_exc(envp);
+
 	// Run command loop.
 	while (status)
 	{
@@ -59,6 +66,7 @@ int	main(int argc, char **argv, char**envp)
 		free(line);
 		free(args);
 	}
+	free_global();
 	// free(args);
-	return (0);*/
+	return (0);
 }
