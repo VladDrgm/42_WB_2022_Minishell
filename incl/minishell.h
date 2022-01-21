@@ -47,6 +47,17 @@ typedef struct s_command
 	char	*path;
 }			t_command;
 
+typedef struct s_global
+{
+	int		signals;
+	t_list	**env;
+	int		last_return; //for $?
+}				t_global;
+
+t_global g_access;
+
+void	free_global(void);
+void 	init_global(void);
 void	ft_signal_setup(void);
 int		lexor(t_list **list, char *args);
 int		parser(t_list **lex_list, t_list **executor_list);
