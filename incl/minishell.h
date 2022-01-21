@@ -55,6 +55,12 @@ typedef struct s_global
 	int		last_return; //for $?
 }				t_global;
 
+typedef struct s_env_var
+{
+	char	*name;
+	char	*value;
+}				t_env_var;
+
 t_global g_access;
 
 void	free_global(void);
