@@ -7,11 +7,13 @@ int	minishell_execute(char **args, t_shell *shell)
 
 	if (args[0] == NULL) // An empty command was entered.
 		return (1);
-	ptr = shell->builtins;
+	ptr = *g_access.builtins;
 	while (ptr)
 	{
-		if (ft_strncmp(args[0], ((t_builtin_content *)ptr->content)->cmd, ft_strlen(args[0])) == 0)
+		if (ft_strncmp(args[0],((t_builtin_content*)(ptr->content))->cmd, ft_strlen(args[0])) == 0)
+		{
 			return(((t_builtin_content *)ptr->content)->minishell_fct(args, shell));
+		}
 		ptr = ptr->next;
 	}
 	return (minishell_launch(args));
