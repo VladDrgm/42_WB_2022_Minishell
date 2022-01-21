@@ -51,6 +51,7 @@ typedef struct s_global
 {
 	int		signals;
 	t_list	**env;
+	t_list	**builtins;
 	int		last_return; //for $?
 }				t_global;
 
