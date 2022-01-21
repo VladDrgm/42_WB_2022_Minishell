@@ -8,7 +8,8 @@
  */
 int	minishell_env(char **args, int len)
 {
-	len = 0; //TO ELIMINATE ERRORS
+	len++; //TO ELIMINATE ERRORS
+	len--;
 	t_list *ptr;
 
 	if (ft_strncmp(args[0], "env", 3))
@@ -38,11 +39,12 @@ int	minishell_env(char **args, int len)
  */
 int	minishell_exit(char **args, int len)
 {
-	len = 0; //TO ELIMINATE ERRORS
+	len++; //TO ELIMINATE ERRORS
+	len--; //TO ELIMINATE ERRORS
 	if (ft_strncmp(args[0], "exit", 4))
 		return (0);
 	//WE NEED TO LINK THIS WITH FREE
-	//DISCUSS THIS AS A TEAM -> MUST BE CONNECTED \
+	//DISCUSS THIS AS A TEAM -> MUST BE CONNECTED
 	// TO SIGNALS SO WE ALL HAVE TO SEE HOW TO FREE MEMORY
 	return (0);
 }
@@ -54,7 +56,8 @@ int	minishell_exit(char **args, int len)
  */
 int minishell_pwd(char **args, int len)
 {
-	len = 0; //TO ELIMINATE ERRORS
+	len++; //TO ELIMINATE ERRORS
+	len--; //TO ELIMINATE ERRORS
 	char *buf;
 	int i = 1;
 	if (ft_strncmp(args[0], "pwd", 3))
@@ -105,13 +108,14 @@ int minishell_pwd(char **args, int len)
 int minishell_export(char **args, int len)
 {
 	t_env_var *env_var;
-	len = 0; //TO ELIMINATE ERRORS
+	len++; //TO ELIMINATE ERRORS
+	len--; //TO ELIMINATE ERRORS
 	if (args[1] == NULL)
 	{
 		write(1, "minishell: Too few arguments for export command\n", 49);
 		return (1);
 	}
-	
+
 	int j = 0;
 	while (args[1][j] != '=' && args[1][j] != '\0')
 		j++;
@@ -133,7 +137,8 @@ int minishell_export(char **args, int len)
  */
 int minishell_unset(char **args, int len)
 {
-	len = 0; //TO ELIMINATE ERRORS
+	len++; //TO ELIMINATE ERRORS
+	len--; //TO ELIMINATE ERRORS
 	t_list *ptr;
 	t_list *temp;
 	temp = NULL;

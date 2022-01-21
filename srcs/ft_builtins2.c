@@ -34,7 +34,8 @@ void ft_update_env(char *to_search, char *to_replace)
  */
 int	minishell_cd(char **args, int len)
 {
-	len = 0; //TO ELIMINATE ERRORS
+	len++; //TO ELIMINATE ERRORS
+	len--; //TO ELIMINATE ERRORS
 	if (args[1] == NULL)
 		write(2, "minishell: expected argument to \"cd\"\n", 40);
 	else
@@ -64,7 +65,7 @@ int	minishell_echo(char **args, int len)
 	flag = 0;
 	if (args[1] == NULL)
 		write(2, "minishell: expected argument to \"echo\"\n", 40);
-	else 
+	else
 	{
 		i = 1;
 		while (args[i])
