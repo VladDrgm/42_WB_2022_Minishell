@@ -14,6 +14,18 @@ void echo_print(char **str, int starter, int size)
 	}
 }
 
+void	*delone(void *content)
+{
+	t_env_var *env_var;
+
+	env_var = (t_env_var *) content;
+
+	free(env_var->name);
+	free(env_var->value);
+	free(content);
+	return NULL;
+}
+
 int echo_flag(char *str)
 {
 	int j;

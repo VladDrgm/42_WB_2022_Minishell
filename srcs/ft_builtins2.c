@@ -9,17 +9,18 @@
 	@todo check if it really behives as intended
  */
 
-void ft_update_env(t_shell *shell, char *to_search, char *to_replace)
+void ft_update_env(char *to_search, char *to_replace)
 {
 	t_list *ptr;
-	ptr = shell->env;
+	ptr = *g_access.env;
+
 	while(ptr!= NULL)
 	{
-		if (!ft_strncmp(ptr->content, to_search, ft_strlen(to_search)))
+		if (!ft_strncmp(((t_env_var*)(ptr->content))->name, to_search, ft_strlen(to_search)))
 		{
-			free(ptr->content);
-			ptr->content = NULL;
-			ptr->content = ft_strdup(to_replace);
+			free(((t_env_var*)(ptr->content))->value);
+			((t_env_var*)(ptr->content))->value = NULL;
+			((t_env_var*)(ptr->content))->value = ft_strdup(to_replace);
 		}
 		ptr = ptr->next;
 	}
@@ -31,20 +32,19 @@ void ft_update_env(t_shell *shell, char *to_search, char *to_replace)
 	 @return Always returns 1, to continue executing.
 	 @todo update PWD and OLDPWD;
  */
-int	minishell_cd(char **args, t_shell *shell)
+int	minishell_cd(char **args, int len)
 {
+	len = 0; //TO ELIMINATE ERRORS
 	if (args[1] == NULL)
 		write(2, "minishell: expected argument to \"cd\"\n", 40);
 	else
 	{
 		if (!ft_strncmp(args[1], "~", 1))
 			args[1] = getenv("HOME");
-		// ft_update_env(shell, "OLDPWD=", ft_strjoin("OLDPWD=", getenv("PWD")));
 		if ((chdir(args[1]) != 0))
 			perror("minishell");
-		// ft_update_env(shell, "PWD=", ft_strjoin("PWD=", args[1]));
 	}
-	ft_update_env(shell, "_=", "_=cd");
+	ft_update_env("_=", "cd");
 	return (1);
 }
 
@@ -56,40 +56,19 @@ int	minishell_cd(char **args, t_shell *shell)
 	 @return Always returns 1, to continue execution.
 	 @todo edge case fetch -nnnnn -nnnn test / edge case echo $_ -> $_ must be implemented alongside history; implemented -nnnnnnnn and also implemented -nnnnn -nnnn V.
  */
-int	minishell_echo(char **args, t_shell *shell)
+int	minishell_echo(char **args, int len)
 {
 	size_t j;
 	int i;
 	int flag;
-
 	flag = 0;
-	int k = 0; // NUMBER OF ARGS
-	while (args[k])
-	 k++;
-	// write(1, args[1], ft_strlen(args[1]));
-
 	if (args[1] == NULL)
 		write(2, "minishell: expected argument to \"echo\"\n", 40);
 	else 
 	{
 		i = 1;
-		// go through each arg (starting from 1) and check if it's "-n" or "-nnnnnnn"
 		while (args[i])
 		{
-			// if (i == 1)
-			// 	flag = echo_flag(args[i]);
-			// if (flag == 0) //print normally
-			// {
-			// 	echo_print(args, i, k);
-			// 	write(1, "\n", 1);
-			// 	break;
-			// }
-			// else //print without \n
-			// {
-			// 	echo_print(args, i, k);
-			// 	break;
-			// }
-			// -nnnnn -nnnnn
 			if ((args[i][0] == '-') && (ft_strlen(args[i]) >= 2)) //check first if we have the mandatory '-' sign
 			{
 				if (args[i][1] == 'n') //check if the next char is 'n'
@@ -109,12 +88,12 @@ int	minishell_echo(char **args, t_shell *shell)
 					{
 						if (flag == 0) //print normally
 						{
-							echo_print(args, i, k);
+							echo_print(args, i, len);
 							write(1, "\n", 1);
 						}
 						else //print without \n
 						{
-							echo_print(args, i, k);
+							echo_print(args, i, len);
 						}
 						break;
 					}
@@ -123,12 +102,12 @@ int	minishell_echo(char **args, t_shell *shell)
 				{
 					if (flag == 0)
 					{
-						echo_print(args, i, k);
+						echo_print(args, i, len);
 						write(1, "\n", 1);
 					}
 					else
 					{
-						echo_print(args, i, k);
+						echo_print(args, i, len);
 					}
 					break;
 				}
@@ -137,18 +116,18 @@ int	minishell_echo(char **args, t_shell *shell)
 			{
 				if (flag == 0)
 				{
-					echo_print(args, i, k);
+					echo_print(args, i, len);
 					write(1, "\n", 1);
 				}
 				else
 				{
-					echo_print(args, i, k);
+					echo_print(args, i, len);
 				}
 				break;
 			}
 
 		}
 	}
-	ft_update_env(shell, "_=", "_=echo");
+	ft_update_env("_=", "echo");
 	return (1);
 }

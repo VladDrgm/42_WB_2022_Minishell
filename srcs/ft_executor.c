@@ -1,10 +1,14 @@
 #include "../incl/minishell.h"
 #include "../incl/minishe11.h"
 
-int	minishell_execute(char **args, t_shell *shell)
+int	minishell_execute(void)
 {
 	t_list	*ptr;
+	char	**args;
+	int		len;
 
+	args = ((t_command *)(*(g_access.parser2exec))->content)->comm_table;
+	len = ((t_command *)(*(g_access.parser2exec))->content)->comm_len;
 	if (args[0] == NULL) // An empty command was entered.
 		return (1);
 	ptr = *g_access.builtins;
@@ -12,7 +16,7 @@ int	minishell_execute(char **args, t_shell *shell)
 	{
 		if (ft_strncmp(args[0],((t_builtin_content*)(ptr->content))->cmd, ft_strlen(args[0])) == 0)
 		{
-			return(((t_builtin_content *)ptr->content)->minishell_fct(args, shell));
+			return(((t_builtin_content *)ptr->content)->minishell_fct(args, len));
 		}
 		ptr = ptr->next;
 	}
