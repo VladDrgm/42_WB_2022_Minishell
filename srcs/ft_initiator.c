@@ -1,5 +1,5 @@
 #include "../incl/minishe11.h"
-
+#include "../incl/minishell.h"
 
 /** !!!!!!!!!! Remove as soon as replacement with Lexer/Parser return value possible !!!!!!!!!!! **/
 char	**minishell_split_line(char *line)
@@ -55,15 +55,15 @@ t_builtin_content *ft_init_builtin_content(char *cmd, int (*minishell_fct)(char 
 	return(content);
 }
 
-void ft_init_builtins(t_list **builtins)
+void ft_init_builtins(void)
 {
-	ft_lstadd_back(builtins, ft_lstnew(ft_init_builtin_content("echo", minishell_echo, 0)));
-	ft_lstadd_back(builtins, ft_lstnew(ft_init_builtin_content("cd", minishell_cd, 1)));
-	ft_lstadd_back(builtins, ft_lstnew(ft_init_builtin_content("pwd", minishell_pwd, 2)));
-	ft_lstadd_back(builtins, ft_lstnew(ft_init_builtin_content("export", minishell_export, 3)));
-	ft_lstadd_back(builtins, ft_lstnew(ft_init_builtin_content("unset", minishell_unset, 4)));
-	ft_lstadd_back(builtins, ft_lstnew(ft_init_builtin_content("env", minishell_env, 5)));
-	ft_lstadd_back(builtins, ft_lstnew(ft_init_builtin_content("exit", minishell_exit, 6)));
+	ft_lstadd_back(g_access.builtins, ft_lstnew(ft_init_builtin_content("echo", minishell_echo, 0)));
+	ft_lstadd_back(g_access.builtins, ft_lstnew(ft_init_builtin_content("cd", minishell_cd, 1)));
+	ft_lstadd_back(g_access.builtins, ft_lstnew(ft_init_builtin_content("pwd", minishell_pwd, 2)));
+	ft_lstadd_back(g_access.builtins, ft_lstnew(ft_init_builtin_content("export", minishell_export, 3)));
+	ft_lstadd_back(g_access.builtins, ft_lstnew(ft_init_builtin_content("unset", minishell_unset, 4)));
+	ft_lstadd_back(g_access.builtins, ft_lstnew(ft_init_builtin_content("env", minishell_env, 5)));
+	ft_lstadd_back(g_access.builtins, ft_lstnew(ft_init_builtin_content("exit", minishell_exit, 6)));
 }
 
 /*
@@ -73,21 +73,19 @@ void ft_init_builtins(t_list **builtins)
 	COMMENTED LINES INSIDE THE FUNCTION ARE FOR TESTING PURPOSES;
 */
 
-void ft_create_envlist(t_list **env, char **envp)
+void ft_create_envlist(char **envp)
 {
 	int i;
 	i = 0;
 	while (envp[i])
 	{
-		ft_lstadd_back(env, ft_lstnew(ft_strdup(envp[i])));
+		ft_lstadd_back(g_access.env, ft_lstnew(ft_strdup(envp[i])));
 		i++;
 	}
 }
 
-void ft_initiator_exc(t_shell **shell, char **envp)
+void ft_initiator_exc(char **envp)
 {
-	(*shell)->env = NULL;
-	(*shell)->builtins = NULL;
-	ft_create_envlist(&((*shell)->env), envp);
-	ft_init_builtins(&((*shell)->builtins));
+	ft_create_envlist(envp);
+	ft_init_builtins();
 }

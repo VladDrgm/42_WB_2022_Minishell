@@ -17,8 +17,8 @@ typedef struct s_builtin_content
 }	t_builtin_content;
 
 void	executor(t_shell *shell);
-void	ft_initiator_exc(t_shell **shell, char **envp);
-void	ft_init_builtins(t_list **builtins);
+void	ft_initiator_exc(char **envp);
+void	ft_init_builtins(void);
 t_builtin_content	*ft_init_builtin_content(char *cmd, int (*minishell_fct)(char **args, t_shell *shell), int i);
 char	**minishell_split_line(char *line);
 int		minishell_cd(char **args, t_shell *shell);

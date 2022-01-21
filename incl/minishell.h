@@ -61,7 +61,7 @@ typedef struct s_env_var
 	char	*value;
 }				t_env_var;
 
-t_global g_access;
+extern t_global g_access;
 
 void	free_global(void);
 void 	init_global(void);
