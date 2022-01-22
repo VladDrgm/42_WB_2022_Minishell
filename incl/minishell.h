@@ -92,7 +92,7 @@ int		minishell_execute(void);
 int		minishell_launch(char **args);
 // BUILTIN UTILS
 void	ft_update_env(char *to_search, char *to_replace);
-void	echo_print(char **str, int starter, int size);
+void	echo_print(char **str, int starter, int size, int flag);
 int		echo_flag(char *str);
 char	*env_value_finder(char *name);
 void	*delone(void *content);
