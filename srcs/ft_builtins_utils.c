@@ -52,3 +52,18 @@ int echo_flag(char *str)
 	else
 		return (0);
 }
+
+char *env_value_finder(char *name) //FINDS THE EQUIVALENT VALUE OF A ENV VAR
+{
+	t_list *ptr = ((t_list *)(*g_access.env));
+
+	while (ptr != NULL)
+	{
+		if (!ft_strncmp(((t_env_var *)(ptr->content))->name, name, ft_strlen(name)))
+		{
+			return (((t_env_var *)(ptr->content))->value);
+		}
+		ptr = ptr->next;
+	}
+	return NULL;
+}
