@@ -1,6 +1,6 @@
 #include "../incl/minishell.h"
 
-void echo_print(char **str, int starter, int size)
+void echo_print(char **str, int starter, int size, int flag)
 {
 	int i;
 
@@ -11,6 +11,10 @@ void echo_print(char **str, int starter, int size)
 		if (i != size - 1)
 			write(1, " ", 1);
 		i++;
+	}
+	if (flag == 0)
+	{
+		write(1, "\n", 1);
 	}
 }
 
