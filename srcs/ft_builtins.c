@@ -116,7 +116,6 @@ int minishell_export(char **args, int len)
 		write(1, "minishell: Too few arguments for export command\n", 49);
 		return (1);
 	}
-	printf("args[1] = %s\n", args[1]);
 	int j = 0;
 	while (args[1][j] != '=' && args[1][j] != '\0')
 		j++;
