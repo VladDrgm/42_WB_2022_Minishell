@@ -34,18 +34,49 @@ void ft_update_env(char *to_search, char *to_replace)
  */
 int	minishell_cd(char **args, int len)
 {
+	if (args[1] == NULL)
+	{
+		write(2, "minishell: expected argument to \"cd\"\n", 40);
+		return (1);
+	}
 	len++; //TO ELIMINATE ERRORS
 	len--; //TO ELIMINATE ERRORS
-	if (args[1] == NULL)
-		write(2, "minishell: expected argument to \"cd\"\n", 40);
-	else
+	int flag;
+	char *argv[3];
+	//PREPARING TO UPDATE PWD / OLDPWD <------------------------
+	argv[1] = ft_strjoin("OLDPWD=", env_value_finder("PWD")); //required IN CASE OLDPWD DOES NOT EXIST IN INITIAL ENV
+	flag = 0; //FLAG FOR UPDATING / CREATING OLDPWD
+	t_list *ptr = ((t_list *)(*g_access.env));
+
+	// printf("value1 = %s\n", env_value_finder("PWD"));
+	// printf("blablablalbaname = %s\n", ((t_env_var *)(ptr->content))->name);
+	while (ptr != NULL)
 	{
-		if (!ft_strncmp(args[1], "~", 1))
-			args[1] = getenv("HOME");
-		if ((chdir(args[1]) != 0))
-			perror("minishell");
+		if (ft_strncmp(((t_env_var *)(ptr->content))->name, "OLDPWD", 6) == 0) //IF OLDPWD EXISTS, WE UPDATE IT <------
+		{
+			// printf("value = %s\n", env_value_finder("PWD"));
+			ft_update_env("OLDPWD=", env_value_finder("PWD"));
+			flag = 1;
+			break;
+		}
+		ptr = ptr->next;
 	}
+	if (flag == 0) //IF OLDPWD DOES NOT EXIST, WE CREATE IT
+		minishell_export(argv, len);
+	if (!ft_strncmp(args[1], "~", 1))
+		args[1] = getenv("HOME");
+	if ((chdir(args[1]) != 0))
+		perror("minishell");
+	//WE UPDATE PWD BELOW
+	char *buf;
+	int i = 0;
+	buf = getcwd(NULL, 0);
+	while(getcwd(buf, i) == NULL)
+		i++;
+	ft_update_env("PWD=", buf);
 	ft_update_env("_=", "cd");
+	//FREE ALLOCATED MEMORY VIA ft_strjoin
+	free(argv[1]);
 	return (1);
 }
 
