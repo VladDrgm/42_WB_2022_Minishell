@@ -1,10 +1,10 @@
 #include "../incl/minishell.h"
 
-void echo_print(char **str, int starter, int size)
+void echo_print(char **str, int starter, int size, int flag)
 {
 	int i;
 
-	i = starter;
+	i = starter; // i becomes the first index of the argument to be printed
 	while (i < size)
 	{
 		write(1, str[i], ft_strlen(str[i]));
@@ -12,6 +12,8 @@ void echo_print(char **str, int starter, int size)
 			write(1, " ", 1);
 		i++;
 	}
+	if (flag == 0)
+		write(1, "\n", 1);
 }
 
 void	*delone(void *content)

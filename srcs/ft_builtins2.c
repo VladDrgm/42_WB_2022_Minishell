@@ -90,75 +90,26 @@ int	minishell_cd(char **args, int len)
  */
 int	minishell_echo(char **args, int len)
 {
-	size_t j;
 	int i;
 	int flag;
+	int temp;
+
 	flag = 0;
 	if (args[1] == NULL)
 		write(2, "minishell: expected argument to \"echo\"\n", 40);
 	else
 	{
 		i = 1;
-		while (args[i])
+		while (args[i]) //go through all arguments
 		{
-			if ((args[i][0] == '-') && (ft_strlen(args[i]) >= 2)) //check first if we have the mandatory '-' sign
-			{
-				if (args[i][1] == 'n') //check if the next char is 'n'
-				{
-					j = 1;
-					while (j < ft_strlen(args[i]) && args[i][j] == 'n') // keep going to pass through all n's
-					{
-						j++;
-					}
-					if (j == ft_strlen(args[i])) // check if all elements were n OR if we have some other char different fron n
-					{
-						i++;
-						flag = 1; //based on this flag, we either print with a \n or not
-						continue;
-					}
-					else
-					{
-						if (flag == 0) //print normally
-						{
-							echo_print(args, i, len);
-							write(1, "\n", 1);
-						}
-						else //print without \n
-						{
-							echo_print(args, i, len);
-						}
-						break;
-					}
-				}
-				else
-				{
-					if (flag == 0)
-					{
-						echo_print(args, i, len);
-						write(1, "\n", 1);
-					}
-					else
-					{
-						echo_print(args, i, len);
-					}
-					break;
-				}
-			}
-			else
-			{
-				if (flag == 0)
-				{
-					echo_print(args, i, len);
-					write(1, "\n", 1);
-				}
-				else
-				{
-					echo_print(args, i, len);
-				}
+			temp = echo_flag(args[i]); //checks for -n / -nnnnnnn and returns 1 if so or 0 if the format is not -n / -nnnnn
+			flag += temp; //flag keeps growing by temp
+			if (flag == 0 || temp == 0)
 				break;
-			}
-
+			else
+				i++;
 		}
+		echo_print(args, i, len, flag); //based on the flag, we either print with or without a \n
 	}
 	ft_update_env("_=", "echo");
 	return (1);
