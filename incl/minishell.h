@@ -92,10 +92,15 @@ int		minishell_execute(void);
 int		minishell_launch(char **args);
 // BUILTIN UTILS
 void	ft_update_env(char *to_search, char *to_replace);
-void	echo_print(char **str, int starter, int size, int flag);
-int		echo_flag(char *str);
 char	*env_value_finder(char *name);
 void	*delone(void *content);
+// ECHO UTILS
+void	echo_print(char **str, int starter, int size);
+int		echo_flag(char *str);
+// CD UTILS
+void	ft_update_create_OLDPWD(char **argv, t_list *ptr, int len);
+void	ft_update_PWD(void);
+char	*ft_handle_cd(char *address);
 
 
 #endif
