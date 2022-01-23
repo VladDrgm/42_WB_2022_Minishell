@@ -23,6 +23,8 @@ int	main(int argc, char **argv, char**envp)
 		g_access.read_line2lexor = readline(">");
 		if (g_access.read_line2lexor == NULL) //dealing with EOF (Ctrl + D)
 			break;
+		if (*(g_access.read_line2lexor) == 0) //dealing with Enter (empty input)
+			continue;
 		add_history(g_access.read_line2lexor);
 		//temp = lexor(&lexer2parser_list, args);
 		temp = lexor();
