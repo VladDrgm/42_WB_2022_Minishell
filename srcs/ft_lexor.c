@@ -35,6 +35,22 @@ void	print_list(t_list *el)
 }
 
 /*
+**	adds string to linked list
+*/
+
+void	add_string(t_list **list, char	*str)
+{
+	t_word	*word;
+	t_list	*new_el;
+
+	word = (t_word *)malloc(sizeof(t_word));
+	word->type = FT_STRING;
+	word->address = (void *)str;
+	new_el = ft_lstnew((void *)word);
+	ft_lstadd_back(list, new_el);
+}
+
+/*
 **	adds substring to linked list
 */
 
