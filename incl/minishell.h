@@ -80,7 +80,7 @@ extern t_global g_access;
 void	free_global(void);
 void 	init_global(void);
 void	ft_signal_setup(void);
-int		lexor(t_list **list, char *args);
+int		lexor(void);
 int		parser(t_list **lex_list, t_list **executor_list);
 void	ft_initiator_exc(char **envp);
 void	ft_init_builtins(void);
