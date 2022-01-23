@@ -10,6 +10,8 @@ void free_global(void)
 		free(g_access.lexor2parser);
 	if (g_access.parser2exec)
 		free(g_access.parser2exec);
+	if (g_access.read_line2lexor)
+		free(g_access.read_line2lexor);
 
 }
 
@@ -21,6 +23,7 @@ void init_global(void)
 	g_access.last_return[1] = '\0';
     g_access.env = (t_list **)malloc(sizeof(t_list *));
     g_access.builtins = (t_list **)malloc(sizeof(t_list *));
-    g_access.parser2exec = (t_list **)malloc(sizeof(t_list *));
-    g_access.lexor2parser = (t_list **)malloc(sizeof(t_list *));
+	g_access.parser2exec = NULL;	//allocated in parser
+    g_access.lexor2parser = NULL;	//allocated in lexor
+	g_access.read_line2lexor = NULL; //allocated in main by readline
 }

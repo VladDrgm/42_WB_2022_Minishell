@@ -65,6 +65,7 @@ typedef struct s_global
 	t_list	**builtins;
 	t_list	**parser2exec;
 	t_list	**lexor2parser;
+	char	*read_line2lexor; //read line output
 	char	*last_return; //for $?
 }				t_global;
 
