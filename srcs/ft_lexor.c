@@ -93,7 +93,28 @@ void	add_specialchar(t_list **list, char ch)
 **	handels sigle quotes
 */
 
-int	single_q_handler(t_list **list, char *str)
+int	q_handler(char *str, char *current_str, char q_char)
+{
+	int	i;
+	char *temp;
+
+	i = 0;
+	while (str[i] != '\0')
+	{
+		if (str[i] == q_char)
+		{
+			temp = ft_substr(str, 0, i);
+			ft_strjoin(current_str, temp);
+			free(temp);
+			temp = NULL;
+			return (i);
+		}
+		i++;
+	}
+	return (-1);
+}
+
+/*int	single_q_handler(t_list **list, char *str)
 {
 	int	i;
 
@@ -109,13 +130,13 @@ int	single_q_handler(t_list **list, char *str)
 		i++;
 	}
 	return (-1);
-}
+}*/
 
 /*
 **	handels double quotes
 */
 
-int	double_q_handler(t_list **list, char *str)
+/*int	double_q_handler(t_list **list, char *str)
 {
 	int	i;
 	int	beginning;
@@ -146,7 +167,7 @@ int	double_q_handler(t_list **list, char *str)
 		i++;
 	}
 	return (-1);
-}
+}*/
 
 /*
 **	clean up function
