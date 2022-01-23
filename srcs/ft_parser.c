@@ -152,7 +152,7 @@ void error_fun(t_list **list, t_list **lexor_list)
 	*lexor_list = NULL;
 }
 
-int	parser(t_list **lex_list, t_list **executor_list)
+int	parser(void)
 {
 	int		index_counter;
 	t_list	*lex_element;
@@ -164,7 +164,7 @@ int	parser(t_list **lex_list, t_list **executor_list)
 	t_command	*cmd;
 
 	index_counter = 0;
-	lex_element = *lex_list;
+	lex_element = *g_access.lexor2parser;
 	cmd = NULL;
 	first_redirect = 0;
 	while (1)
@@ -221,7 +221,7 @@ int	parser(t_list **lex_list, t_list **executor_list)
 				if (*((char *)((t_word *)(lex_element->content))->address) == FT_PIPE)
 				{
 					if (cmd_len == 0)
-						error_fun(executor_list, lex_list);
+						error_fun(g_access.parser2exec, g_access.lexor2parser);
 					break ;
 				}
 			}
@@ -243,17 +243,17 @@ int	parser(t_list **lex_list, t_list **executor_list)
 		cmd->comm_len = cmd_len;
 		//ft_comment_check(&(cmd->comm_table), &cmd->comm_len);
 		executor_element = ft_lstnew((void * ) cmd);
-		ft_lstadd_back(executor_list, executor_element);
+		ft_lstadd_back(g_access.parser2exec, executor_element);
 		index_counter++;
 		if (lex_element == 0)
 			break;
 		else
 			lex_element = lex_element->next;
 	}
-	ft_free_lex_list(*lex_list);
-	*lex_list = NULL;
+	ft_free_lex_list(*g_access.lexor2parser);
+	*g_access.lexor2parser = NULL;
 	if (FT_PARSER_COMMENT)
-		print_list_parse(*executor_list);
+		print_list_parse(*g_access.parser2exec);
 	return (0);
 }
 

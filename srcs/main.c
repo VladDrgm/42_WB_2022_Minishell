@@ -7,9 +7,9 @@ int	main(int argc, char **argv, char**envp)
 
 
 // ************************************Part 1******************************
- 	char	*args;
-	t_list	*lexer2parser_list;
-	t_list	*parser2executor_list;
+ 	//char	*args;
+	//t_list	*lexer2parser_list;
+	//t_list	*parser2executor_list;
 	int		temp;
 
 
@@ -17,26 +17,32 @@ int	main(int argc, char **argv, char**envp)
 		printf("Invalid number of arguments for %s with %s\n", argv[0], envp[0]);
 	init_global();
 	ft_initiator_exc(envp);
-	args = NULL;
-	// args++;
 	temp = 0;
 	while (1)
 	{
-		args = readline(">");
-		add_history(args);
-		lexer2parser_list = NULL;
-		parser2executor_list = NULL;
-		temp = lexor(&lexer2parser_list, args);
+		g_access.read_line2lexor = readline(">");
+		if (g_access.read_line2lexor == NULL) //dealing with EOF (Ctrl + D)
+			break;
+		if (*(g_access.read_line2lexor) == 0) //dealing with Enter (empty input)
+			continue;
+		add_history(g_access.read_line2lexor);
+		//temp = lexor(&lexer2parser_list, args);
+		temp = lexor();
 		if (temp != -1)
 		{
-			temp = parser(&lexer2parser_list, &parser2executor_list);
+			//temp = parser(&lexer2parser_list, &parser2executor_list);
+			temp = parser();
 			if (temp != 0)
 				break ;
-			g_access.parser2exec = &parser2executor_list;
+			//g_access.parser2exec = &parser2executor_list;
 			temp = minishell_execute();
+			free(*(g_access.parser2exec)); //This should be handled by executor at some point
+			*(g_access.parser2exec) = NULL;
 			if (temp == 0)
 				break;
 		}
+		else 
+			break;
 	}
 	// free_global();
 // ************************************Part 2******************************

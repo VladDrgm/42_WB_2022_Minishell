@@ -291,14 +291,16 @@ void ft_env_check(char **args)
 	}
 }
 
-int	lexor(t_list **list, char *args)
+int	lexor(void)
 {
 	int		i;
 	int		begining;
 	char	last;
 	int		flag;
+	char	*args;
 
 
+	args = g_access.read_line2lexor;
 	i = 0;
 	begining = 0;
 	last = FT_SPACE;
@@ -309,8 +311,6 @@ int	lexor(t_list **list, char *args)
 	if (FT_LEXOR_COMMENT)
 		printf("\n************AFTER COMMENT CHECK********** \n%s\n and the length is %ld", args, ft_strlen(args));
 	ft_env_check(&args);
-	//env check
-	//command check
 	while (args[i] != '\0')
 	{
 		if (last == FT_SPACE && args[i] != FT_SPACE)
@@ -319,25 +319,25 @@ int	lexor(t_list **list, char *args)
 		}
 		else if (last != FT_SPACE && args[i] == FT_SPACE)
 		{
-			add_substring(list, i - begining, &(args[begining]));
+			add_substring(g_access.lexor2parser , i - begining, &(args[begining]));
 		}
 		if (args[i] == FT_PIPE || args[i] == FT_GREATER || \
 			args[i] == FT_LESSER)
 		{
-			add_substring(list, i - begining, &(args[begining]));
-			add_specialchar(list, args[i]);
+			add_substring(g_access.lexor2parser, i - begining, &(args[begining]));
+			add_specialchar(g_access.lexor2parser, args[i]);
 			begining = i + 1;
 		}
 		else if (args[i] == FT_DOLLAR_SIGN)
 		{
-			add_substring(list, i - begining, &(args[begining]));
+			add_substring(g_access.lexor2parser, i - begining, &(args[begining]));
 			begining = i;
 		}
 		if (args[i] == FT_SINGLE_QUOTE)
 		{
 			printf("i executed\n");
-			add_substring(list, i - begining, &(args[begining]));
-			flag = single_q_handler(list, &(args[i + 1]));
+			add_substring(g_access.lexor2parser, i - begining, &(args[begining]));
+			flag = single_q_handler(g_access.lexor2parser, &(args[i + 1]));
 			if (flag == -1)
 			{
 				errorfun();
@@ -349,8 +349,8 @@ int	lexor(t_list **list, char *args)
 		}
 		if (args[i] == FT_DOUBLE_QUOTE)
 		{
-			add_substring(list, i - begining, &(args[begining]));
-			flag = double_q_handler(list, &(args[i + 1]));
+			add_substring(g_access.lexor2parser, i - begining, &(args[begining]));
+			flag = double_q_handler(g_access.lexor2parser, &(args[i + 1]));
 			if (flag == -1)
 			{
 				errorfun();
@@ -364,15 +364,16 @@ int	lexor(t_list **list, char *args)
 		i++;
 	}
 	if(args[i - 1] != FT_SPACE && i > 0)
-		add_substring(list, i - begining, &(args[begining]));
+		add_substring(g_access.lexor2parser, i - begining, &(args[begining]));
 	if (FT_LEXOR_COMMENT)
 	{
 		printf("We are in lexor %s\n", args);
-		print_list(*list);
+		print_list(*g_access.lexor2parser);
 		printf("Flag is %d\n", flag);
 	}
 	if (flag == -1)
-		ft_free_list(*list);
+		ft_free_list(*g_access.lexor2parser);
 	free(args);
+	args = NULL; 
 	return flag;
 }

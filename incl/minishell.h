@@ -9,6 +9,9 @@
 # include <stdlib.h>
 # include <errno.h>
 # include <string.h>
+# include <sys/wait.h>
+
+
 # define FT_CHAR 1
 # define FT_STRING 2
 # define FT_TAB 9
@@ -30,7 +33,7 @@
 # define FT_TILDE 126		//futuristic stuff, i dont know
 # define FT_EXCL_MARK 33	//futuristic stuff, i dont know
 # define FT_UNDERSCORE 95
-# define FT_PARSER_COMMENT 1
+# define FT_PARSER_COMMENT 0
 # define FT_LEXOR_COMMENT 0
 
 typedef struct s_word
@@ -62,6 +65,7 @@ typedef struct s_global
 	t_list	**builtins;
 	t_list	**parser2exec;
 	t_list	**lexor2parser;
+	char	*read_line2lexor; //read line output
 	char	*last_return; //for $?
 }				t_global;
 
@@ -76,8 +80,8 @@ extern t_global g_access;
 void	free_global(void);
 void 	init_global(void);
 void	ft_signal_setup(void);
-int		lexor(t_list **list, char *args);
-int		parser(t_list **lex_list, t_list **executor_list);
+int		lexor(void);
+int		parser(void);
 void	ft_initiator_exc(char **envp);
 void	ft_init_builtins(void);
 t_builtin_content	*ft_init_builtin_content(char *cmd, int (*minishell_fct)(char **args, int len), int i);
