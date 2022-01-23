@@ -81,7 +81,7 @@ void	free_global(void);
 void 	init_global(void);
 void	ft_signal_setup(void);
 int		lexor(void);
-int		parser(t_list **lex_list, t_list **executor_list);
+int		parser(void);
 void	ft_initiator_exc(char **envp);
 void	ft_init_builtins(void);
 t_builtin_content	*ft_init_builtin_content(char *cmd, int (*minishell_fct)(char **args, int len), int i);
