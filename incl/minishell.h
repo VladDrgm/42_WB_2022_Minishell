@@ -9,6 +9,9 @@
 # include <stdlib.h>
 # include <errno.h>
 # include <string.h>
+# include <sys/wait.h>
+
+
 # define FT_CHAR 1
 # define FT_STRING 2
 # define FT_TAB 9
