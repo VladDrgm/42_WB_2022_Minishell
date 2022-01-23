@@ -33,8 +33,14 @@
 # define FT_TILDE 126		//futuristic stuff, i dont know
 # define FT_EXCL_MARK 33	//futuristic stuff, i dont know
 # define FT_UNDERSCORE 95
-# define FT_PARSER_COMMENT 0
-# define FT_LEXOR_COMMENT 0
+# define FT_PARSER_COMMENT 1
+# define FT_LEXOR_COMMENT 1
+
+# define FT_CMD_TYPE_ERROR -1
+# define FT_CMD_TYPE_SYSTEM 0
+# define FT_CMD_TYPE_BUILT_IN 1
+# define FT_CMD_TYPE_REDIRECT 2
+
 
 typedef struct s_word
 {
@@ -48,6 +54,7 @@ typedef struct s_command
 	int		comm_len;
 	int		index;
 	char	*path;
+	int		cmd_type;
 }			t_command;
 
 typedef struct s_builtin_content
