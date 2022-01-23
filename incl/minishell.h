@@ -33,7 +33,7 @@
 # define FT_TILDE 126		//futuristic stuff, i dont know
 # define FT_EXCL_MARK 33	//futuristic stuff, i dont know
 # define FT_UNDERSCORE 95
-# define FT_PARSER_COMMENT 1
+# define FT_PARSER_COMMENT 0
 # define FT_LEXOR_COMMENT 1
 
 # define FT_CMD_TYPE_ERROR -1
@@ -112,6 +112,70 @@ int		echo_flag(char *str);
 void	ft_update_create_OLDPWD(char **argv, t_list *ptr, int len);
 void	ft_update_PWD(void);
 char	*ft_handle_cd(char *address);
+
+// LEXOR UTILS
+char	*join2current_str(char* current_str, char* add_on);
+void	ft_free_list(t_list *head);
+void	print_element(void *input);
+void	print_list(t_list *el);
+void	add_string(t_list **list, char	*str);
+void	ft_free_list(t_list *head);
+
+void	add_specialchar(t_list **list, char ch);
+int		q_handler(char *str, char **current_str, char q_char);
+void	errorfun(void);
+void	ft_lex_string_reminder_handler(char **current_str, char *args, int begining, int i);
+int		ft_lex_double_quote_handler(char **current_str, char *args, int begining, int i);
+int		ft_lex_single_quote_handler(char **current_str, char *args, int begining, int i);
+void	ft_lex_operand_handler(char **current_str, char *args, int begining, int i);
+void	ft_lex_space_handler(char **current_str, char *args, int i, int begining);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #endif

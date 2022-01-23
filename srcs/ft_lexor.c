@@ -1,145 +1,10 @@
 #include "../incl/minishell.h"
 
-char *join2current_str(char* current_str, char* add_on)
-{
-	char *temp;
-
-	if (current_str)
-		temp = ft_strjoin(current_str, add_on);
-	else
-		temp = ft_strdup(add_on);
-	free(current_str);
-	current_str = NULL;
-	free(add_on);
-	add_on = NULL;
-	return (temp);
-}
-
-void	ft_free_list(t_list *head)
-{
-	t_list	*tmp;
-
-	while (head != NULL)
-	{
-		tmp = head;
-		head = head->next;
-		free(((t_word *)(tmp->content))->address);
-		free(tmp->content);
-		free(tmp);
-	}
-}
-
-void	print_element(void *input)
-{
-	t_word	*word;
-
-	word = (t_word *)input;
-	if (word->type == FT_STRING)
-		printf("string: %s\n", (char *)(word->address));
-	else if (word->type == FT_CHAR)
-		printf("char: %c\n", *((char *)(word->address)));
-}
-
 /*
-**	printslinked list
-*/
-
-void	print_list(t_list *el)
-{
-	ft_lstiter(el, print_element);
-}
-
-/*
-**	adds string to linked list
-*/
-
-void	add_string(t_list **list, char	*str)
-{
-	t_word	*word;
-	t_list	*new_el;
-
-	if (str == NULL)
-		return ;
-	word = (t_word *)malloc(sizeof(t_word));
-	word->type = FT_STRING;
-	word->address = (void *)ft_strdup(str);
-	new_el = ft_lstnew((void *)word);
-	ft_lstadd_back(list, new_el);
-}
-
-/*
-** adds special char to linked list
-*/
-
-void	add_specialchar(t_list **list, char ch)
-{
-	char	*cp;
-	t_word	*word;
-	t_list	*new_el;
-
-	cp = (char *)malloc(sizeof(char));
-	*cp = ch;
-	word = (t_word *)malloc(sizeof(t_word));
-	word->type = FT_CHAR;
-	word->address = (void *)cp;
-	new_el = ft_lstnew((void *)word);
-	ft_lstadd_back(list, new_el);
-}
-
-/*
-**	handels sigle quotes
-*/
-
-int	q_handler(char *str, char **current_str, char q_char)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] != '\0')
-	{
-		if (str[i] == q_char)
-		{
-			if (FT_LEXOR_COMMENT)
-				printf("at 6-> begin: %d, i:%d, args: %s\n", 0, i , str);
-			*current_str = join2current_str(*current_str, ft_substr(str, 0, i));
-			return (i);
-		}
-		i++;
-	}
-	return (-1);
-}
-
-/*
-**	clean up function
-*/
-
-void	errorfun(void)
-{
-	//to be implemented
-	;
-}
-
-/*
-**	Implemnted
-**	''
-**	""
-**	#
-**	|
-**	[SPACE]
-**	-
-**	<
-**	>
-**	<<
-**	>>
-**	Every
-*/
-
-/*
-**	element beforehand
-**	if double quoute, single quote,
-**	if space == thats a comment
-**	if redirect
-**	if pipe
+**	@brief Function used for comment check from standard input
+**	@param char **args. If args containes # everything afterwards is being removed
+**	@return No Return Value.
+**	@todo /
 */
 
 void ft_comment_check(char **args)
@@ -296,67 +161,35 @@ int	lexor(void)
 			begining = i;
 		}
 		else if (last != FT_SPACE && args[i] == FT_SPACE)
-		{
-			if (FT_LEXOR_COMMENT)
-				printf("at 1-> begin: %d, i:%d, args: %s\n", begining, i , args);
-			current_str = join2current_str(current_str, ft_substr(args, begining, i - begining));
-			add_string(g_access.lexor2parser, current_str);
-			free(current_str);
-			current_str = NULL;
-		}
+			ft_lex_space_handler(&current_str, args, i, begining);
 		if (args[i] == FT_PIPE || args[i] == FT_GREATER || \
 			args[i] == FT_LESSER)
 		{
-			if (FT_LEXOR_COMMENT)
-				printf("at 2-> begin: %d, i:%d, args: %s\n", begining, i , args);
-			current_str = join2current_str(current_str, ft_substr(args, begining, i - begining));
-			add_string(g_access.lexor2parser, current_str);
-			free(current_str);
-			current_str = NULL;
-			add_specialchar(g_access.lexor2parser, args[i]);
+			ft_lex_operand_handler(&current_str, args, begining, i);
 			begining = i + 1;
 		}
 		if (args[i] == FT_SINGLE_QUOTE)
 		{
-			if (FT_LEXOR_COMMENT)
-				printf("at 3-> begin: %d, i:%d, args: %s\n", begining, i , args);
-			current_str = join2current_str(current_str, ft_substr(args, begining, i - begining));
-			flag = q_handler(&(args[i + 1]), &current_str, FT_SINGLE_QUOTE);
+			flag = ft_lex_single_quote_handler(&current_str, args, begining, i);
 			if (flag == -1)
-			{
-				errorfun();
-				printf("Unfinsihed single quote\n");
 				break;
-			}
 			i = i + flag + 1;
 			begining = i + 1;
 		}
 		if (args[i] == FT_DOUBLE_QUOTE)
 		{
-			if (FT_LEXOR_COMMENT)
-				printf("at 4-> begin: %d, i:%d, args: %s\n", begining, i , args);
-			current_str = join2current_str(current_str, ft_substr(args, begining, i - begining));
-			flag = q_handler(&(args[i + 1]), &current_str, FT_DOUBLE_QUOTE);
+			flag = ft_lex_double_quote_handler(&current_str, args, begining, i);
 			if (flag == -1)
-			{
-				errorfun();
-				printf("Unfinsihed double quote\n");
 				break;
-			}
 			i = i + flag + 1; //we move counter I to the next letter from the next quote
 			begining = i + 1; // begining of the next word should be after the first quote
 		}
 		last = args[i];
 		i++;
 	}
-	if(args[i - 1] != FT_SPACE && i > 0)
+	if(args[i - 1] != FT_SPACE && i > 0 && flag != -1)
 	{
-		if (FT_LEXOR_COMMENT)
-			printf("at 5-> begin: %d, i:%d, args: %s\n", begining, i , args);
-		current_str = join2current_str(current_str, ft_substr(args, begining, i - begining));
-		add_string(g_access.lexor2parser, current_str);
-		free(current_str);
-		current_str = NULL;
+		ft_lex_string_reminder_handler(&current_str, args, begining, i);
 	}
 	if (FT_LEXOR_COMMENT)
 	{
@@ -367,6 +200,6 @@ int	lexor(void)
 	if (flag == -1)
 		ft_free_list(*g_access.lexor2parser);
 	free(args);
-	args = NULL; 
+	args = NULL;
 	return flag;
 }
