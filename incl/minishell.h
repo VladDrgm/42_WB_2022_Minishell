@@ -33,7 +33,7 @@
 # define FT_TILDE 126		//futuristic stuff, i dont know
 # define FT_EXCL_MARK 33	//futuristic stuff, i dont know
 # define FT_UNDERSCORE 95
-# define FT_PARSER_COMMENT 1
+# define FT_PARSER_COMMENT 0
 # define FT_LEXOR_COMMENT 0
 
 typedef struct s_word

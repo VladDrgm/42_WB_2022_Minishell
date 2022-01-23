@@ -374,6 +374,6 @@ int	lexor(void)
 	if (flag == -1)
 		ft_free_list(*g_access.lexor2parser);
 	free(args);
-	*args = NULL; 
+	args = NULL; 
 	return flag;
 }
