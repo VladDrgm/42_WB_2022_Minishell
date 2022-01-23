@@ -102,11 +102,37 @@ static char** add_to_line(char **line, char *new_str, int *line_len)
 /*
 ** 	Handles errors
 */
-void error_fun(t_list **list, t_list **lexor_list)
+static void error_fun(t_list **list, t_list **lexor_list)
 {
 	ft_lstclear(list, ft_free_parser);
 	ft_free_lex_list(*lexor_list);
 	*lexor_list = NULL;
+}
+
+static char *create_char_str(char c, int len)
+{
+	int	counter;
+	char* str;
+
+	counter = 0;
+	str = (char *)ft_calloc(len + 1, sizeof(char));
+	while (counter < len)
+	{
+		str[counter] = c;
+		counter++;
+	}
+	return str;
+}
+
+static void ft_string_handler(t_list *lex_element, char	***cmd_line, int *cmd_len)
+{
+	char *str;
+
+	if (ft_strlen((char *)((t_word *)(lex_element->content))->address) != 0)
+	{
+		str = ft_strdup((char *)((t_word *)(lex_element->content))->address);
+		*cmd_line = add_to_line(*cmd_line, str, cmd_len);
+	}
 }
 
 int	parser(void)
@@ -131,20 +157,16 @@ int	parser(void)
 		if (lex_element == NULL)
 			break;
 		while (1)
-		{	if (lex_element == NULL)
+		{	
+			if (lex_element == NULL)
 				break;
 			if (first_redirect != 0)
 			{
 				if (((t_word *)(lex_element->content))->type == FT_STRING || *((char *)((t_word *)(lex_element->content))->address) != first_redirect)
-				{
-					str = (char *)ft_calloc(2, sizeof(char));
-					str[0] = first_redirect;
-				}
+					str = create_char_str(first_redirect, 1);
 				else
 				{
-					str = (char *)ft_calloc(3, sizeof(char));
-					str[0] = first_redirect;
-					str[1] = first_redirect;
+					str = create_char_str(first_redirect, 2);
 					lex_element = lex_element->next;
 				}
 				cmd_line = add_to_line(cmd_line, str, &cmd_len);
@@ -161,16 +183,11 @@ int	parser(void)
 							break;
 						if (*((char *)((t_word *)((lex_element->next)->content))->address) == first_redirect)
 						{
-							str = (char *)ft_calloc(3, sizeof(char));
-							str[0] = first_redirect;
-							str[1] = first_redirect;
+							str = create_char_str(first_redirect, 2);
 							lex_element = lex_element->next;
 						}
 						else
-						{
-							str = (char *)ft_calloc(2, sizeof(char));
-							str[0] = first_redirect;
-						}
+							str = create_char_str(first_redirect, 1);
 					}
 					cmd_line = add_to_line(cmd_line, str, &cmd_len);
 					first_redirect = 0;
@@ -183,14 +200,7 @@ int	parser(void)
 				}
 			}
 			if (((t_word *)(lex_element->content))->type == FT_STRING)
-			{
-				if (ft_strlen((char *)((t_word *)(lex_element->content))->address) != 0)
-				{
-					str = (char *)malloc(sizeof(char) * ft_strlen((char *)((t_word *)(lex_element->content))->address) + 1);
-					ft_strlcpy(str, (char *)((t_word *)(lex_element->content))->address, ft_strlen((char *)((t_word *)(lex_element->content))->address) + 1);
-					cmd_line = add_to_line(cmd_line, str, &cmd_len);
-				}
-			}
+				ft_string_handler(lex_element, &cmd_line, &cmd_len);
 			lex_element = lex_element->next;
 		}
 		cmd = (t_command *)malloc(sizeof(t_command));
@@ -199,14 +209,13 @@ int	parser(void)
 		cmd->index = index_counter;
 		cmd->comm_len = cmd_len;
 		cmd->cmd_type = 0;
-		//ft_comment_check(&(cmd->comm_table), &cmd->comm_len);
 		ft_command_check(cmd->comm_table[0], &cmd->path, &cmd->cmd_type);
 		if (FT_PARSER_COMMENT)
 			printf("Path if: %s\n", cmd->path);
 		executor_element = ft_lstnew((void * ) cmd);
 		ft_lstadd_back(g_access.parser2exec, executor_element);
 		index_counter++;
-		if (lex_element == 0)
+		if (lex_element == NULL)
 			break;
 		else
 			lex_element = lex_element->next;
