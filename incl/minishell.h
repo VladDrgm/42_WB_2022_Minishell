@@ -114,4 +114,44 @@ void	ft_update_PWD(void);
 char	*ft_handle_cd(char *address);
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void	ft_free_parser(void *parser);
+void	print_list_parse(t_list *el);
+int		ft_strcmp(char *s1, char *s2);
+void    ft_free_split(char **split);
+
+
 #endif

@@ -1,49 +1,16 @@
 #include "../incl/minishell.h"
 
 
-
-void    ft_free_split(char **split)
-{
-    int    i;
-
-    i = 0;
-    while (split[i] != NULL)
-    {
-        free(split[i]);
-        i++;
-    }
-    free(split);
-}
-
-int    ft_strcmp(char *s1, char *s2)
-{
-    int i;
-
-    i = 0;
-    while (s1[i] == s2[i] && s1[i] != '\0' && s2[i] != '\0')
-        i++;
-    return (s1[i] - s2[i]);
-}
-
-int ft_command_check(char *str, char **cmd_path, int *cmd_type)
+/*
+**  @brief Finds and assignes path to searched command name
+*/
+static int path_finder(char *str, char **cmd_path)
 {
 	char	*path;
 	char	**split;
 	char	*temp_path;
 	int		i;
-	if (!ft_strcmp(str, "pwd") || !ft_strcmp(str, "cd") || !ft_strcmp(str, "echo")  || !ft_strcmp(str, "export") || !ft_strcmp(str, "unset") ||
-		!ft_strcmp(str, "env") || !ft_strcmp(str, "exit") )
- 	{
- 		*cmd_path = 0;
-		*cmd_type = FT_CMD_TYPE_BUILT_IN;
-		return (0);
- 	}
-	else if(!ft_strcmp(str, "<<") || !ft_strcmp(str, "<") || !ft_strcmp(str, ">>") || !ft_strcmp(str, ">"))
-	{
-		*cmd_path = 0;
-		*cmd_type = FT_CMD_TYPE_REDIRECT;
-		return (0);
-	}
+
 	path = getenv("PATH");
 	split = ft_split(ft_strchr(path, '/'), ':');
 	temp_path = NULL;
@@ -54,7 +21,6 @@ int ft_command_check(char *str, char **cmd_path, int *cmd_type)
 		if (access(temp_path, F_OK) == 0)
 		{
 			*cmd_path = temp_path;
-			*cmd_type = FT_CMD_TYPE_SYSTEM;
 			ft_free_split(split);
 			return (0);
 		}
@@ -63,16 +29,40 @@ int ft_command_check(char *str, char **cmd_path, int *cmd_type)
 		i++;
 	}
 	ft_free_split(split);
-	*cmd_type = FT_CMD_TYPE_ERROR;
 	return (-1);
 }
 
 /*
-**	pwd cd echo export unset env exit << < >> >
+**  @brief Checks command name and assign command variables properly
 */
+static int ft_command_check(char *str, char **cmd_path, int *cmd_type)
+{
+	int err;
 
+	*cmd_path = NULL;
+	if (!ft_strcmp(str, "pwd") || !ft_strcmp(str, "cd") || !ft_strcmp(str, "echo")  || !ft_strcmp(str, "export") || !ft_strcmp(str, "unset") ||
+		!ft_strcmp(str, "env") || !ft_strcmp(str, "exit") )
+ 	{
+		*cmd_type = FT_CMD_TYPE_BUILT_IN;
+		return (0);
+ 	}
+	else if(!ft_strcmp(str, "<<") || !ft_strcmp(str, "<") || !ft_strcmp(str, ">>") || !ft_strcmp(str, ">"))
+	{
+		*cmd_type = FT_CMD_TYPE_REDIRECT;
+		return (0);
+	}
+	err = path_finder(str, cmd_path);
+	if (err == 0)
+		*cmd_type = FT_CMD_TYPE_SYSTEM;
+	else if (err == -1)
+		*cmd_type = FT_CMD_TYPE_ERROR;
+	return (err);
+}
 
-void	ft_free_lex_list(t_list *head)
+/*
+**  Use the lex one
+*/
+static void	ft_free_lex_list(t_list *head)
 {
 	t_list	*tmp;
 
@@ -86,7 +76,10 @@ void	ft_free_lex_list(t_list *head)
 	}
 }
 
-char** add_to_line(char **line, char *new_str, int *line_len)
+/*
+** 	Adds new argument to command table
+*/
+static char** add_to_line(char **line, char *new_str, int *line_len)
 {
 	char	**new_line;
 	int		counter;
@@ -105,54 +98,10 @@ char** add_to_line(char **line, char *new_str, int *line_len)
 	return new_line;
 }
 
-void	print_element_parser(void *input)
-{
-	t_command	*cmd;
-	int 		test_c;
-
-	cmd = (t_command *)input;
-	test_c = 0;
-	// printf("Len is %d\n", cmd->comm_len);
-
-	printf("Command type is:%d\n", cmd->cmd_type);
-	printf("Length       is %d\n", cmd->comm_len);
-	printf("Table        is:\n");
-	while(test_c < (cmd->comm_len))
-	{
-		// printf("1\n");
-		printf("%s\n", cmd->comm_table[test_c]);
-
-		// printf("2\n");
-		test_c++;
-	}
-	printf("*****************************************************\n");
-}
 
 /*
-**	printslinked list
+** 	Handles errors
 */
-
-void	print_list_parse(t_list *el)
-{
-	ft_lstiter(el, print_element_parser);
-}
-
-void ft_free_parser(void *parser)
-{
-	int i;
-	t_command *cmd;
-
-	i = 0;
-	cmd = (t_command *)parser;
-    while (i < cmd->comm_len)
-    {
-        free(cmd->comm_table[i]);
-        i++;
-    }
-	free(cmd->comm_table);
-	free(parser);
-}
-
 void error_fun(t_list **list, t_list **lexor_list)
 {
 	ft_lstclear(list, ft_free_parser);
