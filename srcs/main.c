@@ -21,6 +21,8 @@ int	main(int argc, char **argv, char**envp)
 	while (1)
 	{
 		g_access.read_line2lexor = readline(">");
+		if (g_access.read_line2lexor == NULL) //dealing with EOF (Ctrl + D)
+			break;
 		add_history(g_access.read_line2lexor);
 		//temp = lexor(&lexer2parser_list, args);
 		temp = lexor();
