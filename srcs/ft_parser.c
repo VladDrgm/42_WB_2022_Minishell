@@ -25,6 +25,39 @@ int    ft_strcmp(char *s1, char *s2)
     return (s1[i] - s2[i]);
 }
 
+int ft_command_check(char *str, char **cmd_path)
+{
+	char	*path;
+	char	**split;
+	char	*temp_path;
+	int		i;
+	if (!ft_strcmp(str, "pwd") || !ft_strcmp(str, "cd") || !ft_strcmp(str, "echo")  || !ft_strcmp(str, "export") || !ft_strcmp(str, "unset") ||
+		!ft_strcmp(str, "env") || !ft_strcmp(str, "exit") || !ft_strcmp(str, "<<") || !ft_strcmp(str, "<") || !ft_strcmp(str, ">>") || !ft_strcmp(str, ">"))
+ 	{
+ 		*cmd_path = 0;
+ 		return 0;
+ 	}
+	path = getenv("PATH");
+	split = ft_split(ft_strchr(path, '/'), ':');
+	temp_path = NULL;
+	i = 0;
+	while (split[i])
+	{
+		temp_path = ft_strjoin(split[i], ft_strjoin("/", str));
+		if (access(temp_path, F_OK) == 0)
+		{
+			*cmd_path = temp_path;
+			ft_free_split(split);
+			return (0);
+		}
+		else if (access(temp_path, F_OK) == -1)
+			free((void *)temp_path);
+		i++;
+	}
+	ft_free_split(split);
+	return (-1);
+}
+
 /*
 **	pwd cd echo export unset env exit << < >> >
 */
@@ -90,44 +123,6 @@ void	print_list_parse(t_list *el)
 {
 	ft_lstiter(el, print_element_parser);
 }
-
-// void ft_comment_check(char ***cmd_table, int *cmd_len)
-// {
-// 	int i;
-// 	int new_len;
-// 	char **new_line;
-
-// 	i = 0;
-// 	new_line = NULL;
-// 	new_len = 0;
-// 	while (i < *cmd_len)
-// 	{
-// 		if((*cmd_table)[i][0] == FT_HASHTAG)
-// 		{
-// 			new_len = i;
-// 			break;
-// 		}
-// 		i++;
-// 	}
-// 	if (*cmd_len == i)
-// 		return ;
-// 	i = 0;
-// 	new_line = (char **)malloc (sizeof(char *) * new_len);
-// 	while (i < new_len)
-// 	{
-// 		new_line[i] = ft_strdup((*cmd_table)[i]);
-// 		i++;
-// 	}
-// 	i = 0;
-// 	while (i < *cmd_len)
-// 	{
-// 		free((*cmd_table)[i]);
-// 		i++;
-// 	}
-// 	free(*cmd_table);
-// 	*cmd_table = new_line;
-// 	*cmd_len = new_len;
-// }
 
 void ft_free_parser(void *parser)
 {
@@ -242,6 +237,8 @@ int	parser(void)
 		cmd->index = index_counter;
 		cmd->comm_len = cmd_len;
 		//ft_comment_check(&(cmd->comm_table), &cmd->comm_len);
+		ft_command_check(cmd->comm_table[0], &cmd->path);
+		printf("Path if: %s\n", cmd->path);
 		executor_element = ft_lstnew((void * ) cmd);
 		ft_lstadd_back(g_access.parser2exec, executor_element);
 		index_counter++;
