@@ -1,49 +1,16 @@
 #include "../incl/minishell.h"
 
 
-
-void    ft_free_split(char **split)
-{
-    int    i;
-
-    i = 0;
-    while (split[i] != NULL)
-    {
-        free(split[i]);
-        i++;
-    }
-    free(split);
-}
-
-int    ft_strcmp(char *s1, char *s2)
-{
-    int i;
-
-    i = 0;
-    while (s1[i] == s2[i] && s1[i] != '\0' && s2[i] != '\0')
-        i++;
-    return (s1[i] - s2[i]);
-}
-
-int ft_command_check(char *str, char **cmd_path, int *cmd_type)
+/*
+**  @brief Finds and assignes path to searched command name
+*/
+static int path_finder(char *str, char **cmd_path)
 {
 	char	*path;
 	char	**split;
 	char	*temp_path;
 	int		i;
-	if (!ft_strcmp(str, "pwd") || !ft_strcmp(str, "cd") || !ft_strcmp(str, "echo")  || !ft_strcmp(str, "export") || !ft_strcmp(str, "unset") ||
-		!ft_strcmp(str, "env") || !ft_strcmp(str, "exit") )
- 	{
- 		*cmd_path = 0;
-		*cmd_type = FT_CMD_TYPE_BUILT_IN;
-		return (0);
- 	}
-	else if(!ft_strcmp(str, "<<") || !ft_strcmp(str, "<") || !ft_strcmp(str, ">>") || !ft_strcmp(str, ">"))
-	{
-		*cmd_path = 0;
-		*cmd_type = FT_CMD_TYPE_REDIRECT;
-		return (0);
-	}
+
 	path = getenv("PATH");
 	split = ft_split(ft_strchr(path, '/'), ':');
 	temp_path = NULL;
@@ -54,7 +21,6 @@ int ft_command_check(char *str, char **cmd_path, int *cmd_type)
 		if (access(temp_path, F_OK) == 0)
 		{
 			*cmd_path = temp_path;
-			*cmd_type = FT_CMD_TYPE_SYSTEM;
 			ft_free_split(split);
 			return (0);
 		}
@@ -63,16 +29,40 @@ int ft_command_check(char *str, char **cmd_path, int *cmd_type)
 		i++;
 	}
 	ft_free_split(split);
-	*cmd_type = FT_CMD_TYPE_ERROR;
 	return (-1);
 }
 
 /*
-**	pwd cd echo export unset env exit << < >> >
+**  @brief Checks command name and assign command variables properly
 */
+static int ft_command_check(char *str, char **cmd_path, int *cmd_type)
+{
+	int err;
 
+	*cmd_path = NULL;
+	if (!ft_strcmp(str, "pwd") || !ft_strcmp(str, "cd") || !ft_strcmp(str, "echo")  || !ft_strcmp(str, "export") || !ft_strcmp(str, "unset") ||
+		!ft_strcmp(str, "env") || !ft_strcmp(str, "exit") )
+ 	{
+		*cmd_type = FT_CMD_TYPE_BUILT_IN;
+		return (0);
+ 	}
+	else if(!ft_strcmp(str, "<<") || !ft_strcmp(str, "<") || !ft_strcmp(str, ">>") || !ft_strcmp(str, ">"))
+	{
+		*cmd_type = FT_CMD_TYPE_REDIRECT;
+		return (0);
+	}
+	err = path_finder(str, cmd_path);
+	if (err == 0)
+		*cmd_type = FT_CMD_TYPE_SYSTEM;
+	else if (err == -1)
+		*cmd_type = FT_CMD_TYPE_ERROR;
+	return (err);
+}
 
-void	ft_free_lex_list(t_list *head)
+/*
+**  Use the lex one
+*/
+static void	ft_free_lex_list(t_list *head)
 {
 	t_list	*tmp;
 
@@ -86,7 +76,10 @@ void	ft_free_lex_list(t_list *head)
 	}
 }
 
-char** add_to_line(char **line, char *new_str, int *line_len)
+/*
+** 	Adds new argument to command table
+*/
+static char** add_to_line(char **line, char *new_str, int *line_len)
 {
 	char	**new_line;
 	int		counter;
@@ -105,59 +98,41 @@ char** add_to_line(char **line, char *new_str, int *line_len)
 	return new_line;
 }
 
-void	print_element_parser(void *input)
-{
-	t_command	*cmd;
-	int 		test_c;
-
-	cmd = (t_command *)input;
-	test_c = 0;
-	// printf("Len is %d\n", cmd->comm_len);
-
-	printf("Command type is:%d\n", cmd->cmd_type);
-	printf("Length       is %d\n", cmd->comm_len);
-	printf("Table        is:\n");
-	while(test_c < (cmd->comm_len))
-	{
-		// printf("1\n");
-		printf("%s\n", cmd->comm_table[test_c]);
-
-		// printf("2\n");
-		test_c++;
-	}
-	printf("*****************************************************\n");
-}
 
 /*
-**	printslinked list
+** 	Handles errors
 */
-
-void	print_list_parse(t_list *el)
-{
-	ft_lstiter(el, print_element_parser);
-}
-
-void ft_free_parser(void *parser)
-{
-	int i;
-	t_command *cmd;
-
-	i = 0;
-	cmd = (t_command *)parser;
-    while (i < cmd->comm_len)
-    {
-        free(cmd->comm_table[i]);
-        i++;
-    }
-	free(cmd->comm_table);
-	free(parser);
-}
-
-void error_fun(t_list **list, t_list **lexor_list)
+static void error_fun(t_list **list, t_list **lexor_list)
 {
 	ft_lstclear(list, ft_free_parser);
 	ft_free_lex_list(*lexor_list);
 	*lexor_list = NULL;
+}
+
+static char *create_char_str(char c, int len)
+{
+	int	counter;
+	char* str;
+
+	counter = 0;
+	str = (char *)ft_calloc(len + 1, sizeof(char));
+	while (counter < len)
+	{
+		str[counter] = c;
+		counter++;
+	}
+	return str;
+}
+
+static void ft_string_handler(t_list *lex_element, char	***cmd_line, int *cmd_len)
+{
+	char *str;
+
+	if (ft_strlen((char *)((t_word *)(lex_element->content))->address) != 0)
+	{
+		str = ft_strdup((char *)((t_word *)(lex_element->content))->address);
+		*cmd_line = add_to_line(*cmd_line, str, cmd_len);
+	}
 }
 
 int	parser(void)
@@ -182,20 +157,16 @@ int	parser(void)
 		if (lex_element == NULL)
 			break;
 		while (1)
-		{	if (lex_element == NULL)
+		{	
+			if (lex_element == NULL)
 				break;
 			if (first_redirect != 0)
 			{
 				if (((t_word *)(lex_element->content))->type == FT_STRING || *((char *)((t_word *)(lex_element->content))->address) != first_redirect)
-				{
-					str = (char *)ft_calloc(2, sizeof(char));
-					str[0] = first_redirect;
-				}
+					str = create_char_str(first_redirect, 1);
 				else
 				{
-					str = (char *)ft_calloc(3, sizeof(char));
-					str[0] = first_redirect;
-					str[1] = first_redirect;
+					str = create_char_str(first_redirect, 2);
 					lex_element = lex_element->next;
 				}
 				cmd_line = add_to_line(cmd_line, str, &cmd_len);
@@ -212,16 +183,11 @@ int	parser(void)
 							break;
 						if (*((char *)((t_word *)((lex_element->next)->content))->address) == first_redirect)
 						{
-							str = (char *)ft_calloc(3, sizeof(char));
-							str[0] = first_redirect;
-							str[1] = first_redirect;
+							str = create_char_str(first_redirect, 2);
 							lex_element = lex_element->next;
 						}
 						else
-						{
-							str = (char *)ft_calloc(2, sizeof(char));
-							str[0] = first_redirect;
-						}
+							str = create_char_str(first_redirect, 1);
 					}
 					cmd_line = add_to_line(cmd_line, str, &cmd_len);
 					first_redirect = 0;
@@ -234,14 +200,7 @@ int	parser(void)
 				}
 			}
 			if (((t_word *)(lex_element->content))->type == FT_STRING)
-			{
-				if (ft_strlen((char *)((t_word *)(lex_element->content))->address) != 0)
-				{
-					str = (char *)malloc(sizeof(char) * ft_strlen((char *)((t_word *)(lex_element->content))->address) + 1);
-					ft_strlcpy(str, (char *)((t_word *)(lex_element->content))->address, ft_strlen((char *)((t_word *)(lex_element->content))->address) + 1);
-					cmd_line = add_to_line(cmd_line, str, &cmd_len);
-				}
-			}
+				ft_string_handler(lex_element, &cmd_line, &cmd_len);
 			lex_element = lex_element->next;
 		}
 		cmd = (t_command *)malloc(sizeof(t_command));
@@ -250,14 +209,13 @@ int	parser(void)
 		cmd->index = index_counter;
 		cmd->comm_len = cmd_len;
 		cmd->cmd_type = 0;
-		//ft_comment_check(&(cmd->comm_table), &cmd->comm_len);
 		ft_command_check(cmd->comm_table[0], &cmd->path, &cmd->cmd_type);
 		if (FT_PARSER_COMMENT)
 			printf("Path if: %s\n", cmd->path);
 		executor_element = ft_lstnew((void * ) cmd);
 		ft_lstadd_back(g_access.parser2exec, executor_element);
 		index_counter++;
-		if (lex_element == 0)
+		if (lex_element == NULL)
 			break;
 		else
 			lex_element = lex_element->next;

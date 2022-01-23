@@ -178,4 +178,44 @@ void	ft_lex_space_handler(char **current_str, char *args, int i, int begining);
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void	ft_free_parser(void *parser);
+void	print_list_parse(t_list *el);
+int		ft_strcmp(char *s1, char *s2);
+void    ft_free_split(char **split);
+
+
 #endif

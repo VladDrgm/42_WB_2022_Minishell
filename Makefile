@@ -5,7 +5,8 @@ CFLAGS		= -g3 -Wall -Wextra -Werror
 RM			= rm -f
 SRCD		= ./srcs/
 SRC			= main.c ft_lexor.c ft_parser.c ft_executor.c ft_initiator.c ft_echo_utils.c ft_builtins2.c ft_builtins.c ft_globlal_fun.c \
-				ft_builtins_utils.c ft_cd_utils.c ft_lexor_utils.c ft_lexor_utils2.c ft_lexor_handlers.c
+				ft_builtins_utils.c ft_cd_utils.c ft_lexor_utils.c ft_lexor_utils2.c ft_lexor_handlers.c ft_parser_utils.c utils.c
+
 # Command to add the source folder prefix (instead of having it added manually to SRC)
 SRCF		= $(addprefix $(SRCD),$(SRC))
 OBJD		= ./objs/
