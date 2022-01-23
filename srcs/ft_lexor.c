@@ -1,5 +1,20 @@
 #include "../incl/minishell.h"
 
+char *join2current_str(char* current_str, char* add_on)
+{
+	char *temp;
+
+	if (current_str)
+		temp = ft_strjoin(current_str, add_on);
+	else
+		temp = ft_strdup(add_on);
+	free(current_str);
+	current_str = NULL;
+	free(add_on);
+	add_on = NULL;
+	return (temp);
+}
+
 void	ft_free_list(t_list *head)
 {
 	t_list	*tmp;
@@ -35,21 +50,19 @@ void	print_list(t_list *el)
 }
 
 /*
-**	adds substring to linked list
+**	adds string to linked list
 */
 
-void	add_substring(t_list **list, int end, char *str)
+void	add_string(t_list **list, char	*str)
 {
-	char	*sub_str;
 	t_word	*word;
 	t_list	*new_el;
 
-	if (end <= 0)
+	if (str == NULL)
 		return ;
-	sub_str = ft_substr(str, 0, end);
 	word = (t_word *)malloc(sizeof(t_word));
 	word->type = FT_STRING;
-	word->address = (void *)sub_str;
+	word->address = (void *)ft_strdup(str);
 	new_el = ft_lstnew((void *)word);
 	ft_lstadd_back(list, new_el);
 }
@@ -77,55 +90,19 @@ void	add_specialchar(t_list **list, char ch)
 **	handels sigle quotes
 */
 
-int	single_q_handler(t_list **list, char *str)
+int	q_handler(char *str, char **current_str, char q_char)
 {
 	int	i;
 
 	i = 0;
 	while (str[i] != '\0')
 	{
-		if (str[i] == FT_SINGLE_QUOTE)
+		if (str[i] == q_char)
 		{
-			add_substring(list, i, str);
-			//add_specialchar(list, FT_SINGLE_QUOTE);
+			if (FT_LEXOR_COMMENT)
+				printf("at 6-> begin: %d, i:%d, args: %s\n", 0, i , str);
+			*current_str = join2current_str(*current_str, ft_substr(str, 0, i));
 			return (i);
-		}
-		i++;
-	}
-	return (-1);
-}
-
-/*
-**	handels double quotes
-*/
-
-int	double_q_handler(t_list **list, char *str)
-{
-	int	i;
-	int	beginning;
-	int env;
-
-	i = 0;
-	env = 0;
-	beginning = 0;
-	while (str[i] != '\0')
-	{
-		if (str[i] == FT_DOUBLE_QUOTE)
-		{
-			add_substring(list, i - beginning, &(str[beginning]));
-			return (i);
-		}
-		else if (str[i] == FT_DOLLAR_SIGN)
-		{
-			add_substring(list, i - beginning, &(str[beginning]));
-			beginning = i;
-			env = 1;
-		}
-		else if (str[i] == FT_SPACE && env == 1)
-		{
-			add_substring(list, i - beginning, &(str[beginning]));
-			beginning = i;
-			env = 0;
 		}
 		i++;
 	}
@@ -298,7 +275,7 @@ int	lexor(void)
 	char	last;
 	int		flag;
 	char	*args;
-
+	char	*current_str;
 
 	args = g_access.read_line2lexor;
 	i = 0;
@@ -306,11 +283,12 @@ int	lexor(void)
 	last = FT_SPACE;
 	flag = 0;
 	if (FT_LEXOR_COMMENT)
-		printf("\n***********BEFORE COMMENT CHECK********** \n%s\n and the length is %ld", args, ft_strlen(args));
+		printf("\n***********BEFORE COMMENT CHECK********** \n%s\n and the length is %ld\n", args, ft_strlen(args));
 	ft_comment_check(&args);
 	if (FT_LEXOR_COMMENT)
-		printf("\n************AFTER COMMENT CHECK********** \n%s\n and the length is %ld", args, ft_strlen(args));
+		printf("************AFTER COMMENT CHECK********** \n%s\n and the length is %ld\n", args, ft_strlen(args));
 	ft_env_check(&args);
+	current_str = NULL;
 	while (args[i] != '\0')
 	{
 		if (last == FT_SPACE && args[i] != FT_SPACE)
@@ -319,25 +297,31 @@ int	lexor(void)
 		}
 		else if (last != FT_SPACE && args[i] == FT_SPACE)
 		{
-			add_substring(g_access.lexor2parser , i - begining, &(args[begining]));
+			if (FT_LEXOR_COMMENT)
+				printf("at 1-> begin: %d, i:%d, args: %s\n", begining, i , args);
+			current_str = join2current_str(current_str, ft_substr(args, begining, i - begining));
+			add_string(g_access.lexor2parser, current_str);
+			free(current_str);
+			current_str = NULL;
 		}
 		if (args[i] == FT_PIPE || args[i] == FT_GREATER || \
 			args[i] == FT_LESSER)
 		{
-			add_substring(g_access.lexor2parser, i - begining, &(args[begining]));
+			if (FT_LEXOR_COMMENT)
+				printf("at 2-> begin: %d, i:%d, args: %s\n", begining, i , args);
+			current_str = join2current_str(current_str, ft_substr(args, begining, i - begining));
+			add_string(g_access.lexor2parser, current_str);
+			free(current_str);
+			current_str = NULL;
 			add_specialchar(g_access.lexor2parser, args[i]);
 			begining = i + 1;
 		}
-		else if (args[i] == FT_DOLLAR_SIGN)
-		{
-			add_substring(g_access.lexor2parser, i - begining, &(args[begining]));
-			begining = i;
-		}
 		if (args[i] == FT_SINGLE_QUOTE)
 		{
-			printf("i executed\n");
-			add_substring(g_access.lexor2parser, i - begining, &(args[begining]));
-			flag = single_q_handler(g_access.lexor2parser, &(args[i + 1]));
+			if (FT_LEXOR_COMMENT)
+				printf("at 3-> begin: %d, i:%d, args: %s\n", begining, i , args);
+			current_str = join2current_str(current_str, ft_substr(args, begining, i - begining));
+			flag = q_handler(&(args[i + 1]), &current_str, FT_SINGLE_QUOTE);
 			if (flag == -1)
 			{
 				errorfun();
@@ -349,8 +333,10 @@ int	lexor(void)
 		}
 		if (args[i] == FT_DOUBLE_QUOTE)
 		{
-			add_substring(g_access.lexor2parser, i - begining, &(args[begining]));
-			flag = double_q_handler(g_access.lexor2parser, &(args[i + 1]));
+			if (FT_LEXOR_COMMENT)
+				printf("at 4-> begin: %d, i:%d, args: %s\n", begining, i , args);
+			current_str = join2current_str(current_str, ft_substr(args, begining, i - begining));
+			flag = q_handler(&(args[i + 1]), &current_str, FT_DOUBLE_QUOTE);
 			if (flag == -1)
 			{
 				errorfun();
@@ -364,7 +350,14 @@ int	lexor(void)
 		i++;
 	}
 	if(args[i - 1] != FT_SPACE && i > 0)
-		add_substring(g_access.lexor2parser, i - begining, &(args[begining]));
+	{
+		if (FT_LEXOR_COMMENT)
+			printf("at 5-> begin: %d, i:%d, args: %s\n", begining, i , args);
+		current_str = join2current_str(current_str, ft_substr(args, begining, i - begining));
+		add_string(g_access.lexor2parser, current_str);
+		free(current_str);
+		current_str = NULL;
+	}
 	if (FT_LEXOR_COMMENT)
 	{
 		printf("We are in lexor %s\n", args);
