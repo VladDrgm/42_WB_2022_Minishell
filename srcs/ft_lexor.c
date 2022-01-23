@@ -230,7 +230,7 @@ void ft_comment_check(char **args)
 	}
 	temp = ft_substr(*args, 0, i);
 	free(*args);
-	*args = temp;
+	*args = temp;FT_SINGLE_QUOTE
 }
 
 char *ft_getenv(char *str)
@@ -335,6 +335,7 @@ int	lexor(void)
 	char	last;
 	int		flag;
 	char	*args;
+	char	*current_str;
 
 
 	args = g_access.read_line2lexor;
@@ -348,6 +349,7 @@ int	lexor(void)
 	if (FT_LEXOR_COMMENT)
 		printf("\n************AFTER COMMENT CHECK********** \n%s\n and the length is %ld", args, ft_strlen(args));
 	ft_env_check(&args);
+	current_str = NULL;
 	while (args[i] != '\0')
 	{
 		if (last == FT_SPACE && args[i] != FT_SPACE)
@@ -374,7 +376,7 @@ int	lexor(void)
 		{
 			printf("i executed\n");
 			add_substring(g_access.lexor2parser, i - begining, &(args[begining]));
-			flag = single_q_handler(g_access.lexor2parser, &(args[i + 1]));
+			flag = q_handler(&(args[i + 1]), current_str, FT_SINGLE_QUOTE);
 			if (flag == -1)
 			{
 				errorfun();
@@ -387,7 +389,7 @@ int	lexor(void)
 		if (args[i] == FT_DOUBLE_QUOTE)
 		{
 			add_substring(g_access.lexor2parser, i - begining, &(args[begining]));
-			flag = double_q_handler(g_access.lexor2parser, &(args[i + 1]));
+			flag = q_handler(&(args[i + 1]), current_str, FT_DOUBLE_QUOTE);
 			if (flag == -1)
 			{
 				errorfun();
