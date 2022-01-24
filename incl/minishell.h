@@ -41,6 +41,11 @@
 # define FT_CMD_TYPE_BUILT_IN 1
 # define FT_CMD_TYPE_REDIRECT 2
 
+# define FT_LIST_TYPE_WORD 0
+# define FT_LIST_TYPE_COMMAND 1
+# define FT_LIST_TYPE_BUILTIN_CONTENT 2
+# define FT_LIST_TYPE_ENV_VAR 3
+
 
 typedef struct s_word
 {
@@ -129,93 +134,13 @@ int		ft_lex_double_quote_handler(char **current_str, char *args, int begining, i
 int		ft_lex_single_quote_handler(char **current_str, char *args, int begining, int i);
 void	ft_lex_operand_handler(char **current_str, char *args, int begining, int i);
 void	ft_lex_space_handler(char **current_str, char *args, int i, int begining);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// LEXOR UTILS
 void	ft_free_parser(void *parser);
 void	print_list_parse(t_list *el);
+// UTILS
 int		ft_strcmp(char *s1, char *s2);
 void    ft_free_split(char **split);
+int		ft_free_linked_list(t_list ***lst, int type);
 
 
 #endif
