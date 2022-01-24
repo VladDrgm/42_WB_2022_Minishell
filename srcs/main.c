@@ -44,7 +44,7 @@ int	main(int argc, char **argv, char**envp)
 		else 
 			break;
 	}
-	// free_global();
+	free_global();
 // ************************************Part 2******************************
 	// t_shell *shell;
 	// char	*line;
