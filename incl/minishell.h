@@ -140,7 +140,7 @@ void	print_list_parse(t_list *el);
 // UTILS
 int		ft_strcmp(char *s1, char *s2);
 void    ft_free_split(char **split);
-int		ft_free_linked_list(t_list ***lst, int type);
+int 	ft_free_linked_list(t_list ***lst, int type, int full);
 
 
 #endif

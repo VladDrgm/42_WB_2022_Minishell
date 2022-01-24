@@ -2,14 +2,16 @@
 
 void free_global(void)
 {
-    free(g_access.env);
-    free(g_access.builtins);
+	if (g_access.env)
+		ft_free_linked_list(&(g_access.env), FT_LIST_TYPE_ENV_VAR, 1);
+	if (g_access.builtins)
+		ft_free_linked_list(&(g_access.builtins), FT_LIST_TYPE_BUILTIN_CONTENT, 1);
 	if (g_access.last_return)
 		free(g_access.last_return);
 	if (g_access.lexor2parser)
-		free(g_access.lexor2parser);	//needs to be correctly freed
+		ft_free_linked_list(&(g_access.lexor2parser), FT_LIST_TYPE_WORD, 1);
 	if (g_access.parser2exec)
-		free(g_access.parser2exec);		//needs to be correctly freed
+		ft_free_linked_list(&(g_access.parser2exec), FT_LIST_TYPE_COMMAND, 1);
 	if (g_access.read_line2lexor)
 		free(g_access.read_line2lexor);
 

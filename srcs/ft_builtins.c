@@ -144,7 +144,7 @@ int minishell_unset(char **args, int len)
 	temp = NULL;
 	if (args[1] == NULL)
 	{
-		write(1, "minishell: Too few arguments for unset command\n", 49);
+		write(1, "minishell: Too few arguments for unset command\n", 48);
 		return (1);
 	}
 	ft_update_env("_=", "unset");

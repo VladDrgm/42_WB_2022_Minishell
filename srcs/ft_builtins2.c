@@ -38,7 +38,7 @@ int	minishell_cd(char **args, int len)
 	len--; //TO ELIMINATE ERRORS
 	if (args[1] == NULL)
 	{
-		write(2, "minishell: expected argument to \"cd\"\n", 40);
+		write(2, "minishell: expected argument to \"cd\"\n", 38);
 		return (1);
 	}
 	else
