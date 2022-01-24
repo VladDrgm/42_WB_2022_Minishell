@@ -42,7 +42,7 @@ int	minishell_launch(char **args)
 	else if (pid == 0)
 	{
 		if (execvp(args[0], args) == -1)
-			perror("minishell");
+			perror(ft_strjoin("minishell: ", args[0]));
 		exit(EXIT_FAILURE);
 	}
 	// Parent process

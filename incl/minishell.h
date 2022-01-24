@@ -34,7 +34,7 @@
 # define FT_EXCL_MARK 33	//futuristic stuff, i dont know
 # define FT_UNDERSCORE 95
 # define FT_PARSER_COMMENT 0
-# define FT_LEXOR_COMMENT 1
+# define FT_LEXOR_COMMENT 0
 
 # define FT_CMD_TYPE_ERROR -1
 # define FT_CMD_TYPE_SYSTEM 0
@@ -110,8 +110,8 @@ void	echo_print(char **str, int starter, int size, int flag);
 int		echo_flag(char *str);
 // CD UTILS
 void	ft_update_create_OLDPWD(char **argv, t_list *ptr, int len);
-void	ft_update_PWD(void);
-char	*ft_handle_cd(char *address);
+void	ft_update_PWD(char *path);
+char	*ft_handle_cd(char *address, t_list *ptr);
 
 // LEXOR UTILS
 char	*join2current_str(char* current_str, char* add_on);
