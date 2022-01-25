@@ -36,8 +36,8 @@ void	print_element(void *input)
 	word = (t_word *)input;
 	if (word->type == FT_STRING)
 		printf("string: %s\n", word->address);
-	else if (word->type == FT_CHAR)
-		printf("specila char string: %s\n", word->address);
+	else if (word->type == FT_SPECIAL_CHAR_STRING)
+		printf("special char string: %s\n", word->address);
 }
 
 void	print_list(t_list *el)

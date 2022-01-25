@@ -7,7 +7,7 @@
 **	@todo /
 */
 
-void ft_lex_space_handler(char **current_str, char *args, int i, int begining)
+void ft_lex_space_handler(char **current_str, char *args, int begining, int i)
 {
 	if (FT_LEXOR_COMMENT)
 		printf("at 1-> begin: %d, i:%d, args: %s\n", begining, i , args);
@@ -30,13 +30,14 @@ void ft_lex_space_handler(char **current_str, char *args, int i, int begining)
 void	ft_lex_operand_handler(char **current_str, char *args, int begining, int i)
 {
 	if (FT_LEXOR_COMMENT)
-		printf("at 2-> begin: %d, i:%d, args: %s\n", begining, i , args);
+		printf("at 1-> begin: %d, i:%d, args: %s\n", begining, i , args);
 	*current_str = join2current_str(*current_str, ft_substr(args, begining, i - begining));
 	if (ft_strlen(*current_str))
-		add_string(g_access.lexor2parser, *current_str);
+		add_specialchar_string(g_access.lexor2parser, *current_str);
 	free(*current_str);
 	*current_str = NULL;
-	add_specialchar(g_access.lexor2parser, args[i]);
+	free(*current_str);
+	*current_str = NULL;
 }
 
 /*
