@@ -133,6 +133,20 @@ void ft_env_check(char **args)
 	}
 }
 
+int is_space(char ch)
+{
+	if (ch == FT_SPACE)
+		return (1);
+	return (0);
+}
+
+int is_special_char(char ch)
+{
+	if (ch == FT_PIPE || ch == FT_GREATER || ch == FT_LESSER)
+		return (1);
+	return (0);
+}
+
 int	lexor(void)
 {
 	int		i;
