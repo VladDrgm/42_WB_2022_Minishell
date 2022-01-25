@@ -12,7 +12,7 @@
 # include <sys/wait.h>
 
 
-# define FT_CHAR 1
+# define FT_SPECIAL_CHAR_STRING 1
 # define FT_STRING 2
 # define FT_TAB 9
 # define FT_SPACE 32
@@ -49,7 +49,7 @@
 
 typedef struct s_word
 {
-	void	*address;
+	char	*address;
 	int		type;
 }			t_word;
 
@@ -130,7 +130,7 @@ void	print_list(t_list *el);
 void	add_string(t_list **list, char	*str);
 void	ft_free_list(t_list *head);
 
-void	add_specialchar(t_list **list, char ch);
+void	add_specialchar_string(t_list **list, char *str);
 int		q_handler(char *str, char **current_str, char q_char);
 void	errorfun(void);
 void	ft_lex_string_reminder_handler(char **current_str, char *args, int begining, int i);

@@ -28,17 +28,14 @@ void	ft_free_list(t_list *head)
 **	@todo /
 */
 
-void	add_specialchar(t_list **list, char ch)
+void	add_specialchar_string(t_list **list, char *str)
 {
-	char	*cp;
 	t_word	*word;
 	t_list	*new_el;
 
-	cp = (char *)malloc(sizeof(char));
-	*cp = ch;
 	word = (t_word *)malloc(sizeof(t_word));
-	word->type = FT_CHAR;
-	word->address = (void *)cp;
+	word->type = FT_SPECIAL_CHAR_STRING;
+	word->address = ft_strdup(str);
 	new_el = ft_lstnew((void *)word);
 	ft_lstadd_back(list, new_el);
 }

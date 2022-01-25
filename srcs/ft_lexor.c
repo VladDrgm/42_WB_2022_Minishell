@@ -133,6 +133,20 @@ void ft_env_check(char **args)
 	}
 }
 
+int is_space(char ch)
+{
+	if (ch == FT_SPACE)
+		return (1);
+	return (0);
+}
+
+int is_special_char(char ch)
+{
+	if (ch == FT_PIPE || ch == FT_GREATER || ch == FT_LESSER)
+		return (1);
+	return (0);
+}
+
 int	lexor(void)
 {
 	int		i;
@@ -156,17 +170,24 @@ int	lexor(void)
 	current_str = NULL;
 	while (args[i] != '\0')
 	{
-		if (last == FT_SPACE && args[i] != FT_SPACE)
+		if ((is_space(last) && !is_space(args[i])))
 		{
 			begining = i;
 		}
-		else if (last != FT_SPACE && args[i] == FT_SPACE)
-			ft_lex_space_handler(&current_str, args, i, begining);
-		if (args[i] == FT_PIPE || args[i] == FT_GREATER || \
-			args[i] == FT_LESSER)
+		else if(!is_special_char(last) && is_special_char(args[i]))
+		{
+			ft_lex_space_handler(&current_str, args, begining, i);
+			begining = i;
+		}
+		else if (is_special_char(last) && !is_special_char(args[i]))
 		{
 			ft_lex_operand_handler(&current_str, args, begining, i);
-			begining = i + 1;
+			begining = i;
+		}
+		else if ((!is_space(last) && is_space(args[i])))
+		{
+			ft_lex_space_handler(&current_str, args, begining, i);
+			begining = i;
 		}
 		if (args[i] == FT_SINGLE_QUOTE)
 		{
@@ -187,7 +208,7 @@ int	lexor(void)
 		last = args[i];
 		i++;
 	}
-	if(args[i - 1] != FT_SPACE && i > 0 && flag != -1)
+	if(!is_space(args[i - 1]) && i > 0 && flag != -1)
 	{
 		ft_lex_string_reminder_handler(&current_str, args, begining, i);
 	}
