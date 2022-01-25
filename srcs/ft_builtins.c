@@ -46,7 +46,7 @@ int	minishell_exit(char **args, int len)
 	if (len > 2 && !ft_digit_check(args[1]))
 	{
 		write(1, "minishell: exit: too many arguments\n", 36);
-		exit(1);
+		return (1);
 	}
 	else if (len == 1)
 	{
@@ -60,13 +60,23 @@ int	minishell_exit(char **args, int len)
 			(num_arg > 0 && args[1][0] == '-')))
 		{
 			if (num_arg >=0 && num_arg <= 255)
+			{
+				write(1, "exit\n", 5);
 				exit(num_arg);
+			}
 			else if (num_arg > 255)
+			{
+				write(1, "exit\n", 5);
 				exit (num_arg % 256);
+			}
 			else if (num_arg < 0)
+			{
+				write(1, "exit\n", 5);
 				exit (256 - ((num_arg * -1) % 256));
+			}
 		}
 	}
+	write(1, "exit\n", 5);
 	write(1,"minishell: exit: ", 17);
 	write (1, args[1], ft_strlen(args[1]));
 	write(1, ": numeric argument required\n", 28);
