@@ -50,10 +50,14 @@ char	*ft_handle_cd(char *address, t_list *ptr)
 	if (address == NULL)
 		return (env_value_finder("HOME"));
 	else if ((!ft_strncmp(address, "~", 1) && ft_strlen(address) < 2)|| (!ft_strncmp(address, "--", 2) && ft_strlen(address) < 3))
-		return (getenv("HOME"));
+	{
+		if (env_value_finder("HOME") == NULL && (!ft_strncmp(address, "~", 1) && ft_strlen(address) < 2))
+			return(g_access.home);
+		else
+			return (env_value_finder("HOME"));
+	}
 	else if (!ft_strncmp(address, "-", 1) && ft_strlen(address) < 2)
 	{
-		
 		while (ptr != NULL)
 		{
 			if (ft_strncmp(((t_env_var *)(ptr->content))->name, "OLDPWD", 6) == 0) //IF OLDPWD EXISTS, WE RETURN env_value_finder("OLDPWD") <------
