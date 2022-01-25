@@ -1,5 +1,6 @@
 #include "../incl/minishell.h"
 
+//when UNSETTING PWD, this needs to have a special situation
 void	ft_update_create_OLDPWD(char **argv, t_list *ptr, int len)
 {
 	while (ptr != NULL)
@@ -7,7 +8,7 @@ void	ft_update_create_OLDPWD(char **argv, t_list *ptr, int len)
 		if (ft_strncmp(((t_env_var *)(ptr->content))->name, "OLDPWD", 6) == 0) //IF OLDPWD EXISTS, WE UPDATE IT <------
 		{
 			// printf("value = %s\n", env_value_finder("PWD"));
-			ft_update_env("OLDPWD=", env_value_finder("PWD"));
+			ft_update_env("OLDPWD=", g_access.pwd);
 			return ;
 		}
 		ptr = ptr->next;
@@ -30,19 +31,22 @@ void	ft_update_create_OLDPWD(char **argv, t_list *ptr, int len)
  */
 void	ft_update_PWD(char *path)
 {
-	// path = ../../../
-	char *buf;
-	int i = 0;
-	buf = getcwd(NULL, 0);
-	while(getcwd(buf, i) == NULL)
-		i++;
-	if (!ft_strncmp(buf, path, ft_strlen(path)))
-	//write to lower string function
-	//compare buf.to_lower with path.to_lower
-	//write reversersed ft_strncmp
-	//remove the path.to_lower part of 'buf' ft_strjoin(*buf.to_lower+(until path starts))
-	//ft_strjoin(what's left of buf, path)
-	ft_update_env("PWD=", buf);
+	g_access.pwd = path;
+	if (env_value_finder("PWD") == NULL)
+	{
+		if (temp_value_finder("PWD") == NULL)
+		{
+			//create PWD in temp with the value equivalent of path;
+			//need to have a start value in our shadow-env???
+			// return;
+		}
+		else
+		{
+			//update TEMP PWD;
+			//return;
+		}
+	}
+	ft_update_env("PWD=", path);
 }
 
 char	*ft_handle_cd(char *address, t_list *ptr)
@@ -50,10 +54,14 @@ char	*ft_handle_cd(char *address, t_list *ptr)
 	if (address == NULL)
 		return (env_value_finder("HOME"));
 	else if ((!ft_strncmp(address, "~", 1) && ft_strlen(address) < 2)|| (!ft_strncmp(address, "--", 2) && ft_strlen(address) < 3))
-		return (getenv("HOME"));
+	{
+		if (env_value_finder("HOME") == NULL && (!ft_strncmp(address, "~", 1) && ft_strlen(address) < 2))
+			return(g_access.home);
+		else
+			return (env_value_finder("HOME"));
+	}
 	else if (!ft_strncmp(address, "-", 1) && ft_strlen(address) < 2)
 	{
-		
 		while (ptr != NULL)
 		{
 			if (ft_strncmp(((t_env_var *)(ptr->content))->name, "OLDPWD", 6) == 0) //IF OLDPWD EXISTS, WE RETURN env_value_finder("OLDPWD") <------

@@ -74,11 +74,14 @@ typedef struct s_global
 {
 	int		signals;
 	t_list	**env;
+	t_list	**temp_env;
 	t_list	**builtins;
 	t_list	**parser2exec;
 	t_list	**lexor2parser;
 	char	*read_line2lexor; //read line output
 	char	*last_return; //for $?
+	char	*pwd;
+	char	*home;
 }				t_global;
 
 typedef struct s_env_var
@@ -107,8 +110,9 @@ int 	minishell_unset(char **args, int len);
 int		minishell_execute(void);
 int		minishell_launch(char **args);
 // BUILTIN UTILS
-void	ft_update_env(char *to_search, char *to_replace);
+void	ft_update_env(char *to_search, char *to_replace); //check if value finder finds insider env and if not, create a new one; env should not create duplicate env variables;
 char	*env_value_finder(char *name);
+char	*temp_value_finder(char *name);
 void	*delone(void *content);
 // ECHO UTILS
 void	echo_print(char **str, int starter, int size, int flag);

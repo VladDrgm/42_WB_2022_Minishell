@@ -14,7 +14,14 @@ void free_global(void)
 		ft_free_linked_list(&(g_access.parser2exec), FT_LIST_TYPE_COMMAND, 1);
 	if (g_access.read_line2lexor)
 		free(g_access.read_line2lexor);
-
+	if (g_access.home)
+		free(g_access.home);
+	if (g_access.pwd)
+		free(g_access.pwd);
+	if (g_access.env)
+		ft_free_linked_list(&(g_access.temp_env), FT_LIST_TYPE_ENV_VAR, 1);
+	g_access.home = NULL;
+	g_access.pwd = NULL;
 }
 
 void init_global(void)
@@ -28,4 +35,7 @@ void init_global(void)
 	g_access.lexor2parser = (t_list **)malloc(sizeof(t_list *));
     g_access.parser2exec = (t_list **)malloc(sizeof(t_list *));
 	g_access.read_line2lexor = NULL; //allocated in main by readline
+	g_access.temp_env = (t_list **)malloc(sizeof(t_list *));
+	g_access.home = ft_strdup(getenv("HOME"));
+	g_access.pwd = ft_strdup(getenv("PWD"));
 }
