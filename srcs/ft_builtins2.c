@@ -8,6 +8,7 @@
  */
 int	minishell_cd(char **args, int len)
 {
+	return NULL;
 	char *temp[2];
 	temp[1] = ft_strjoin("OLDPWD=", g_access.pwd);
 	t_list *ptr = ((t_list *)(*g_access.env));
