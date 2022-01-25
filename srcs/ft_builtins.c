@@ -31,6 +31,8 @@ int	minishell_env(char **args, int len)
 	return (1);
 }
 
+
+
 /**
 	 @brief Builtin command: exit.
 	 @param args List of args.	Not examined.
@@ -39,11 +41,36 @@ int	minishell_env(char **args, int len)
  */
 int	minishell_exit(char **args, int len)
 {
-	len++; //TO ELIMINATE ERRORS
-	len--; //TO ELIMINATE ERRORS
-	write(1, "exit\n", 5);
-	if (ft_strncmp(args[0], "exit", 4))
-		return (0);
+	long long int num_arg;
+
+	if (len > 2 && !ft_digit_check(args[1]))
+	{
+		write(1, "minishell: exit: too many arguments\n", 36);
+		exit(1);
+	}
+	else if (len == 1)
+	{
+		write(1, "exit\n", 5);
+		exit (0);
+	}
+	else if (!ft_digit_check(args[1]))
+	{
+		num_arg = ft_atoll(args[1]);
+		if (!((num_arg < 0 && args[1][0] != '-') || \
+			(num_arg > 0 && args[1][0] == '-')))
+		{
+			if (num_arg >=0 && num_arg <= 255)
+				exit(num_arg);
+			else if (num_arg > 255)
+				exit (num_arg % 256);
+			else if (num_arg < 0)
+				exit (256 - ((num_arg * -1) % 256));
+		}
+	}
+	write(1,"minishell: exit: ", 17);
+	write (1, args[1], ft_strlen(args[1]));
+	write(1, ": numeric argument required\n", 28);
+	exit(2);
 	//WE NEED TO LINK THIS WITH FREE
 	//DISCUSS THIS AS A TEAM -> MUST BE CONNECTED
 	// TO SIGNALS SO WE ALL HAVE TO SEE HOW TO FREE MEMORY
