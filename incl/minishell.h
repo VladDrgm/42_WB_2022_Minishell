@@ -74,11 +74,14 @@ typedef struct s_global
 {
 	int		signals;
 	t_list	**env;
+	t_list	**temp_env;
 	t_list	**builtins;
 	t_list	**parser2exec;
 	t_list	**lexor2parser;
 	char	*read_line2lexor; //read line output
 	char	*last_return; //for $?
+	char	*pwd;
+	char	*home;
 }				t_global;
 
 typedef struct s_env_var
