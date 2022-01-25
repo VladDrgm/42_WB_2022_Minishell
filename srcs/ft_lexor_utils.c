@@ -35,9 +35,9 @@ void	print_element(void *input)
 
 	word = (t_word *)input;
 	if (word->type == FT_STRING)
-		printf("string: %s\n", (char *)(word->address));
+		printf("string: %s\n", word->address);
 	else if (word->type == FT_CHAR)
-		printf("char: %c\n", *((char *)(word->address)));
+		printf("specila char string: %s\n", word->address);
 }
 
 void	print_list(t_list *el)
@@ -61,7 +61,7 @@ void	add_string(t_list **list, char	*str)
 		return ;
 	word = (t_word *)malloc(sizeof(t_word));
 	word->type = FT_STRING;
-	word->address = (void *)ft_strdup(str);
+	word->address = ft_strdup(str);
 	new_el = ft_lstnew((void *)word);
 	ft_lstadd_back(list, new_el);
 }

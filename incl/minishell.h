@@ -44,7 +44,7 @@
 
 typedef struct s_word
 {
-	void	*address;
+	char	*address;
 	int		type;
 }			t_word;
 
