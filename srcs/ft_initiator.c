@@ -1,49 +1,6 @@
 #include "../incl/minishell.h"
 
-/** !!!!!!!!!! Remove as soon as replacement with Lexer/Parser return value possible !!!!!!!!!!! **/
-// char	**minishell_split_line(char *line)
-// {
-// 	int		buffer;
-// 	int		bufsize;
-// 	int		position;
-// 	char	**tokens;
-// 	char	*token;
-
-// 	buffer = 64;
-// 	bufsize = buffer;
-// 	position = 0;
-// 	tokens = malloc(bufsize * sizeof(char*));
-// 	if (!tokens)
-// 	{
-// 		write(2, "minishell: allocation error\n", 28);
-// 		exit(EXIT_FAILURE);
-// 	}
-// 	token = strtok(line, " \t\r\n\a");
-// 	while (token != NULL)
-// 	{
-// 		tokens[position] = token;
-// 		position++;
-
-// 		if (position >= bufsize)
-// 		{
-// 			bufsize += buffer;
-// 			tokens = realloc(tokens, bufsize * sizeof(char*));
-// 			if (!tokens)
-// 			{
-// 				write(2, "minishell: allocation error\n", 28);
-// 				exit(EXIT_FAILURE);
-// 			}
-// 		}
-// 		token = strtok(NULL, " \t\r\n\a");
-// 	}
-// 	tokens[position] = NULL;
-// 	return (tokens);
-// }
-
-
-/*Functions to keep*/
-
-t_builtin_content *ft_init_builtin_content(char *cmd, int (*minishell_fct)(char **args, int len), int i)
+t_builtin_content *ft_init_builtin_content(char *cmd, int (*minishell_fct)(char **args, ...), int i)
 {
 	t_builtin_content	*content;
 

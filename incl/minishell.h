@@ -10,6 +10,7 @@
 # include <errno.h>
 # include <string.h>
 # include <sys/wait.h>
+# include <stdarg.h>
 
 
 # define FT_SPECIAL_CHAR_STRING 1
@@ -65,7 +66,7 @@ typedef struct s_command
 typedef struct s_builtin_content
 {
 	char	*cmd;
-	int	(* minishell_fct)(char **args, int len);
+	int	(* minishell_fct)(char **args, ...);
 	int		index;
 }	t_builtin_content;
 
@@ -98,14 +99,14 @@ int		lexor(void);
 int		parser(void);
 void	ft_initiator(char **envp);
 void	ft_init_builtins(void);
-t_builtin_content	*ft_init_builtin_content(char *cmd, int (*minishell_fct)(char **args, int len), int i);
-int		minishell_cd(char **args, int len);
-int		minishell_env(char **args, int len);
-int		minishell_echo(char **args, int len);
-int		minishell_exit(char **args, int len);
-int		minishell_pwd(char **args, int len);
-int		minishell_export(char **args, int len);
-int 	minishell_unset(char **args, int len);
+t_builtin_content	*ft_init_builtin_content(char *cmd, int (*minishell_fct)(char **args, ...), int i);
+int		minishell_cd(char **args, ...);
+int		minishell_env(char **args, ...);
+int		minishell_echo(char **args, ...);
+int		minishell_exit(char **args, ...);
+int		minishell_pwd(char **args, ...);
+int		minishell_export(char **args, ...);
+int 	minishell_unset(char **args, ...);
 int		minishell_execute(void);
 int		minishell_launch(char **args);
 // BUILTIN UTILS
