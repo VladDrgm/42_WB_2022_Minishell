@@ -27,16 +27,16 @@ void del_env_var(void* tmp)
 		free(((t_env_var *)(tmp))->value);
 }
 
-int ft_free_linked_list(t_list ***lst, int type, int full)
+int ft_free_linked_list(t_list **lst, int type, int full)
 {
 	if (type == FT_LIST_TYPE_WORD)
-		ft_lstclear(*lst, del_word);
+		ft_lstclear(lst, del_word);
 	else if(type == FT_LIST_TYPE_COMMAND)
-		ft_lstclear(*lst, del_command);
+		ft_lstclear(lst, del_command);
 	else if(type == FT_LIST_TYPE_BUILTIN_CONTENT)
-		ft_lstclear(*lst, del_builtin_content);
+		ft_lstclear(lst, del_builtin_content);
 	else if(type == FT_LIST_TYPE_ENV_VAR)
-		ft_lstclear(*lst, del_env_var);
+		ft_lstclear(lst, del_env_var);
 	else
 		return (-1); //Unknown type
 	if (full)

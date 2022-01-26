@@ -14,7 +14,7 @@ void	*delone(void *content)
 
 char *env_value_finder(char *name) //FINDS THE EQUIVALENT VALUE OF A ENV VAR
 {
-	t_list *ptr = ((t_list *)(*g_access.env));
+	t_list *ptr = g_access.env;
 
 	while (ptr != NULL)
 	{
@@ -30,7 +30,7 @@ char *env_value_finder(char *name) //FINDS THE EQUIVALENT VALUE OF A ENV VAR
 
 char *temp_value_finder(char *name)
 {
-	t_list *ptr = ((t_list *)(*g_access.temp_env));
+	t_list *ptr = g_access.temp_env;
 
 	while (ptr != NULL)
 	{
@@ -56,7 +56,7 @@ char *temp_value_finder(char *name)
 void ft_update_env(char *to_search, char *to_replace)
 {
 	t_list *ptr;
-	ptr = *g_access.env;
+	ptr = g_access.env;
 
 	while(ptr!= NULL)
 	{

@@ -73,11 +73,11 @@ typedef struct s_builtin_content
 typedef struct s_global
 {
 	int		signals;
-	t_list	**env;
-	t_list	**temp_env;
-	t_list	**builtins;
-	t_list	**parser2exec;
-	t_list	**lexor2parser;
+	t_list	*env;
+	t_list	*temp_env;
+	t_list	*builtins;
+	t_list	*parser2exec;
+	t_list	*lexor2parser;
 	char	*read_line2lexor; //read line output
 	char	*last_return; //for $?
 	char	*pwd;
@@ -93,11 +93,10 @@ typedef struct s_env_var
 extern t_global g_access;
 
 void	free_global(void);
-void 	init_global(void);
 void	ft_signal_setup(void);
 int		lexor(void);
 int		parser(void);
-void	ft_initiator_exc(char **envp);
+void	ft_initiator(char **envp);
 void	ft_init_builtins(void);
 t_builtin_content	*ft_init_builtin_content(char *cmd, int (*minishell_fct)(char **args, int len), int i);
 int		minishell_cd(char **args, int len);
@@ -148,7 +147,7 @@ void	print_list_parse(t_list *el);
 // UTILS
 int		ft_strcmp(char *s1, char *s2);
 void    ft_free_split(char **split);
-int 	ft_free_linked_list(t_list ***lst, int type, int full);
+int 	ft_free_linked_list(t_list **lst, int type, int full);
 
 
 #endif
