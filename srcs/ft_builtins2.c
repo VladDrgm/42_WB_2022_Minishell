@@ -10,7 +10,7 @@ int	minishell_cd(char **args, int len)
 {
 	char *temp[2];
 	temp[1] = ft_strjoin("OLDPWD=", g_access.pwd);
-	t_list *ptr = ((t_list *)(*g_access.env));
+	t_list *ptr = g_access.env;
 	args[1] = ft_handle_cd(args[1], ptr);
 //see if implementation of error_printing can be made inside ft_handle_cd
 	if (args[1] == NULL)

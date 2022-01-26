@@ -13,7 +13,7 @@ void ft_lex_space_handler(char **current_str, char *args, int begining, int i)
 		printf("at 1-> begin: %d, i:%d, args: %s\n", begining, i , args);
 	*current_str = join2current_str(*current_str, ft_substr(args, begining, i - begining));
 	if (ft_strlen(*current_str))
-		add_string(g_access.lexor2parser, *current_str);
+		add_string(&(g_access.lexor2parser), *current_str);
 	free(*current_str);
 	*current_str = NULL;
 	free(*current_str);
@@ -33,7 +33,7 @@ void	ft_lex_operand_handler(char **current_str, char *args, int begining, int i)
 		printf("at 1-> begin: %d, i:%d, args: %s\n", begining, i , args);
 	*current_str = join2current_str(*current_str, ft_substr(args, begining, i - begining));
 	if (ft_strlen(*current_str))
-		add_specialchar_string(g_access.lexor2parser, *current_str);
+		add_specialchar_string(&(g_access.lexor2parser), *current_str);
 	free(*current_str);
 	*current_str = NULL;
 	free(*current_str);
@@ -104,7 +104,7 @@ void ft_lex_string_reminder_handler(char **current_str, char *args, int begining
 		printf("at 5-> begin: %d, i:%d, args: %s\n", begining, i , args);
 	*current_str = join2current_str(*current_str, ft_substr(args, begining, i - begining));
 	if (ft_strlen(*current_str))
-		add_string(g_access.lexor2parser, *current_str);
+		add_string(&(g_access.lexor2parser), *current_str);
 	free(*current_str);
 	*current_str = NULL;
 }

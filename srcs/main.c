@@ -15,8 +15,7 @@ int	main(int argc, char **argv, char**envp)
 
 	if (argc > 1)
 		printf("Invalid number of arguments for %s with %s\n", argv[0], envp[0]);
-	init_global();
-	ft_initiator_exc(envp);
+	ft_initiator(envp);
 	temp = 0;
 	while (1)
 	{
@@ -36,8 +35,8 @@ int	main(int argc, char **argv, char**envp)
 				break ;
 			//g_access.parser2exec = &parser2executor_list;
 			temp = minishell_execute();
-			free(*(g_access.parser2exec)); //This should be handled by executor at some point
-			*(g_access.parser2exec) = NULL;
+			free(g_access.parser2exec); //This should be handled by executor at some point
+			g_access.parser2exec = NULL;
 			if (temp == 0)
 				break;
 		}

@@ -14,7 +14,7 @@ int	minishell_env(char **args, int len)
 
 	if (ft_strncmp(args[0], "env", 3))
 		return (0);
-	ptr = *g_access.env;
+	ptr = g_access.env;
 	while (ptr != NULL)
 	{
 		write(1, ((t_env_var*)(ptr->content))->name, \
@@ -162,7 +162,7 @@ int minishell_export(char **args, int len)
 		env_var = (t_env_var *)malloc(sizeof(t_env_var));
 		env_var->name = ft_substr(args[1], 0, j + 1);
 		env_var->value = ft_strdup(&(args[1][j + 1]));
-		ft_lstadd_back(g_access.env, ft_lstnew(env_var));
+		ft_lstadd_back(&(g_access.env), ft_lstnew(env_var));
 	}
 	ft_update_env("_=", "export");
 	return (1);
@@ -186,12 +186,12 @@ int minishell_unset(char **args, int len)
 		return (1);
 	}
 	ft_update_env("_=", "unset");
-	ptr = *g_access.env;
+	ptr = g_access.env;
 	if (ft_strlen(args[1]) == ft_strlen(((t_env_var*)(ptr->content))->name) - 1)
 	{
 		if (!ft_strncmp(args[1], ((t_env_var*)(ptr->content))->name, ft_strlen(args[1])))
 		{
-			*g_access.env = ptr->next;
+			g_access.env = ptr->next;
 			ft_lstdelone(ptr, delone(ptr->content));
 			return (1);
 		}

@@ -154,7 +154,7 @@ int	parser(void)
 	t_command	*cmd;
 
 	index_counter = 0;
-	lex_element = *g_access.lexor2parser;
+	lex_element = g_access.lexor2parser;
 	cmd = NULL;
 	while (1)
 	{
@@ -181,12 +181,12 @@ int	parser(void)
 				else  if (is_pipe(((t_word *)(lex_element->content))->address)) 
 				{
 					if (cmd_len == 0)
-						error_fun(g_access.parser2exec, g_access.lexor2parser);
+						error_fun(&(g_access.parser2exec), &(g_access.lexor2parser));
 					break ;
 				}
 				else
 				{
-					error_fun(g_access.parser2exec, g_access.lexor2parser);
+					error_fun(&(g_access.parser2exec), &(g_access.lexor2parser));
 					break ;
 				}
 			}
@@ -204,13 +204,13 @@ int	parser(void)
 		if (FT_PARSER_COMMENT)
 			printf("Path if: %s\n", cmd->path);
 		executor_element = ft_lstnew((void * ) cmd);
-		ft_lstadd_back(g_access.parser2exec, executor_element);
+		ft_lstadd_back(&(g_access.parser2exec), executor_element);
 		index_counter++;
 	}
-	ft_free_lex_list(*g_access.lexor2parser);
-	*g_access.lexor2parser = NULL;
+	ft_free_lex_list(g_access.lexor2parser);
+	g_access.lexor2parser = NULL;
 	if (FT_PARSER_COMMENT)
-		print_list_parse(*g_access.parser2exec);
+		print_list_parse(g_access.parser2exec);
 	return (0);
 }
 

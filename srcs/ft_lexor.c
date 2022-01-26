@@ -49,7 +49,7 @@ char *ft_getenv(char *str)
 	{
 		return g_access.last_return;
 	}
-	temp = (t_list *)(*(g_access.env));
+	temp = g_access.env;
 	if (!str)
 		return "NOINPUT";
 	while (temp)
@@ -215,11 +215,11 @@ int	lexor(void)
 	if (FT_LEXOR_COMMENT)
 	{
 		printf("We are in lexor %s\n", args);
-		print_list(*g_access.lexor2parser);
+		print_list(g_access.lexor2parser);
 		printf("Flag is %d\n", flag);
 	}
 	if (flag == -1)
-		ft_free_list(*g_access.lexor2parser);
+		ft_free_list(g_access.lexor2parser);
 	free(args);
 	args = NULL;
 	return flag;

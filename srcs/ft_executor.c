@@ -6,11 +6,11 @@ int	minishell_execute(void)
 	char	**args;
 	int		len;
 
-	args = ((t_command *)(*(g_access.parser2exec))->content)->comm_table;
-	len = ((t_command *)(*(g_access.parser2exec))->content)->comm_len;
+	args = ((t_command *)(g_access.parser2exec)->content)->comm_table;
+	len = ((t_command *)(g_access.parser2exec)->content)->comm_len;
 	if (args[0] == NULL) // An empty command was entered.
 		return (1);
-	ptr = *g_access.builtins;
+	ptr = g_access.builtins;
 	while (ptr)
 	{
 		if (ft_strncmp(args[0],((t_builtin_content*)(ptr->content))->cmd, ft_strlen(args[0])) == 0)
