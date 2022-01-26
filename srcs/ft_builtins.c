@@ -6,10 +6,8 @@
 	 @return Always returns 1, to continue executing.
 	 @todo check after adding two times with export => checked; V.
  */
-int	minishell_env(char **args, int len)
+int	minishell_env(char **args, ...)
 {
-	len++; //TO ELIMINATE ERRORS
-	len--;
 	t_list *ptr;
 
 	if (ft_strncmp(args[0], "env", 3))
@@ -39,10 +37,15 @@ int	minishell_env(char **args, int len)
 	 @return Always returns 0, to terminate execution.
 	 @todo free linked lists etc properly; fix arguments that need to be passed!
  */
-int	minishell_exit(char **args, int len)
+int	minishell_exit(char **args, ...)
 {
 	long long int num_arg;
-
+	int len;
+	va_list arg;
+	
+	va_start(arg, *args);
+	len = va_arg(arg, int);
+	va_end(arg);
 	if (len > 2 && !ft_digit_check(args[1]))
 	{
 		write(1, "minishell: exit: too many arguments\n", 36);
@@ -92,10 +95,8 @@ int	minishell_exit(char **args, int len)
 	@param args List of args.	Not examined. (and no need to)
 	@return Always returns 1, to continue execution.
  */
-int minishell_pwd(char **args, int len)
+int minishell_pwd(char **args, ...)
 {
-	len++; //TO ELIMINATE ERRORS
-	len--; //TO ELIMINATE ERRORS
 	char *buf;
 	int i = 1;
 	if (ft_strncmp(args[0], "pwd", 3))
@@ -144,11 +145,9 @@ int minishell_pwd(char **args, int len)
 	@todo multiple arguments;
 	@todo 
  */
-int minishell_export(char **args, int len)
+int minishell_export(char **args, ...)
 {
 	t_env_var *env_var;
-	len++; //TO ELIMINATE ERRORS
-	len--; //TO ELIMINATE ERRORS
 	if (args[1] == NULL)
 	{
 		write(1, "minishell: Too few arguments for export command\n", 49);
@@ -173,10 +172,8 @@ int minishell_export(char **args, int len)
 	@param args List of args.	Not examined. (and no need to)
 	@return Always returns 1, to continue execution.
  */
-int minishell_unset(char **args, int len)
+int minishell_unset(char **args, ...)
 {
-	len++; //TO ELIMINATE ERRORS
-	len--; //TO ELIMINATE ERRORS
 	t_list *ptr;
 	t_list *temp;
 	temp = NULL;
@@ -219,7 +216,6 @@ int minishell_unset(char **args, int len)
 		}
 		ptr = ptr->next;
 	}
-
 	return (1);
 }
 

@@ -6,9 +6,15 @@
 	 @return Always returns 1, to continue executing.
 	 @todo CHECK IF PWD EXISTS AND CREATE IT IF IT DOESN'T, AFTER USING CD; (idea: change PWD to PWD1 if using 'unset' on PWD)
  */
-int	minishell_cd(char **args, int len)
+int	minishell_cd(char **args, ...)
 {
 	char *temp[2];
+	int len;
+	va_list arg;
+	
+	va_start(arg, *args);
+	len = va_arg(arg, int);
+	va_end(arg);
 	temp[1] = ft_strjoin("OLDPWD=", g_access.pwd);
 	t_list *ptr = g_access.env;
 	args[1] = ft_handle_cd(args[1], ptr);
@@ -42,12 +48,17 @@ int	minishell_cd(char **args, int len)
 	 @return Always returns 1, to continue execution.
 	 @todo edge case fetch -nnnnn -nnnn test / edge case echo $_ -> $_ must be implemented alongside history; implemented -nnnnnnnn and also implemented -nnnnn -nnnn V.
  */
-int	minishell_echo(char **args, int len)
+int	minishell_echo(char **args, ...)
 {
 	int i;
 	int flag;
 	int temp;
-
+	int len;
+	va_list arg;
+	
+	va_start(arg, *args);
+	len = va_arg(arg, int);
+	va_end(arg);
 	flag = 0;
 	if (args[1] == NULL)
 		write(2, "minishell: expected argument to \"echo\"\n", 40);
