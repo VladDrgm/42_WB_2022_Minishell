@@ -115,53 +115,53 @@ int minishell_pwd(char **args, ...)
 	@brief Builtin command: export.
 	@param args List of args.	Not examined. (and no need to)
 	@return Always returns 1, to continue execution.
-	@todo fetch if env var already exists and replace it; fetch export without arguments
-	check, why only shown after second function call
-	=> export alone creates a list like this:
-	declare -x DISPLAY="/private/tmp/com.apple.launchd.VWhPUKtCQM/org.xquartz:0"
-	declare -x HOME="/Users/vdragomi"
-	declare -x LANG="en_US.UTF-8"
-	declare -x LOGNAME="vdragomi"
-	declare -x LaunchInstanceID="1BB7B018-FDE5-4F92-A9E3-99580E576E48"
-	declare -x OLDPWD="/Users/vdragomi/Documents/project_minishell_testing"
-	declare -x PATH="/Users/vdragomi/.cargo/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki:/opt/X11/bin:/Users/vdragomi/.cargo/bin:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
-	declare -x PWD="/Users/vdragomi"
-	declare -x SECURITYSESSIONID="186be"
-	declare -x SHELL="/bin/zsh"
-	declare -x SHLVL="2"
-	declare -x SSH_AUTH_SOCK="/private/tmp/com.apple.launchd.Hzvv7vHGS8/Listeners"
-	declare -x TERM="xterm-256color"
-	declare -x TERM_PROGRAM="Apple_Terminal"
-	declare -x TERM_PROGRAM_VERSION="433"
-	declare -x TERM_SESSION_ID="0395DE62-7152-4FC0-9FEE-884044F7E710"
-	declare -x TMPDIR="/var/folders/zz/zyxvpxvq6csfxvn_n000cbrm0032y5/T/"
-	declare -x USER="vdragomi"
-	declare -x VALDVARCLEMENS
-	declare -x XPC_FLAGS="0x0"
-	declare -x XPC_SERVICE_NAME="0"
-	=> export keys must ONLY be alphanumerical
-	@todo add to ENVP ONLY if varable has EQUAL sign
-	@todo only alphanum for key; doesn't matter for value; first character of key only alpha;
-	@todo multiple arguments;
-	@todo 
  */
 int minishell_export(char **args, ...)
 {
 	t_env_var *env_var;
+	int len;
+	va_list arg;
+	int j;
+	int i;
+	int valid;
+	
+	va_start(arg, *args);
+	len = va_arg(arg, int);
+	va_end(arg);
+	valid = 1;
+
 	if (args[1] == NULL)
+		return (ft_single_export());
+	j = 0;
+	i = 1;
+	while (i < len)
 	{
-		write(1, "minishell: Too few arguments for export command\n", 49);
-		return (1);
-	}
-	int j = 0;
-	while (args[1][j] != '=' && args[1][j] != '\0')
-		j++;
-	if (args[1][j] == '=')
-	{
-		env_var = (t_env_var *)malloc(sizeof(t_env_var));
-		env_var->name = ft_substr(args[1], 0, j + 1);
-		env_var->value = ft_strdup(&(args[1][j + 1]));
-		ft_lstadd_back(&(g_access.env), ft_lstnew(env_var));
+		j = 0;
+		valid = 1;
+		while (args[i][j] != '=' && args[i][j] != '\0')
+		{
+			if (j == 0 && (args[i][j] == '_' || ft_isalpha(args[i][j])))
+				j++;
+			else if (j > 0 && (args[i][j] == '_' || ft_isalnum(args[i][j])))
+				j++;
+			else
+			{
+				valid = 0;
+				write(1, "minishell: export: `", 20); //bash: export: `4hehe=he': not a valid identifier
+				write(1 , args[i], ft_strlen(args[i]));
+				write(1, "': not a valid identifier\n", 26);
+				j++;
+			}
+		}
+		if (args[i][j] == '=' && valid)
+		{
+			env_var = (t_env_var *)malloc(sizeof(t_env_var));
+			env_var->name = ft_substr(args[i], 0, j + 1);
+			env_var->value = ft_strdup(&(args[i][j + 1]));
+			if (!ft_check_existing_env(&env_var))
+				ft_lstadd_back(&(g_access.env), ft_lstnew(env_var));
+		}
+		i++;
 	}
 	ft_update_env("_=", "export");
 	return (1);

@@ -126,6 +126,12 @@ char	*ft_handle_cd(char *address, t_list *ptr);
 int		ft_digit_check(char *argv);
 long long int	ft_atoll(const char *str);
 
+//EXPORT UTILS
+t_list *ft_copy_env(void);
+void ft_print_sorted_copy(t_list *env_cpy);
+int ft_single_export(void);
+int ft_check_existing_env(t_env_var **env_var);
+
 // LEXOR UTILS
 char	*join2current_str(char* current_str, char* add_on);
 void	ft_free_list(t_list *head);
