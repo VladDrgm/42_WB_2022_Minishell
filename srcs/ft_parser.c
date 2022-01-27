@@ -163,7 +163,7 @@ int	parser(void)
 		if (lex_element == NULL)
 			break;
 		while (1)
-		{
+		{	
 			if (lex_element == NULL)
 				break;
 			if (((t_word *)(lex_element->content))->type == FT_SPECIAL_CHAR_STRING)
@@ -178,11 +178,10 @@ int	parser(void)
 					else
 						break;
 				}
-				else  if (is_pipe(((t_word *)(lex_element->content))->address))
+				else  if (is_pipe(((t_word *)(lex_element->content))->address)) 
 				{
 					if (cmd_len == 0)
 						error_fun(g_access.parser2exec, g_access.lexor2parser);
-					lex_element = lex_element->next;
 					break ;
 				}
 				else

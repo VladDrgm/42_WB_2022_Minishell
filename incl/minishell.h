@@ -10,7 +10,6 @@
 # include <errno.h>
 # include <string.h>
 # include <sys/wait.h>
-# include "pipex.h"
 
 
 # define FT_SPECIAL_CHAR_STRING 1
@@ -34,10 +33,8 @@
 # define FT_TILDE 126		//futuristic stuff, i dont know
 # define FT_EXCL_MARK 33	//futuristic stuff, i dont know
 # define FT_UNDERSCORE 95
-
 # define FT_PARSER_COMMENT 0
 # define FT_LEXOR_COMMENT 0
-# define FT_PIPES_COMMENT 1
 
 # define FT_CMD_TYPE_ERROR -1
 # define FT_CMD_TYPE_SYSTEM 0
@@ -48,8 +45,6 @@
 # define FT_LIST_TYPE_COMMAND 1
 # define FT_LIST_TYPE_BUILTIN_CONTENT 2
 # define FT_LIST_TYPE_ENV_VAR 3
-
-#define FT_PIPEX_ON 1
 
 
 typedef struct s_word
@@ -150,7 +145,6 @@ void	print_list_parse(t_list *el);
 int		ft_strcmp(char *s1, char *s2);
 void    ft_free_split(char **split);
 int 	ft_free_linked_list(t_list ***lst, int type, int full);
-int		pipex(char **envp);
 
 
 #endif
