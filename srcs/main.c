@@ -17,12 +17,18 @@ int	main(int argc, char **argv, char**envp)
 		printf("Invalid number of arguments for %s with %s\n", argv[0], envp[0]);
 	init_global();
 	ft_initiator_exc(envp);
-	temp = 0;
+	// temp = 0;
 	while (1)
 	{
+		fflush(stdin);
+		// close(0);
 		g_access.read_line2lexor = readline(">");
 		if (g_access.read_line2lexor == NULL) //dealing with EOF (Ctrl + D)
+		{
+			printf("I broke because i am poor\n");
 			break;
+		}
+
 		if (*(g_access.read_line2lexor) == 0) //dealing with Enter (empty input)
 			continue;
 		add_history(g_access.read_line2lexor);
@@ -35,14 +41,22 @@ int	main(int argc, char **argv, char**envp)
 			if (temp != 0)
 				break ;
 			//g_access.parser2exec = &parser2executor_list;
-			temp = minishell_execute();
+			if (FT_PIPEX_ON)
+			{
+				temp = pipex(envp);
+				printf("Temp is: %d", temp);
+			}
+			else
+				write(1, "dingus\n", 10);
+			// temp = minishell_execute();
 			free(*(g_access.parser2exec)); //This should be handled by executor at some point
 			*(g_access.parser2exec) = NULL;
 			if (temp == 0)
 				break;
 		}
-		else 
+		else
 			break;
+		write(1, "WE BROKE\n", 9);
 	}
 	free_global();
 // ************************************Part 2******************************

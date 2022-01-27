@@ -1,12 +1,14 @@
 CC			= gcc
-#CFLAGS		= -g3
-CFLAGS		= -g3 -Wall -Wextra -Werror
+CFLAGS		= -g3
+# CFLAGS		= -g3 -Wall -Wextra -Werror
 #CFLAGS		=
 RM			= rm -f
 SRCD		= ./srcs/
 SRC			= main.c ft_lexor.c ft_parser.c ft_executor.c ft_initiator.c ft_echo_utils.c ft_builtins2.c ft_builtins.c ft_globlal_fun.c \
 				ft_builtins_utils.c ft_cd_utils.c ft_lexor_utils.c ft_lexor_utils2.c ft_lexor_handlers.c ft_parser_utils.c utils.c \
-				ft_free_linked_list.c ft_exit_utils.c
+				ft_free_linked_list.c ft_exit_utils.c \
+				pipex.c ft_file_checker.c ft_cmd_check.c ft_handlers.c ft_utilities_1.c ft_mem_handlers.c ft_utilities_2.c
+
 
 # Command to add the source folder prefix (instead of having it added manually to SRC)
 SRCF		= $(addprefix $(SRCD),$(SRC))
@@ -17,7 +19,7 @@ BUILD		= $(OBJF:$(OBJD)%.o)
 
 NAME		= minishell
 HEADD		= ./incl/
-HEADF		= minishell.h minishe11.h
+HEADF		= minishell.h pipex.h
 
 LIBFTD		= ./libft/
 LIBFT_OBJD	= objs

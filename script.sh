@@ -1,4 +1,4 @@
 clear
-make re
+make
 clear
 ./minishell
