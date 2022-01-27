@@ -10,6 +10,7 @@
 # include <errno.h>
 # include <string.h>
 # include <sys/wait.h>
+# include <stdarg.h>
 
 
 # define FT_SPECIAL_CHAR_STRING 1
@@ -65,7 +66,7 @@ typedef struct s_command
 typedef struct s_builtin_content
 {
 	char	*cmd;
-	int	(* minishell_fct)(char **args, int len);
+	int	(* minishell_fct)(char **args, ...);
 	int		index;
 }	t_builtin_content;
 
@@ -73,12 +74,15 @@ typedef struct s_builtin_content
 typedef struct s_global
 {
 	int		signals;
-	t_list	**env;
-	t_list	**builtins;
-	t_list	**parser2exec;
-	t_list	**lexor2parser;
+	t_list	*env;
+	t_list	*temp_env;
+	t_list	*builtins;
+	t_list	*parser2exec;
+	t_list	*lexor2parser;
 	char	*read_line2lexor; //read line output
 	char	*last_return; //for $?
+	char	*pwd;
+	char	*home;
 }				t_global;
 
 typedef struct s_env_var
@@ -90,25 +94,25 @@ typedef struct s_env_var
 extern t_global g_access;
 
 void	free_global(void);
-void 	init_global(void);
 void	ft_signal_setup(void);
 int		lexor(void);
 int		parser(void);
-void	ft_initiator_exc(char **envp);
+void	ft_initiator(char **envp);
 void	ft_init_builtins(void);
-t_builtin_content	*ft_init_builtin_content(char *cmd, int (*minishell_fct)(char **args, int len), int i);
-int		minishell_cd(char **args, int len);
-int		minishell_env(char **args, int len);
-int		minishell_echo(char **args, int len);
-int		minishell_exit(char **args, int len);
-int		minishell_pwd(char **args, int len);
-int		minishell_export(char **args, int len);
-int 	minishell_unset(char **args, int len);
+t_builtin_content	*ft_init_builtin_content(char *cmd, int (*minishell_fct)(char **args, ...), int i);
+int		minishell_cd(char **args, ...);
+int		minishell_env(char **args, ...);
+int		minishell_echo(char **args, ...);
+int		minishell_exit(char **args, ...);
+int		minishell_pwd(char **args, ...);
+int		minishell_export(char **args, ...);
+int 	minishell_unset(char **args, ...);
 int		minishell_execute(void);
 int		minishell_launch(char **args);
 // BUILTIN UTILS
-void	ft_update_env(char *to_search, char *to_replace);
+void	ft_update_env(char *to_search, char *to_replace); //check if value finder finds insider env and if not, create a new one; env should not create duplicate env variables;
 char	*env_value_finder(char *name);
+char	*temp_value_finder(char *name);
 void	*delone(void *content);
 // ECHO UTILS
 void	echo_print(char **str, int starter, int size, int flag);
@@ -121,6 +125,12 @@ char	*ft_handle_cd(char *address, t_list *ptr);
 // EXIT UTILS
 int		ft_digit_check(char *argv);
 long long int	ft_atoll(const char *str);
+
+//EXPORT UTILS
+t_list *ft_copy_env(void);
+void ft_print_sorted_copy(t_list *env_cpy);
+int ft_single_export(void);
+int ft_check_existing_env(t_env_var **env_var);
 
 // LEXOR UTILS
 char	*join2current_str(char* current_str, char* add_on);
@@ -144,7 +154,7 @@ void	print_list_parse(t_list *el);
 // UTILS
 int		ft_strcmp(char *s1, char *s2);
 void    ft_free_split(char **split);
-int 	ft_free_linked_list(t_list ***lst, int type, int full);
+int 	ft_free_linked_list(t_list **lst, int type, int full);
 
 
 #endif
