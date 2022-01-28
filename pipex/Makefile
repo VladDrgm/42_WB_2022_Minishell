@@ -41,7 +41,7 @@ $(OBJD)%.o: $(SRCD)%.c
 
 $(NAME):	${OBJF}
 			make libftmake
-			$(CC) $(CFLAGS) $(SRCF) -o $(NAME) $(HEADD)$(HEADF) $(LIBFTD)$(LIBFTL)
+			$(CC) $(CFLAGS) $(SRCF) -o $(NAME) $(HEADD)$(HEADF) $(LIBFTD)$(LIBFTL) -L /usr/local/lib -I /usr/local/include -lreadline
 
 
 all:		${NAME}

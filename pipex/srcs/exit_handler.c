@@ -46,6 +46,13 @@ void	ft_exit_on_error(t_list **cmd_list, char *error_msg)
 	exit(EXIT_FAILURE);
 }
 
+void	ft_exit_on_error2(char *error_msg)
+{
+	perror(error_msg);
+	ft_close_fd();
+	exit(EXIT_FAILURE);
+}
+
 void	ft_exit_on_invalid_cmd(char **path_list, t_list **cmd_list, \
 		t_content *content, t_list *elem)
 {
