@@ -28,6 +28,7 @@ void	ft_update_create_OLDPWD(char **argv, t_list *ptr, int len)
 	 		'....user/minishell' instead of '......user/Minishell'
 	 @todo if we use cd "/etc" (or any variant of any below-mounting-point value), 
 	 	instead of updating PWD to private/etc, we must update it to /etc (or any below mounting-point folder used)
+		@todo fix cd ..
  */
 void	ft_update_PWD(char *path)
 {

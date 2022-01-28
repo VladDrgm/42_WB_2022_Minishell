@@ -115,6 +115,7 @@ int minishell_pwd(char **args, ...)
 	@brief Builtin command: export.
 	@param args List of args.	Not examined. (and no need to)
 	@return Always returns 1, to continue execution.
+	@todo Check for export directly after minishell execution on MAC. Is OLDPWD printed? If yes, insert exception.
  */
 int minishell_export(char **args, ...)
 {
