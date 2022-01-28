@@ -17,6 +17,11 @@ int	minishell_cd(char **args, ...)
 	va_end(arg);
 	temp[1] = ft_strjoin("OLDPWD=", g_access.pwd);
 	t_list *ptr = g_access.env;
+	if (len > 2)
+	{
+		write(1, "minishell: cd: too many arguments\n", 34);
+		return (1);
+	}
 	args[1] = ft_handle_cd(args[1], ptr);
 //see if implementation of error_printing can be made inside ft_handle_cd
 	if (args[1] == NULL)

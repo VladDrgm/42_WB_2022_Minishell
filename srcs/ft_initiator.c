@@ -1,4 +1,5 @@
 #include "../incl/minishell.h"
+#include <fcntl.h>
 
 t_builtin_content *ft_init_builtin_content(char *cmd, int (*minishell_fct)(char **args, ...), int i)
 {
@@ -29,16 +30,28 @@ void ft_init_builtins(void)
 	COMMENTED LINES INSIDE THE FUNCTION ARE FOR TESTING PURPOSES;
 */
 
+/**
+	 @brief Creating a copy of the original env list. 
+	 @param envp Original environmental variables list.
+	 @return None.
+	 @exception As per start of a shell OLPWD is not existent.
+	 @exception As per start of a shell PWD is always existent, 
+	 			even if unset in parent shell
+ */
 void ft_create_envlist(char **envp)
 {
 	int i, j;
 	t_env_var *env_var;
+	int pwd_flag;
 
 	i = 0;
+	pwd_flag = 0;
 	while (envp[i])
 	{
 		if (ft_strncmp(envp[i], "OLDPWD", 6))
 		{
+			if (!ft_strncmp(envp[i], "PWD", 3))
+				pwd_flag = 1;
 			j = 0;
 			while (envp[i][j] != '=' && envp[i][j] != '\0')
 				j++;
@@ -52,6 +65,59 @@ void ft_create_envlist(char **envp)
 		}
 		i++;
 	}
+	i = 1;
+	g_access.pwd = getcwd(NULL, 0);
+	while(getcwd(g_access.pwd, i) == NULL)
+		i++;
+	if (!pwd_flag)
+	{
+		env_var = (t_env_var *)malloc(sizeof(t_env_var));
+		env_var->name = ft_strdup("PWD=");
+		env_var->value = ft_strdup(g_access.pwd);
+		ft_lstadd_back(&(g_access.temp_env), ft_lstnew(env_var));
+	}
+}
+
+void ft_get_home(void)
+{
+	int fd = open("/etc/passwd", O_RDONLY);
+	char *s = get_next_line(fd);
+	int i;
+	t_list *ptr;
+	char *uname;
+	char *str;
+	int len;
+
+	ptr = g_access.env;
+	uname = NULL;
+	while(ptr)
+	{
+		if (!ft_strncmp(((t_env_var *)(ptr->content))->name, "USER=", 5))
+			uname = ft_strdup(((t_env_var *)(ptr->content))->value);
+		ptr=ptr->next;
+	}
+	while (s != NULL)
+	{
+		i = 0;
+		while (s[i])
+		{
+			if (!ft_strncmp(s, uname, ft_strlen(uname)))
+			{
+				str = ft_strchr(s, '/');
+				uname = ft_strchr(str, ':');
+				len = uname - str;
+				g_access.home = ft_substr(str, 0, len);
+				break;
+			}
+			i++;
+		}
+		if (g_access.home != NULL)
+			break;
+		free(s);
+		s = get_next_line(fd);
+	}
+	close(fd);
+
 }
 
 void ft_initiator(char **envp)
@@ -60,12 +126,14 @@ void ft_initiator(char **envp)
 	g_access.last_return = malloc(sizeof(char) * 2);
 	g_access.last_return[0] = '0';
 	g_access.last_return[1] = '\0';
+	g_access.temp_env = NULL;
+	g_access.pwd = NULL;
 	ft_create_envlist(envp);
+	ft_get_home();
 	ft_init_builtins();
 	g_access.lexor2parser = NULL;
 	g_access.parser2exec = NULL;
-	g_access.temp_env = NULL;
 	g_access.read_line2lexor = NULL; //allocated in main by readline
-	g_access.home = ft_strdup(getenv("HOME"));
-	g_access.pwd = ft_strdup(getenv("PWD"));
+	//g_access.home = ft_strdup(getenv("HOME"));
+	
 }
