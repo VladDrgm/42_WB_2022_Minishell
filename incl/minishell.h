@@ -11,7 +11,7 @@
 # include <string.h>
 # include <sys/wait.h>
 # include <stdarg.h>
-
+#include <fcntl.h>
 
 # define FT_SPECIAL_CHAR_STRING 1
 # define FT_STRING 2
@@ -113,6 +113,9 @@ int		minishell_export(char **args, ...);
 int 	minishell_unset(char **args, ...);
 int		minishell_execute(void);
 int		minishell_launch(char **args);
+//INIT UTILS
+void	ft_get_home(void);
+void	prerror(char *msg);
 // BUILTIN UTILS
 void	ft_update_env(char *to_search, char *to_replace); //check if value finder finds insider env and if not, create a new one; env should not create duplicate env variables;
 char	*env_value_finder(char *name);
@@ -125,7 +128,6 @@ int		echo_flag(char *str);
 void	ft_update_create_OLDPWD(char **argv, t_list *ptr, int len);
 void	ft_update_PWD(char *path);
 char	*ft_handle_cd(char *address, t_list *ptr);
-
 // EXIT UTILS
 int		ft_digit_check(char *argv);
 long long int	ft_atoll(const char *str);
