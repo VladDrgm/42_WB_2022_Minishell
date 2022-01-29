@@ -23,23 +23,14 @@ void	ft_memmove_till_newline(char *l_to_m)
 int	ft_return_prep(int bytes, char **tmp, char **line, int fd)
 {
 	if (bytes > 0)
-	{
-
 		return (1);
-	}
-		
 	else if (bytes == 0)
-	{
-		if (tmp)
-			free(tmp);
 		return (0);
-	}
 	else
 	{
 		if (fd >= 0 && fd <= 1024)
 			free(*line);
 		*line = NULL;
-		free(tmp);
 		*tmp = NULL;
 		return (-1);
 	}
