@@ -79,7 +79,6 @@ typedef struct s_global
 {
 	int		signals;
 	t_list	*env;
-	t_list	*temp_env;
 	t_list	*builtins;
 	t_list	*parser2exec;
 	t_list	*lexor2parser;
@@ -119,7 +118,6 @@ void	prerror(char *msg);
 // BUILTIN UTILS
 void	ft_update_env(char *to_search, char *to_replace); //check if value finder finds insider env and if not, create a new one; env should not create duplicate env variables;
 char	*env_value_finder(char *name);
-char	*temp_value_finder(char *name);
 void	*delone(void *content);
 // ECHO UTILS
 void	echo_print(char **str, int starter, int size, int flag);
@@ -159,8 +157,9 @@ void	ft_free_parser(void *parser);
 void	print_list_parse(t_list *el);
 // UTILS
 int		ft_strcmp(char *s1, char *s2);
-void    ft_free_split(char **split);
-int 	ft_free_linked_list(t_list **lst, int type, int full);
+void	ft_free_split(char **split);
+int		ft_free_linked_list(t_list **lst, int type, int full);
+void	ft_set_global_pwd(char **env);
 //GNL
 int		get_next_line_prev(int fd, char **line);
 char	*get_next_line(int fd);

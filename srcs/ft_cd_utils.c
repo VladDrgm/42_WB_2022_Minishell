@@ -7,14 +7,12 @@ void	ft_update_create_OLDPWD(char **argv, t_list *ptr)
 	{
 		if (ft_strncmp(((t_env_var *)(ptr->content))->name, "OLDPWD", 6) == 0) //IF OLDPWD EXISTS, WE UPDATE IT <------
 		{
-			// printf("value = %s\n", env_value_finder("PWD"));
-			ft_update_env("OLDPWD=", g_access.pwd);
+			ft_set_global_pwd(&(((t_env_var *)(ptr->content))->value));
 			return ;
 		}
 		ptr = ptr->next;
 	}
 	minishell_export(argv, 2); //if OLDPWD does not exist, we create it <-------------
-
 	return ;
 }
 
@@ -34,20 +32,9 @@ void	ft_update_PWD(char *path)
 {
 	g_access.pwd = path;
 	if (env_value_finder("PWD") == NULL)
-	{
-		if (temp_value_finder("PWD") == NULL)
-		{
-			//create PWD in temp with the value equivalent of path;
-			//need to have a start value in our shadow-env???
-			// return;
-		}
-		else
-		{
-			//update TEMP PWD;
-			//return;
-		}
-	}
-	ft_update_env("PWD=", path);
+		ft_set_global_pwd(&g_access.pwd);
+	else
+		ft_update_env("PWD=", path);
 }
 
 char	*ft_handle_cd(char *address, t_list *ptr)
