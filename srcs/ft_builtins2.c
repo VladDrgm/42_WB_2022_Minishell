@@ -39,7 +39,7 @@ int	minishell_cd(char **args, ...)
 	}
 	ft_update_create_OLDPWD(temp, ptr);
 	if (chdir(path) != 0)
-		perror(ft_strjoin("minishell: cd: ", args[1]));
+		perror(ft_strjoin("minishell: cd: ", path));
 	ft_update_PWD(path);
 	free(temp[1]);
 	ft_update_env("_=", "cd");
