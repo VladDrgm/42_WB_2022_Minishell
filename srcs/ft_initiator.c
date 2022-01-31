@@ -65,16 +65,7 @@ void ft_create_envlist(char **envp)
 		i++;
 	}
 	if (g_access.pwd == NULL)
-	{
-		i = 1;
-		g_access.pwd = getcwd(NULL, 0);
-		while(getcwd(g_access.pwd, i) == NULL)
-			i++;
-		env_var = (t_env_var *)malloc(sizeof(t_env_var));
-		env_var->name = ft_strdup("PWD=");
-		env_var->value = ft_strdup(g_access.pwd);
-		ft_lstadd_back(&(g_access.temp_env), ft_lstnew(env_var));
-	}
+		ft_set_global_pwd(&g_access.pwd);
 	if (g_access.home == NULL)
 		ft_get_home();
 }
@@ -85,7 +76,6 @@ void ft_initiator(char **envp)
 	g_access.last_return = malloc(sizeof(char) * 2);
 	g_access.last_return[0] = '0';
 	g_access.last_return[1] = '\0';
-	g_access.temp_env = NULL;
 	g_access.pwd = NULL;
 	ft_create_envlist(envp);
 	ft_init_builtins();

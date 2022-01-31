@@ -32,3 +32,15 @@ int ft_strcmp(char *s1, char *s2)
         i++;
     return (s1[i] - s2[i]);
 }
+
+void ft_set_global_pwd(char **env)
+{
+	int i;
+
+	i = 1;
+	if (*env)
+		free(*env);
+	*env = getcwd(NULL, 0);
+	while(getcwd(*env, i) == NULL)
+		i++;
+}

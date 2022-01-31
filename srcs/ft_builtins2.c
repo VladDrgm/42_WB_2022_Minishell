@@ -11,6 +11,7 @@ int	minishell_cd(char **args, ...)
 	char *temp[2];
 	int len;
 	va_list arg;
+	char *path;
 	
 	va_start(arg, *args);
 	len = va_arg(arg, int);
@@ -22,24 +23,24 @@ int	minishell_cd(char **args, ...)
 		write(1, "minishell: cd: too many arguments\n", 34);
 		return (1);
 	}
-	args[1] = ft_handle_cd(args[1], ptr);
+	path = ft_strdup(ft_handle_cd(args[1], ptr));
 //see if implementation of error_printing can be made inside ft_handle_cd
-	if (args[1] == NULL)
+	if (path == NULL)
 	{
 		write(1, "minishell: cd: HOME not set\n", 28);
 		ft_update_env("_=", "cd");
 		return (1);
 	}
-	else if (!ft_strncmp(args[1], ";", 1))
+	else if (!ft_strncmp(path, ";", 1))
 	{
 		write(1, "minishell: cd: OLDPWD not set\n", 30);
 		ft_update_env("_=", "cd");
 		return (1);
 	}
 	ft_update_create_OLDPWD(temp, ptr);
-	if ((chdir(args[1]) != 0))
+	if (chdir(path) != 0)
 		perror(ft_strjoin("minishell: cd: ", args[1]));
-	ft_update_PWD(args[1]);
+	ft_update_PWD(path);
 	free(temp[1]);
 	ft_update_env("_=", "cd");
 	return (1);
