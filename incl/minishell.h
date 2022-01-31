@@ -125,7 +125,7 @@ void	*delone(void *content);
 void	echo_print(char **str, int starter, int size, int flag);
 int		echo_flag(char *str);
 // CD UTILS
-void	ft_update_create_OLDPWD(char **argv, t_list *ptr, int len);
+void	ft_update_create_OLDPWD(char **argv, t_list *ptr);
 void	ft_update_PWD(char *path);
 char	*ft_handle_cd(char *address, t_list *ptr);
 // EXIT UTILS
