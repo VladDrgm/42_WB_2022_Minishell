@@ -1,7 +1,7 @@
 #include "../incl/minishell.h"
 
 //when UNSETTING PWD, this needs to have a special situation
-void	ft_update_create_OLDPWD(char **argv, t_list *ptr, int len)
+void	ft_update_create_OLDPWD(char **argv, t_list *ptr)
 {
 	while (ptr != NULL)
 	{
@@ -13,7 +13,7 @@ void	ft_update_create_OLDPWD(char **argv, t_list *ptr, int len)
 		}
 		ptr = ptr->next;
 	}
-	minishell_export(argv, len); //if OLDPWD does not exist, we create it <-------------
+	minishell_export(argv, 2); //if OLDPWD does not exist, we create it <-------------
 
 	return ;
 }
