@@ -189,6 +189,8 @@ int minishell_unset(char **args, ...)
 	{
 		if (!ft_strncmp(args[1], ((t_env_var*)(ptr->content))->name, ft_strlen(args[1])))
 		{
+			if (!ft_strncmp(((t_env_var*)(ptr->content))->name, "PWD=", 4))
+				g_access.pwd = NULL;
 			g_access.env = ptr->next;
 			ft_lstdelone(ptr, delone(ptr->content));
 			return (1);
@@ -213,6 +215,8 @@ int minishell_unset(char **args, ...)
 					ptr->next = NULL;
 					return (1);
 				}
+				if (!ft_strncmp(((t_env_var*)(ptr->content))->name, "PWD=", 4))
+					g_access.pwd = NULL;
 			}
 		}
 		ptr = ptr->next;
