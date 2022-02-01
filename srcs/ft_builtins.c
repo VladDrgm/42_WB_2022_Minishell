@@ -49,6 +49,8 @@ int	minishell_exit(char **args, ...)
 	if (len > 2 && !ft_digit_check(args[1]))
 	{
 		write(1, "minishell: exit: too many arguments\n", 36);
+		free(g_access.last_return);
+		g_access.last_return = ft_itoa(1);
 		return (1);
 	}
 	else if (len == 1)
@@ -97,9 +99,12 @@ int	minishell_exit(char **args, ...)
  */
 int minishell_pwd(char **args, ...)
 {
+
 	char *buf;
 	int i = 1;
-	if (ft_strncmp(args[0], "pwd", 3))
+	free(g_access.last_return);
+	g_access.last_return = ft_itoa(0);
+	if (args[0] == NULL) //in order to prevent compiler errors
 		return (0);
 	buf = getcwd(NULL, 0);
 	while(getcwd(buf, i) == NULL)
@@ -108,6 +113,7 @@ int minishell_pwd(char **args, ...)
 	write(1, "\n", 1);
 	free(buf);
 	ft_update_env("_=", "pwd");
+
 	return (1);
 }
 
@@ -131,6 +137,9 @@ int minishell_export(char **args, ...)
 	va_end(arg);
 	valid = 1;
 
+	ft_update_env("_=", "export");
+	free(g_access.last_return);
+	g_access.last_return = ft_itoa(0);
 	if (args[1] == NULL)
 		return (ft_single_export());
 	j = 0;
@@ -151,6 +160,8 @@ int minishell_export(char **args, ...)
 				write(1, "minishell: export: `", 20); //bash: export: `4hehe=he': not a valid identifier
 				write(1 , args[i], ft_strlen(args[i]));
 				write(1, "': not a valid identifier\n", 26);
+				free(g_access.last_return);
+				g_access.last_return = ft_itoa(1);
 				j++;
 			}
 		}
@@ -164,7 +175,6 @@ int minishell_export(char **args, ...)
 		}
 		i++;
 	}
-	ft_update_env("_=", "export");
 	return (1);
 }
 
@@ -178,12 +188,9 @@ int minishell_unset(char **args, ...)
 	t_list *ptr;
 	t_list *temp;
 	temp = NULL;
-	if (args[1] == NULL)
-	{
-		write(1, "minishell: Too few arguments for unset command\n", 48);
-		return (1);
-	}
-	ft_update_env("_=", "unset");
+	ft_update_env("_=", "export");
+	free(g_access.last_return);
+	g_access.last_return = ft_itoa(0);
 	ptr = g_access.env;
 	if (ft_strlen(args[1]) == ft_strlen(((t_env_var*)(ptr->content))->name) - 1)
 	{
