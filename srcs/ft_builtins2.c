@@ -13,7 +13,7 @@ int	minishell_cd(char **args, ...)
 	va_list arg;
 	char *path;
 	
-	va_start(arg, *args);
+	va_start(arg, args);
 	len = va_arg(arg, int);
 	va_end(arg);
 	temp[1] = ft_strjoin("OLDPWD=", g_access.pwd);
@@ -62,7 +62,7 @@ int	minishell_echo(char **args, ...)
 	int len;
 	va_list arg;
 	
-	va_start(arg, *args);
+	va_start(arg, args);
 	len = va_arg(arg, int);
 	va_end(arg);
 	flag = 0;
