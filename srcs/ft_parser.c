@@ -182,6 +182,8 @@ int	parser(void)
 				{
 					if (cmd_len == 0)
 						error_fun(&(g_access.parser2exec), &(g_access.lexor2parser));
+					else
+						lex_element = lex_element->next;
 					break ;
 				}
 				else
@@ -194,6 +196,7 @@ int	parser(void)
 				ft_string_handler(lex_element, &cmd_line, &cmd_len);
 			lex_element = lex_element->next;
 		}
+		cmd_line = add_to_line(cmd_line, NULL, &cmd_len);
 		cmd = (t_command *)malloc(sizeof(t_command));
 		cmd->comm_table = cmd_line;
 		cmd->path = NULL;
