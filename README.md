@@ -1,57 +1,51 @@
 # 42_WB_2022_Minishell
 
-Working Repo for the Minishell project.
+## Conventions
+| No  | Task          | Actions                                           | Target                          | Example |
+| :-: | ------------- | ------------------------------------------------- |-------------------------------- | ------------------------------------------------- |
+| 1   | Create issue  |    Add, Create, Implement, Modify, Debug, Close   | Feature / Function / File name  | Implement History / Add Makefile/ Create s_to_l() |
+| 2   | Create branch |    PERSONAL ID + Add/ Create/ Implement/ etc.     | Feature / Function / File name  |  007-Implement History / 005-Add Makefile         |
+| 3   | Create commit | Description of choice + "Fixes #<number of issue>"|               N/A               |  "I have fixed this thing. Fixes #4"              |
+	
 
-Approach:
+## Contributor Details
 
-Create Issue
-	Issue (task) convention:
-	1) Action: Add, Create, Implement, Modify, Debug, Close
-	2) Feature / Function / File name
-	Example:	Implement History
-				Add Makefile
-				Create s_to_l()
+| ID    | Name                                    |
+| :-:   | --------------------------------------- |
+| 005   | [Maggie](https://github.com/Madasanya)  |
+| 549   | [Deky](https://github.com/dejanzivanov) |
+| 007   | [Domen](https://github.com/mr-bammby)   |
+| 099   | [Vlad](https://github.com/VladDrag)     |
+	
+	
+## General Instructions
 
-Create Branch
-	Branch Creation:
-		```git branch [BRANCH_NAME]```
-	Switch to branch:
+### Create Branch
+	A: Branch Creation:
+		```git branch [BRANCH_NAME]``` OR ```git checkout -b [BRANCH_NAME]```
+	   Switch to branch:
 		```git checkout [BRANCH_NAME]```
-	Pushing created Branch:
+	   Pushing created Branch:
 		```git push --set-upstream origin [BRANCH_NAME]```
-	Pull request:
-		Do it on Github
-	**Branching convention for [BRANCH_NAME]:
-	1) Use your [PERSONAL_ID] (made out of 3 digits)
-		[PERSONAL ID]:
-			005 - Maggi
-			099 - Vlad
-			007 - Domen
-			549 - Deki
-	2) Action: Add, Create, Implement, Modify, Debug, Close
-	3) Feature / Function / File name
-	Example:	        007-Implement History
-				005-Add Makefile
-				001-Create s_to_l()**
+	   Pull request:
+		- via Github
 
-Move commit from overmind to new branch (for dummys)
-	Creat new branch:
-		```git branch [BRANCH_NAME]```
+	B: Move commit from overmind to new branch:
+	   Create new branch:
+		```git branch [BRANCH_NAME]``` OR ```git checkout -b [BRANCH_NAME]```
+	   Merge branch:
 		```git merge overmind```
+	   Change to overmind (main):
 		```git checkout overmind```
+	   Reset *if need be*:
 		```git reset --hard HEAD~[N]``` # Go back [N] commits. You *will* lose uncommitted work. [N] is a number.
+	   Switch to branch:
 		```git checkout [BRANCH_NAME]```
 
 
-Add and Commit:
-	Commits convention:
-		1) Add a description (free to add however you want it)
-		2) Write "Fixes" + {}-> github issue number (#number)
-		Example: "I have fixed this thing. Fixes #4"
 
-
-Installing reqierments:
--install readline library
-	linux debian(based):	
-	```apt-get install libreadline-dev```
+       C: Installing reqierments:
+		-install readline library:
+			 For Linux Debian(based):	
+			```apt-get install libreadline-dev```
 
