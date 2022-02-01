@@ -43,7 +43,7 @@ int	minishell_exit(char **args, ...)
 	int len;
 	va_list arg;
 	
-	va_start(arg, *args);
+	va_start(arg, args);
 	len = va_arg(arg, int);
 	va_end(arg);
 	if (len > 2 && !ft_digit_check(args[1]))
@@ -126,7 +126,7 @@ int minishell_export(char **args, ...)
 	int i;
 	int valid;
 	
-	va_start(arg, *args);
+	va_start(arg, args);
 	len = va_arg(arg, int);
 	va_end(arg);
 	valid = 1;
