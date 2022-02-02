@@ -128,14 +128,15 @@ int minishell_export(char **args, ...)
 {
 	t_env_var *env_var;
 	int len;
-	va_list arg;
 	int j;
 	int i;
 	int valid;
-	
-	va_start(arg, args);
-	len = va_arg(arg, int);
-	va_end(arg);
+
+	len = 0;
+	while (args[len])
+	{
+		len++;
+	}
 	valid = 1;
 
 	ft_update_env("_=", "export");
