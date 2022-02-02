@@ -44,3 +44,14 @@ void ft_set_global_pwd(char **env)
 	while(getcwd(*env, i) == NULL)
 		i++;
 }
+
+int ft_count_arguments(t_list *cmd_list)
+{
+	int counter = 0;
+	while(cmd_list != NULL)
+	{
+		counter++;
+		cmd_list = cmd_list->next;
+	}
+	return (counter);
+}
