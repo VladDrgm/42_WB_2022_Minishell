@@ -66,5 +66,9 @@ char	*ft_handle_cd(char *address, t_list *ptr)
 	{
 		return ("L");
 	}
+	else if (!ft_strncmp(address, "---", 3) && ft_strlen(address) > 3)
+	{
+		return ("L");
+	}
 	return (address);
 }
