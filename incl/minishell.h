@@ -160,6 +160,7 @@ int		ft_strcmp(char *s1, char *s2);
 void	ft_free_split(char **split);
 int		ft_free_linked_list(t_list **lst, int type, int full);
 void	ft_set_global_pwd(char **env);
+int		ft_count_arguments(t_list *cmd_list);
 //GNL
 int		get_next_line_prev(int fd, char **line);
 char	*get_next_line(int fd);

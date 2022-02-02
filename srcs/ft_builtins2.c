@@ -9,28 +9,16 @@
 int	minishell_cd(char **args, ...)
 {
 	char *temp[2];
-	// int len;
-	va_list arg;
 	char *path;
 
 	ft_update_env("_=", "cd");
 	free(g_access.last_return);
 	g_access.last_return = ft_itoa(0);
-	
-	va_start(arg, args);
-	// len = va_arg(arg, int);
-	va_end(arg);
+
 	temp[1] = ft_strjoin("OLDPWD=", g_access.pwd);
 	t_list *ptr = g_access.env;
-	// if (len > 2)
-	// {
-	// 	write(1, "minishell: cd: too many arguments\n", 34);
-	// 	return (1);
-	// }
 	//IMPLEMENT ACCESS IN ORDER TO TACKLE INCORRECT PATH
 	path = ft_strdup(ft_handle_cd(args[1], ptr));
-//see if implementation of error_printing can be made inside ft_handle_cd
-// bash: cd: --: invalid option
 	if (path == NULL)
 	{
 		write(1, "minishell: cd: HOME not set\n", 28);
@@ -79,15 +67,17 @@ int	minishell_echo(char **args, ...)
 	int flag;
 	int temp;
 	int len;
-	va_list arg;
 
 	free(g_access.last_return);
 	g_access.last_return = ft_itoa(0);
 	ft_update_env("_=", "echo");
 
-	va_start(arg, args);
-	len = va_arg(arg, int);
-	va_end(arg);
+	int j = 0;
+	while (args[j] != NULL)
+	{
+		j++;
+	}
+	len = j;
 	flag = 0;
 	if (args[1] == NULL)
 		write(2, "minishell: expected argument to \"echo\"\n", 40);

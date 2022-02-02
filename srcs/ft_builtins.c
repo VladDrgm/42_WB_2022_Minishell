@@ -39,13 +39,14 @@ int	minishell_env(char **args, ...)
  */
 int	minishell_exit(char **args, ...)
 {
+	int i = 0;
+	while (args[i] != NULL)
+	{
+		i++;
+	}
 	long long int num_arg;
 	int len;
-	va_list arg;
-	
-	va_start(arg, args);
-	len = va_arg(arg, int);
-	va_end(arg);
+	len = i;
 	if (len > 2 && !ft_digit_check(args[1]))
 	{
 		write(1, "minishell: exit: too many arguments\n", 36);
