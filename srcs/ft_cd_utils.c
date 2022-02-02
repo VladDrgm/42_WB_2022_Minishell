@@ -62,5 +62,9 @@ char	*ft_handle_cd(char *address, t_list *ptr)
 		}
 		return (";");
 	}
+	if (!ft_strncmp(address, "---", 3))
+	{
+		return ("L");
+	}
 	return (address);
 }

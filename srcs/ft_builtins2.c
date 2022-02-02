@@ -9,7 +9,7 @@
 int	minishell_cd(char **args, ...)
 {
 	char *temp[2];
-	int len;
+	// int len;
 	va_list arg;
 	char *path;
 
@@ -30,6 +30,7 @@ int	minishell_cd(char **args, ...)
 	//IMPLEMENT ACCESS IN ORDER TO TACKLE INCORRECT PATH
 	path = ft_strdup(ft_handle_cd(args[1], ptr));
 //see if implementation of error_printing can be made inside ft_handle_cd
+// bash: cd: --: invalid option
 	if (path == NULL)
 	{
 		write(1, "minishell: cd: HOME not set\n", 28);
@@ -40,6 +41,13 @@ int	minishell_cd(char **args, ...)
 	else if (!ft_strncmp(path, ";", 1))
 	{
 		write(1, "minishell: cd: OLDPWD not set\n", 30);
+		free(g_access.last_return);
+		g_access.last_return = ft_itoa(1);
+		return (1);
+	}
+	else if (!ft_strncmp(path, "L", 1))
+	{
+		write(1, "minishell: cd: --: invalid option\n", 34);
 		free(g_access.last_return);
 		g_access.last_return = ft_itoa(1);
 		return (1);
