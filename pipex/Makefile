@@ -11,10 +11,11 @@
 # **************************************************************************** #
 
 CC			= gcc
-CFLAGS		= -Wall -Wextra -Werror
+#CFLAGS		= -Wall -Wextra -Werror
+CFLAGS		= 
 RM			= rm -f
 SRCD		= ./srcs/
-SRC			= pipex.c helper.c piping.c exit_handler.c
+SRC			= pipex.c helper.c test.c exit_handler.c
 # Command to add the source folder prefix (instead of having it added manually to SRC)
 SRCF		= $(addprefix $(SRCD),$(SRC))
 OBJD		= ./objs/
