@@ -133,7 +133,7 @@ int minishell_export(char **args, ...)
 	int valid;
 
 	len = 0;
-	while (args[len])
+	while (args[len] != 0)
 	{
 		len++;
 	}

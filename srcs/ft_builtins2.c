@@ -40,7 +40,9 @@ int	minishell_cd(char **args, ...)
 		g_access.last_return = ft_itoa(1);
 		return (1);
 	}
-	ft_update_create_OLDPWD(temp, ptr);
+	// ft_update_create_OLDPWD(temp, ptr);
+	args[1] = ft_strdup(temp[1]);
+	ft_update_create_OLDPWD(args, ptr);
 	if (chdir(path) != 0)
 	{
 		free(g_access.last_return);
