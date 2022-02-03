@@ -55,3 +55,19 @@ int ft_count_arguments(t_list *cmd_list)
 	}
 	return (counter);
 }
+
+int ft_execve(char **args, pid_t pid)
+{
+	t_list	*ptr;
+	ptr = g_access.builtins;
+
+	while (ptr)
+	{
+		if (ft_strncmp(args[0],((t_builtin_content*)(ptr->content))->cmd, ft_strlen(args[0])) == 0)
+		{
+			return(((t_builtin_content *)ptr->content)->minishell_fct(args, pid));
+		}
+		ptr = ptr->next;
+	}
+	return (0);
+}
