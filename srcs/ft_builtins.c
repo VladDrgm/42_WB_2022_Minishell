@@ -8,26 +8,29 @@
  */
 int	minishell_env(char **args, pid_t pid)
 {
-		pid++;
-	pid--;
 	t_list *ptr;
 
+	ft_update_env("_=", "env");
+	free(g_access.last_return);
+	g_access.last_return = ft_itoa(0);
 	if (ft_strncmp(args[0], "env", 3))
 		return (0);
 	ptr = g_access.env;
-	while (ptr != NULL)
+	if (pid == 0)
 	{
-		write(1, ((t_env_var*)(ptr->content))->name, \
-			ft_strlen(((t_env_var*)(ptr->content))->name));
-		write(1, ((t_env_var*)(ptr->content))->value, \
-			ft_strlen(((t_env_var*)(ptr->content))->value));
-		write(1, "\n", 1);
-		if (ptr->next != NULL)
-			ptr = ptr->next;
-		else
-			break;
+		while (ptr != NULL)
+		{
+			write(1, ((t_env_var*)(ptr->content))->name, \
+				ft_strlen(((t_env_var*)(ptr->content))->name));
+			write(1, ((t_env_var*)(ptr->content))->value, \
+				ft_strlen(((t_env_var*)(ptr->content))->value));
+			write(1, "\n", 1);
+			if (ptr->next != NULL)
+				ptr = ptr->next;
+			else
+				break;
+		}
 	}
-	ft_update_env("_=", "env");
 	return (1);
 }
 
@@ -104,8 +107,6 @@ int	minishell_exit(char **args, pid_t pid)
  */
 int minishell_pwd(char **args, pid_t pid)
 {
-	pid++;
-	pid--;
 	char *buf;
 	int i = 1;
 	free(g_access.last_return);
@@ -115,11 +116,13 @@ int minishell_pwd(char **args, pid_t pid)
 	buf = getcwd(NULL, 0);
 	while(getcwd(buf, i) == NULL)
 		i++;
-	write(1, buf, ft_strlen(buf));
-	write(1, "\n", 1);
+	if (pid == 0)
+	{
+		write(1, buf, ft_strlen(buf));
+		write(1, "\n", 1);
+	}
 	free(buf);
 	ft_update_env("_=", "pwd");
-
 	return (1);
 }
 
@@ -150,7 +153,7 @@ int minishell_export(char **args, pid_t pid)
 	ft_update_env("_=", "export");
 	free(g_access.last_return);
 	g_access.last_return = ft_itoa(0);
-	if (args[1] == NULL)
+	if (args[1] == NULL && pid == 0)
 		return (ft_single_export());
 	j = 0;
 	i = 1;
@@ -167,9 +170,12 @@ int minishell_export(char **args, pid_t pid)
 			else
 			{
 				valid = 0;
-				write(1, "minishell: export: `", 20); //bash: export: `4hehe=he': not a valid identifier
-				write(1 , args[i], ft_strlen(args[i]));
-				write(1, "': not a valid identifier\n", 26);
+				if (pid == 0)
+				{
+					write(2, "minishell: export: `", 20); //bash: export: `4hehe=he': not a valid identifier
+					write(2 , args[i], ft_strlen(args[i]));
+					write(2, "': not a valid identifier\n", 26);
+				}
 				free(g_access.last_return);
 				g_access.last_return = ft_itoa(1);
 				j++;
@@ -192,11 +198,11 @@ int minishell_export(char **args, pid_t pid)
 	@brief Builtin command: unset.
 	@param args List of args.	Not examined. (and no need to)
 	@return Always returns 1, to continue execution.
+	@todo Implement invalid identifier checks
+	@todo check if multiple variables can be unset on the same call
  */
 int minishell_unset(char **args, pid_t pid)
 {
-		pid++;
-	pid--;
 	t_list *ptr;
 	t_list *temp;
 	temp = NULL;

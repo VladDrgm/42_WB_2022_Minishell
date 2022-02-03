@@ -211,13 +211,11 @@ void	ft_execute_child(t_list *cmd_list, char **envp, pid_t pid)
 	// write(1, "dumbass", 7);
 	cmd = (t_command *)(cmd_list->content);
 	// write(2, cmd->path, ft_strlen(cmd->path));
-	dprintf(2, "PID BEFORE CHILD: %d\n", pid);
 	if (cmd->cmd_type == FT_CMD_TYPE_SYSTEM)
 		if (execve(cmd->path,cmd->comm_table, envp) == -1)
 			ft_exit_on_error(&cmd_list, "Command execution failed");
 	if (cmd->cmd_type == FT_CMD_TYPE_BUILT_IN)
 	{
-		dprintf(2, "PID IS CHILD: %d\n", pid);
 		ft_execve(cmd->comm_table, pid);
 	}
 
@@ -346,10 +344,8 @@ int test(t_list *cmd_list, char** envp)
 			}
 			if (cmd->cmd_type == FT_CMD_TYPE_BUILT_IN)
 			{
-				printf("PID IS PARENT: %d\n", pidt[i]);
 				ft_execve(cmd->comm_table, pidt[i]);
 			}
-			write(2, "ITS ON US\n", 10);
 			close(fd_in[0]);
 			close(fd_out[1]);
 			if (i == last_index)
@@ -361,7 +357,6 @@ int test(t_list *cmd_list, char** envp)
 				}
 				close(fd_out[0]);
 			}
-			write(2, "ITS ON US1\n", 11);
 			// waitpid(first_input, NULL, 0);
 			// ft_execute_parent();
 
@@ -384,7 +379,6 @@ int test(t_list *cmd_list, char** envp)
 	// 	close(fd_in[1]);
 	dup2(fd_stream[0], STDIN_FILENO);
 	dup2(fd_stream[1], STDOUT_FILENO);
-	printf("SAINT ANGER AROUND MY NECK\n");
 
 }
 
