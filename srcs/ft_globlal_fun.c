@@ -18,8 +18,6 @@ void free_global(void)
 		free(g_access.home);
 	if (g_access.pwd)
 		free(g_access.pwd);
-	if (g_access.temp_env)
-		ft_free_linked_list(&(g_access.temp_env), FT_LIST_TYPE_ENV_VAR, 1);
 	g_access.home = NULL;
 	g_access.pwd = NULL;
 }

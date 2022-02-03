@@ -149,8 +149,8 @@ int	parser(void)
 	t_list	*lex_element;
 	t_list	*executor_element;
 	char	**cmd_line;
+	char	**cmd_line_red;
 	int		cmd_len;
-	char	*str;
 	t_command	*cmd;
 
 	index_counter = 0;
@@ -170,18 +170,31 @@ int	parser(void)
 			{
 				if (is_redirect(((t_word *)(lex_element->content))->address))
 				{
-					if (cmd_len == 0)
+					cmd_line_red = (char **)ft_calloc(3, sizeof(char *));
+					cmd_line_red[0] = ft_strdup(((t_word *)(lex_element->content))->address);
+					lex_element = lex_element->next;
+					if(lex_element == NULL)
 					{
-						str = ft_strdup(((t_word *)(lex_element->content))->address);
-						cmd_line = add_to_line(cmd_line, str, &cmd_len);
-					}
-					else
+						free(cmd_line_red);
+						error_fun(&(g_access.parser2exec), &(g_access.lexor2parser));
 						break;
+					}
+					cmd_line_red[1] = ft_strdup(((t_word *)(lex_element->content))->address);
+					cmd = (t_command *)malloc(sizeof(t_command));
+					cmd->comm_table = cmd_line_red;
+					cmd->path = NULL;
+					cmd->index = index_counter;
+					cmd->comm_len = 3;
+					cmd->cmd_type = FT_CMD_TYPE_REDIRECT;
+					executor_element = ft_lstnew((void * ) cmd);
+					ft_lstadd_back(&(g_access.parser2exec), executor_element);
 				}
 				else  if (is_pipe(((t_word *)(lex_element->content))->address)) 
 				{
 					if (cmd_len == 0)
 						error_fun(&(g_access.parser2exec), &(g_access.lexor2parser));
+					else
+						lex_element = lex_element->next;
 					break ;
 				}
 				else
@@ -190,10 +203,11 @@ int	parser(void)
 					break ;
 				}
 			}
-			if (((t_word *)(lex_element->content))->type == FT_STRING)
+			else if (((t_word *)(lex_element->content))->type == FT_STRING)
 				ft_string_handler(lex_element, &cmd_line, &cmd_len);
 			lex_element = lex_element->next;
 		}
+		cmd_line = add_to_line(cmd_line, NULL, &cmd_len);
 		cmd = (t_command *)malloc(sizeof(t_command));
 		cmd->comm_table = cmd_line;
 		cmd->path = NULL;

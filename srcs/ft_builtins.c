@@ -6,8 +6,10 @@
 	 @return Always returns 1, to continue executing.
 	 @todo check after adding two times with export => checked; V.
  */
-int	minishell_env(char **args, ...)
+int	minishell_env(char **args, pid_t pid)
 {
+		pid++;
+	pid--;
 	t_list *ptr;
 
 	if (ft_strncmp(args[0], "env", 3))
@@ -37,18 +39,23 @@ int	minishell_env(char **args, ...)
 	 @return Always returns 0, to terminate execution.
 	 @todo free linked lists etc properly; fix arguments that need to be passed!
  */
-int	minishell_exit(char **args, ...)
+int	minishell_exit(char **args, pid_t pid)
 {
+		pid++;
+	pid--;
+	int i = 0;
+	while (args[i] != NULL)
+	{
+		i++;
+	}
 	long long int num_arg;
 	int len;
-	va_list arg;
-	
-	va_start(arg, *args);
-	len = va_arg(arg, int);
-	va_end(arg);
+	len = i;
 	if (len > 2 && !ft_digit_check(args[1]))
 	{
 		write(1, "minishell: exit: too many arguments\n", 36);
+		free(g_access.last_return);
+		g_access.last_return = ft_itoa(1);
 		return (1);
 	}
 	else if (len == 1)
@@ -95,11 +102,15 @@ int	minishell_exit(char **args, ...)
 	@param args List of args.	Not examined. (and no need to)
 	@return Always returns 1, to continue execution.
  */
-int minishell_pwd(char **args, ...)
+int minishell_pwd(char **args, pid_t pid)
 {
+	pid++;
+	pid--;
 	char *buf;
 	int i = 1;
-	if (ft_strncmp(args[0], "pwd", 3))
+	free(g_access.last_return);
+	g_access.last_return = ft_itoa(0);
+	if (args[0] == NULL) //in order to prevent compiler errors
 		return (0);
 	buf = getcwd(NULL, 0);
 	while(getcwd(buf, i) == NULL)
@@ -108,6 +119,7 @@ int minishell_pwd(char **args, ...)
 	write(1, "\n", 1);
 	free(buf);
 	ft_update_env("_=", "pwd");
+
 	return (1);
 }
 
@@ -115,21 +127,29 @@ int minishell_pwd(char **args, ...)
 	@brief Builtin command: export.
 	@param args List of args.	Not examined. (and no need to)
 	@return Always returns 1, to continue execution.
+	@todo Check for export directly after minishell execution on MAC. Is OLDPWD printed? If yes, insert exception.
  */
-int minishell_export(char **args, ...)
+int minishell_export(char **args, pid_t pid)
 {
+	pid++;
+	pid--;
 	t_env_var *env_var;
 	int len;
-	va_list arg;
 	int j;
 	int i;
 	int valid;
-	
-	va_start(arg, *args);
-	len = va_arg(arg, int);
-	va_end(arg);
+
+	len = 0;
+	while (args[len] != 0)
+	{
+		len++;
+	}
+
 	valid = 1;
 
+	ft_update_env("_=", "export");
+	free(g_access.last_return);
+	g_access.last_return = ft_itoa(0);
 	if (args[1] == NULL)
 		return (ft_single_export());
 	j = 0;
@@ -150,6 +170,8 @@ int minishell_export(char **args, ...)
 				write(1, "minishell: export: `", 20); //bash: export: `4hehe=he': not a valid identifier
 				write(1 , args[i], ft_strlen(args[i]));
 				write(1, "': not a valid identifier\n", 26);
+				free(g_access.last_return);
+				g_access.last_return = ft_itoa(1);
 				j++;
 			}
 		}
@@ -163,7 +185,6 @@ int minishell_export(char **args, ...)
 		}
 		i++;
 	}
-	ft_update_env("_=", "export");
 	return (1);
 }
 
@@ -172,22 +193,23 @@ int minishell_export(char **args, ...)
 	@param args List of args.	Not examined. (and no need to)
 	@return Always returns 1, to continue execution.
  */
-int minishell_unset(char **args, ...)
+int minishell_unset(char **args, pid_t pid)
 {
+		pid++;
+	pid--;
 	t_list *ptr;
 	t_list *temp;
 	temp = NULL;
-	if (args[1] == NULL)
-	{
-		write(1, "minishell: Too few arguments for unset command\n", 48);
-		return (1);
-	}
-	ft_update_env("_=", "unset");
+	ft_update_env("_=", "export");
+	free(g_access.last_return);
+	g_access.last_return = ft_itoa(0);
 	ptr = g_access.env;
 	if (ft_strlen(args[1]) == ft_strlen(((t_env_var*)(ptr->content))->name) - 1)
 	{
 		if (!ft_strncmp(args[1], ((t_env_var*)(ptr->content))->name, ft_strlen(args[1])))
 		{
+			if (!ft_strncmp(((t_env_var*)(ptr->content))->name, "PWD=", 4))
+				g_access.pwd = NULL;
 			g_access.env = ptr->next;
 			ft_lstdelone(ptr, delone(ptr->content));
 			return (1);
@@ -212,6 +234,8 @@ int minishell_unset(char **args, ...)
 					ptr->next = NULL;
 					return (1);
 				}
+				if (!ft_strncmp(((t_env_var*)(ptr->content))->name, "PWD=", 4))
+					g_access.pwd = NULL;
 			}
 		}
 		ptr = ptr->next;

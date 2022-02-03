@@ -16,11 +16,15 @@ static void	print_element_parser(void *input)
 
 	printf("Command type is:%d\n", cmd->cmd_type);
 	printf("Length       is %d\n", cmd->comm_len);
+	printf("Index       is %d\n", cmd->index);
 	printf("Table        is:\n");
 	while(test_c < (cmd->comm_len))
 	{
 		// printf("1\n");
-		printf("%s\n", cmd->comm_table[test_c]);
+		if (cmd->comm_table[test_c] == NULL)
+			printf("0\n");
+		else
+			printf("%s\n", cmd->comm_table[test_c]);
 
 		// printf("2\n");
 		test_c++;

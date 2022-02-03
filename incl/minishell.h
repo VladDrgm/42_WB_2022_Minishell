@@ -11,7 +11,7 @@
 # include <string.h>
 # include <sys/wait.h>
 # include <stdarg.h>
-
+#include <fcntl.h>
 
 # define FT_SPECIAL_CHAR_STRING 1
 # define FT_STRING 2
@@ -48,6 +48,10 @@
 # define FT_LIST_TYPE_ENV_VAR 3
 
 
+# define BUFFER_SIZE 1
+
+
+
 typedef struct s_word
 {
 	char	*address;
@@ -66,7 +70,7 @@ typedef struct s_command
 typedef struct s_builtin_content
 {
 	char	*cmd;
-	int	(* minishell_fct)(char **args, ...);
+	int	(* minishell_fct)(char **args, pid_t pid);
 	int		index;
 }	t_builtin_content;
 
@@ -75,7 +79,6 @@ typedef struct s_global
 {
 	int		signals;
 	t_list	*env;
-	t_list	*temp_env;
 	t_list	*builtins;
 	t_list	*parser2exec;
 	t_list	*lexor2parser;
@@ -99,29 +102,30 @@ int		lexor(void);
 int		parser(void);
 void	ft_initiator(char **envp);
 void	ft_init_builtins(void);
-t_builtin_content	*ft_init_builtin_content(char *cmd, int (*minishell_fct)(char **args, ...), int i);
-int		minishell_cd(char **args, ...);
-int		minishell_env(char **args, ...);
-int		minishell_echo(char **args, ...);
-int		minishell_exit(char **args, ...);
-int		minishell_pwd(char **args, ...);
-int		minishell_export(char **args, ...);
-int 	minishell_unset(char **args, ...);
+t_builtin_content	*ft_init_builtin_content(char *cmd, int (*minishell_fct)(char **args, pid_t pid), int i);
+int		minishell_cd(char **args, pid_t pid);
+int		minishell_env(char **args, pid_t pid);
+int		minishell_echo(char **args, pid_t pid);
+int		minishell_exit(char **args, pid_t pid);
+int		minishell_pwd(char **args, pid_t pid);
+int		minishell_export(char **args, pid_t pid);
+int 	minishell_unset(char **args, pid_t pid);
 int		minishell_execute(void);
 int		minishell_launch(char **args);
+//INIT UTILS
+void	ft_get_home(void);
+void	prerror(char *msg);
 // BUILTIN UTILS
 void	ft_update_env(char *to_search, char *to_replace); //check if value finder finds insider env and if not, create a new one; env should not create duplicate env variables;
 char	*env_value_finder(char *name);
-char	*temp_value_finder(char *name);
 void	*delone(void *content);
 // ECHO UTILS
 void	echo_print(char **str, int starter, int size, int flag);
 int		echo_flag(char *str);
 // CD UTILS
-void	ft_update_create_OLDPWD(char **argv, t_list *ptr, int len);
+void	ft_update_create_OLDPWD(char **argv, t_list *ptr, pid_t pid);
 void	ft_update_PWD(char *path);
-char	*ft_handle_cd(char *address, t_list *ptr);
-
+char	*ft_handle_cd(char *address, t_list *ptr, pid_t pid);
 // EXIT UTILS
 int		ft_digit_check(char *argv);
 long long int	ft_atoll(const char *str);
@@ -153,8 +157,22 @@ void	ft_free_parser(void *parser);
 void	print_list_parse(t_list *el);
 // UTILS
 int		ft_strcmp(char *s1, char *s2);
-void    ft_free_split(char **split);
-int 	ft_free_linked_list(t_list **lst, int type, int full);
+void	ft_free_split(char **split);
+int		ft_free_linked_list(t_list **lst, int type, int full);
+void	ft_set_global_pwd(char **env);
+int		ft_count_arguments(t_list *cmd_list);
+int		ft_execve(char **args, pid_t pid);
+//GNL
+int		get_next_line_prev(int fd, char **line);
+char	*get_next_line(int fd);
+void	ft_memmove_till_newline(char *l_to_m);
+int		ft_return_prep(int bytes, char **tmp, char **line, int fd);
+int		ft_check_array_input(char **tmp, char **line, char *buffer, int fd);
+void	*ft_memmove(void *dest, const void *src, size_t n);
+char	*ft_strchr_gnl(const char *s, int c);
+char	*ft_strjoin_gnl(char *s1, char *s2, int j);
+size_t	ft_strlen_gnl(char *s);
+
 
 
 #endif
