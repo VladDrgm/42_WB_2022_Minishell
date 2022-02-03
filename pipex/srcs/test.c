@@ -54,12 +54,16 @@ void heredoc(char *stop_word, int fd_stream[2], int fd_out, char *keyword)
 			}
 		}
 		if(write(fd_out, out, ft_strlen(out)) == -1)
-			close_flag = 1;
-		if(write(fd_out, "\n", 1) == -1)
-			close_flag = 1;
-		free(out);
-		if (close_flag)
+		{
+			free (out);
 			break;
+		}
+		if(write(fd_out, "\n", 1) == -1)
+		{
+			free (out);
+			break;
+		}
+		free(out);
 	}
 	close(fd_out);
 	close(fd_stream[0]);
@@ -200,7 +204,7 @@ void	ft_file_checker(t_list **cmd_list, int i, int fd_infile, int fd_outfile, in
 	close(fd_outfile);
 }
 
-void	ft_execute_child(t_list *cmd_list, char **envp)
+void	ft_execute_child(t_list *cmd_list, char **envp, pid_t pid)
 {
 	t_command *cmd;
 	// write(1, cmd->path, ft_strlen(cmd->path));
@@ -210,8 +214,12 @@ void	ft_execute_child(t_list *cmd_list, char **envp)
 	if (cmd->cmd_type == FT_CMD_TYPE_SYSTEM)
 		if (execve(cmd->path,cmd->comm_table, envp) == -1)
 			ft_exit_on_error(&cmd_list, "Command execution failed");
-	// add built-ins call
+	// else if (cmd->cmd_type == FT_CMD_TYPE_BUILT_IN)
+	// 			ft_exrcve_builtin(cmd->comm_table, pid);
+
+	pid++;
 }
+
 
 int test(t_list *cmd_list, char** envp)
 {
@@ -277,18 +285,7 @@ int test(t_list *cmd_list, char** envp)
 			ft_exit_on_error(&cmd_list, "Pipe creation failed in line 127");
 		else if(pidt[i] == 0)
 		{
-			// write(0, "dingus1\n", 7);
-			// write(1, "dingus2\n", 7);
-			// write(2, "dingus3\n", 7);
-
-			// if(i == 0)
-			// 	close(fd_in[1]); //DONT FORGET T THAT YOU MAYBE NEED THIS
-
-			// char c4;
-			// while (read(fd_in[0], &c4, 1))
-			// {
-			// 	write(1, &c4, 1);
-			// }
+			close(fd_out[0]);
 			if (dup2(fd_in[0], STDIN_FILENO) == -1)
 				ft_exit_on_error2("File descriptor duplication failed 90");
 			// dprintf(2, "Before file checker fd_in[0] is %d, fd_in[1] is %d fd_out[0] is %d,fd_out[1] is %d\n", fd_in[0], fd_in[1] , fd_out[0], fd_out[1]);
@@ -298,17 +295,28 @@ int test(t_list *cmd_list, char** envp)
 				ft_exit_on_error2("File descriptor duplication failedi 91");
 				printf("Errno is %d", errno);
 			}
-
 			ft_file_checker(&cmd_list, i, fd_in[0], fd_out[1], fd_docks[i]);
+		//	write(2, "meo1\n", 5);
 			if(i == 0)
 				close(fd_in[1]);
-			// char c;
-			// while (read(STDIN_FILENO, &c, 1))
+			ft_execute_child(cmd_list, envp, pidt[i]);
+			// write(2, "meo2\n", 5);
+			// char c4;
+			// while (read(0, &c4, 1))
 			// {
-			// 	write(1, &c, 1);
+			// 	write(2, "meo3\n", 5);
+
+			// 	if (c4 == '\n')
+			// 	{
+			// 		if(write(1, "$", 1) == -1)
+			// 		{
+			// 			write(2, "ASG", 3);
+			// 			break;
+			// 		}
+			// 	}
+			// 	if (write(1, &c4, 1) == -1)
+			// 		break;
 			// }
-			// exit(0);
-			ft_execute_child(cmd_list, envp);
 			exit(0);
 		}
 		else
@@ -317,21 +325,22 @@ int test(t_list *cmd_list, char** envp)
 			{
 				first_input = fork();
 				if (!first_input)
+				{
+					close(fd_out[0]);
+					close(fd_out[1]);
 					heredoc_child(fd_in, fd_stream, NULL, "");
-
-				// else
-					// parent(fd_docks[cmd->index], first_input);
-				// while(1)
-				// {
-				// 	out = readline("ll>");
-				// 	if (out == NULL)
-				// 		break;
-				// 	write(fd_in[1], out, strlen(out));
-				// 	write(fd_in[1], "\n", 1);
-				// 	free(out);
-				// }
-				// close(fd_in[1]);
+				}
+				close(fd_in[1]);
 			}
+			while (cmd_list != NULL)
+			{
+				cmd = (t_command *)cmd_list->content;
+				if (cmd->cmd_type != FT_CMD_TYPE_REDIRECT)
+					break;
+				cmd_list = cmd_list->next;
+			}
+			// if (cmd->cmd_type == FT_CMD_TYPE_BUILT_IN)
+			// 	ft_exrcve_builtin(cmd->comm_table, pidt[i]);
 			close(fd_in[0]);
 			close(fd_out[1]);
 			if (i == last_index)
@@ -341,43 +350,32 @@ int test(t_list *cmd_list, char** envp)
 				{
 					write(1, &ccc, 1);
 				}
+				close(fd_out[0]);
 			}
-
-
 			// waitpid(first_input, NULL, 0);
 			// ft_execute_parent();
 		}
-
-		while (cmd_list != NULL)
-		{
-			cmd = (t_command *)cmd_list->content;
-			if (cmd->index != i)
-			{
-				break;
-			}
-			cmd_list = cmd_list->next;
-		}
 		i++;
-
+		cmd_list = cmd_list->next;
 	}
 	i = 0;
+
+	printf("SHIT IN THE PANTS\n");
 	waitpid(first_input, NULL, 0);
-	close(fd_in[1]);
 	// if(write(fd_in[1], "", 0) == -1)
 	// 	close(fd_in[1]);
+	printf("SHIT IN THE PANTS\n");
 	while (i <= last_index)
 	{
-		// write(1, "22222222222222222222222222222222222222222222222\n", 48);
 		waitpid(pidt[i], NULL, 0);
-		// write(1, "11111111111111111111111111111111111111111111111\n", 48);
 		i++;
 	}
-
+	printf("SHIT IN THE PANTS\n");
 	// if(write(fd_in[1], "", 0) == -1)
 	// 	close(fd_in[1]);
 	dup2(fd_stream[0], STDIN_FILENO);
 	dup2(fd_stream[1], STDOUT_FILENO);
-
+	printf("SHIT IN THE PANTS\n");
 
 }
 

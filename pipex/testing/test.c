@@ -26,7 +26,7 @@ void parent(int *fd, pid_t pid)
 	char c;
 
 	waitpid(pid, NULL, 0);
-	close(fd[1]);
+	close(fd[0]);
 	while(read(fd[0], &c, 1))
 		write(1, &c, 1);
 	close(fd[0]);
@@ -47,7 +47,8 @@ void heredoc(char *stop_word, int fd_stream[2], int fd_out)
 			free (out);
 			break;
 		}
-		write(fd_out, out, strlen(out));
+		if (write(fd_out, out, strlen(out)) == -1);
+			write(2, "shit\n", 5);
 		write(fd_out, "\n", 1);
 		//write(2, out, ft_strlen(out));
 		//write(2, "\n", 1);
@@ -58,7 +59,6 @@ void heredoc(char *stop_word, int fd_stream[2], int fd_out)
 	close(fd_stream[1]);
 	close(STDIN_FILENO);
 	close(STDOUT_FILENO);
-	exit(0) ;
 }
 
 void child(int* fd, int *fd_stream)
