@@ -1,7 +1,6 @@
 #ifndef PIPEX_H
 # define PIPEX_H
 # include "../libft/incl/libft.h"
-
 # include <limits.h>
 # include <stdio.h>
 # include <string.h>
@@ -53,21 +52,21 @@
 # define IN_HEREDOC 3 // <<
 
 
-typedef struct s_command
-{
-	char	**comm_table ;
-	int		comm_len;
-	int		index;
-	char	*path;
-	int		cmd_type;
-}			t_command;
+// typedef struct s_command
+// {
+// 	char	**comm_table ;
+// 	int		comm_len;
+// 	int		index;
+// 	char	*path;
+// 	int		cmd_type;
+// }			t_command;
 
 
-typedef struct s_env_var
-{
-	char	*name;
-	char	*value;
-}				t_env_var;
+// typedef struct s_env_var
+// {
+// 	char	*name;
+// 	char	*value;
+// }				t_env_var;
 
 
 typedef struct s_content

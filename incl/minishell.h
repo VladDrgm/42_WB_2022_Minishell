@@ -2,6 +2,7 @@
 # define MINISHELL_H
 
 # include "../libft/incl/libft.h"
+// # include "pipex.h"
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -50,6 +51,11 @@
 
 # define BUFFER_SIZE 1
 
+# define OUT_WRITE 0 // >
+# define OUT_APPEND 1 // >>
+# define IN_READFILE 2 // <
+# define IN_HEREDOC 3 // <<
+
 
 
 typedef struct s_word
@@ -96,6 +102,7 @@ typedef struct s_env_var
 
 extern t_global g_access;
 
+void    ft_free_split(char **split);
 void	free_global(void);
 void	ft_signal_setup(void);
 int		lexor(void);
@@ -142,7 +149,6 @@ void	ft_free_list(t_list *head);
 void	print_element(void *input);
 void	print_list(t_list *el);
 void	add_string(t_list **list, char	*str);
-void	ft_free_list(t_list *head);
 
 void	add_specialchar_string(t_list **list, char *str);
 int		q_handler(char *str, char **current_str, char q_char);
@@ -172,6 +178,50 @@ void	*ft_memmove(void *dest, const void *src, size_t n);
 char	*ft_strchr_gnl(const char *s, int c);
 char	*ft_strjoin_gnl(char *s1, char *s2, int j);
 size_t	ft_strlen_gnl(char *s);
+
+
+//pipex
+
+typedef struct s_content
+{
+	char	**cmd_n_flags;
+	char	*path;
+	int		index;
+}	t_content;
+
+
+
+int	ft_super_mario(char **envp);
+
+/*exit_handler.c*/
+void	ft_close_fd(void);
+void	ft_free_split(char **split);
+// void	ft_free_list(t_list *head);
+void	ft_exit_on_error(t_list **cmd_list, char *error_msg);
+void	ft_exit_on_invalid_cmd(char **path_list, t_list **cmd_list, \
+		t_content *content, t_list *elem);
+
+/*helper.c*/
+void	ft_make_cmd_list(char **argv, char **envp, int argc, t_list **cmd_list);
+char	*ft_get_cmd_path(const char *cmd, char **path_list);
+char	**ft_split_path(char **env);
+char	*ft_strjoin_with_free(char *s1, char const *s2);
+
+/*piping.c*/
+void	ft_pipex(t_list *cmd_list, char **envp);
+void	ft_initialize_fds(int *fd_temp);
+void	ft_execute_child_process(t_list *cmd_list, char **envp, int *fd, int *fd_stream);
+void	ft_execute_parent_process(int *fd, t_list **cmd_list, pid_t pid);
+void	ft_execute_last_cmd(int *fd, t_list **cmd_list, pid_t pid, int *fd_temp);
+
+/*pipex.c*/
+//int		main(int argc, char **argv, char **envp);
+void	ft_check_input_file(char *filename, char *outputfile);
+void	ft_check_output_file(const char *filename);
+char	*ft_check_cmd_path(char **path, char **split, int j, const char *cmd);
+void	ft_exit_on_error2(char *error_msg);
+
+int test(t_list *cmd, char **envp);
 
 
 

@@ -1,8 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-#include "../incl/pipex.h"
 #include "../incl/minishell.h"
-
 
 void make_cmd_list (t_list **cmd_list)
 {
@@ -31,15 +27,37 @@ void make_cmd_list (t_list **cmd_list)
 	// ft_lstadd_back(cmd_list, ft_lstnew(temp));
 
 
+	// temp = (t_command *)malloc(sizeof(t_command));
+	// temp->comm_len = 3;
+	// temp->comm_table = (char **)malloc(sizeof(char *) * temp->comm_len);
+	// temp->comm_table[0] = "echo";
+	// temp->comm_table[1] = "vlad is plumber";
+	// temp->comm_table[2] = NULL;
+	// temp->index = 0;
+	// temp->cmd_type = FT_CMD_TYPE_SYSTEM;
+	// temp->path = "/usr/bin/echo";
+	// ft_lstadd_back(cmd_list, ft_lstnew(temp));
+
 	temp = (t_command *)malloc(sizeof(t_command));
 	temp->comm_len = 3;
 	temp->comm_table = (char **)malloc(sizeof(char *) * temp->comm_len);
-	temp->comm_table[0] = "cat";
-	temp->comm_table[1] = "-e";
+	temp->comm_table[0] = "cd";
+	temp->comm_table[1] = "..";
 	temp->comm_table[2] = NULL;
 	temp->index = 0;
-	temp->cmd_type = FT_CMD_TYPE_SYSTEM;
-	temp->path = "/usr/bin/cat";
+	temp->cmd_type = FT_CMD_TYPE_BUILT_IN;
+	temp->path = NULL;
+	ft_lstadd_back(cmd_list, ft_lstnew(temp));
+
+	temp = (t_command *)malloc(sizeof(t_command));
+	temp->comm_len = 3;
+	temp->comm_table = (char **)malloc(sizeof(char *) * temp->comm_len);
+	temp->comm_table[0] = "cd";
+	temp->comm_table[1] = "-";
+	temp->comm_table[2] = NULL;
+	temp->index = 1;
+	temp->cmd_type = FT_CMD_TYPE_BUILT_IN;
+	temp->path = NULL;
 	ft_lstadd_back(cmd_list, ft_lstnew(temp));
 
 	// temp = (t_command *)malloc(sizeof(t_command));
@@ -55,16 +73,16 @@ void make_cmd_list (t_list **cmd_list)
 
 	// 2
 
-	temp = (t_command *)malloc(sizeof(t_command));
-	temp->comm_len = 3;
-	temp->comm_table = (char **)malloc(sizeof(char *) * temp->comm_len);
-	temp->comm_table[0] = "echo";
-	temp->comm_table[1] = "lala";
-	temp->comm_table[2] = NULL;
-	temp->index = 1;
-	temp->cmd_type = FT_CMD_TYPE_SYSTEM;
-	temp->path = "/usr/bin/echo";
-	ft_lstadd_back(cmd_list, ft_lstnew(temp));
+	// temp = (t_command *)malloc(sizeof(t_command));
+	// temp->comm_len = 3;
+	// temp->comm_table = (char **)malloc(sizeof(char *) * temp->comm_len);
+	// temp->comm_table[0] = "echo";
+	// temp->comm_table[1] = "lala";
+	// temp->comm_table[2] = NULL;
+	// temp->index = 1;
+	// temp->cmd_type = FT_CMD_TYPE_SYSTEM;
+	// temp->path = "/usr/bin/echo";
+	// ft_lstadd_back(cmd_list, ft_lstnew(temp));
 
 	// temp = (t_command *)malloc(sizeof(t_command));
 	// temp->comm_len = 3;
@@ -112,10 +130,9 @@ void make_cmd_list (t_list **cmd_list)
 	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! the last line should be executable by execve !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
 
-int	naimo(int argc, char **argv, char **envp)
+int	ft_super_mario(char **envp)
 {
-	argc++;
-	argv++;
+
 	t_list	*cmd_list;
 	char *str;
 	str = NULL;
@@ -134,7 +151,7 @@ int	naimo(int argc, char **argv, char **envp)
 	make_cmd_list(&cmd_list);
 	//ft_pipex(cmd_list, envp);
 	test(cmd_list, envp);
-	return (0);
+	return (1);
 }
 
 

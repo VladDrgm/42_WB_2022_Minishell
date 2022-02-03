@@ -4,18 +4,18 @@
 **  @brief Delets array returned from ft_split
 **  @param split: Array of strings which ands with NULL pointer
 */
-void    ft_free_split(char **split)
-{
-    int i;
+// void    ft_free_split(char **split)
+// {
+//     int i;
 
-    i = 0;
-    while (split[i] != NULL)
-    {
-        free(split[i]);
-        i++;
-    }
-    free(split);
-}
+//     i = 0;
+//     while (split[i] != NULL)
+//     {
+//         free(split[i]);
+//         i++;
+//     }
+//     free(split);
+// }
 
 /*
 **  @brief Compares two string
