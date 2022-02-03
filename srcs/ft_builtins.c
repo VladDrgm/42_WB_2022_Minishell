@@ -104,8 +104,6 @@ int	minishell_exit(char **args, pid_t pid)
  */
 int minishell_pwd(char **args, pid_t pid)
 {
-	pid++;
-	pid--;
 	char *buf;
 	int i = 1;
 	free(g_access.last_return);
@@ -115,11 +113,13 @@ int minishell_pwd(char **args, pid_t pid)
 	buf = getcwd(NULL, 0);
 	while(getcwd(buf, i) == NULL)
 		i++;
-	write(1, buf, ft_strlen(buf));
-	write(1, "\n", 1);
+	if (pid == 0)
+	{
+		write(1, buf, ft_strlen(buf));
+		write(1, "\n", 1);
+	}
 	free(buf);
 	ft_update_env("_=", "pwd");
-
 	return (1);
 }
 
