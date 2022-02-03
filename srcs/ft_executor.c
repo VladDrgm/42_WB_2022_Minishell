@@ -4,10 +4,12 @@ int	minishell_execute(void)
 {
 	t_list	*ptr;
 	char	**args;
-	int		len;
+	// int		len;
+	pid_t	pid;
 
+	pid = 0; //FOR TESTING PID UNTIL IMPLEMENTATION
 	args = ((t_command *)(g_access.parser2exec)->content)->comm_table;
-	len = ((t_command *)(g_access.parser2exec)->content)->comm_len;
+	// len = ((t_command *)(g_access.parser2exec)->content)->comm_len;
 	if (args[0] == NULL) // An empty command was entered.
 		return (1);
 	ptr = g_access.builtins;
@@ -15,7 +17,7 @@ int	minishell_execute(void)
 	{
 		if (ft_strncmp(args[0],((t_builtin_content*)(ptr->content))->cmd, ft_strlen(args[0])) == 0)
 		{
-			return(((t_builtin_content *)ptr->content)->minishell_fct(args, len));
+			return(((t_builtin_content *)ptr->content)->minishell_fct(args, pid));
 		}
 		ptr = ptr->next;
 	}
