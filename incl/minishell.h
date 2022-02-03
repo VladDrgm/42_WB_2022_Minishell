@@ -123,9 +123,9 @@ void	*delone(void *content);
 void	echo_print(char **str, int starter, int size, int flag);
 int		echo_flag(char *str);
 // CD UTILS
-void	ft_update_create_OLDPWD(char **argv, t_list *ptr);
+void	ft_update_create_OLDPWD(char **argv, t_list *ptr, pid_t pid);
 void	ft_update_PWD(char *path);
-char	*ft_handle_cd(char *address, t_list *ptr);
+char	*ft_handle_cd(char *address, t_list *ptr, pid_t pid);
 // EXIT UTILS
 int		ft_digit_check(char *argv);
 long long int	ft_atoll(const char *str);

@@ -131,7 +131,7 @@ int minishell_pwd(char **args, pid_t pid)
  */
 int minishell_export(char **args, pid_t pid)
 {
-		pid++;
+	pid++;
 	pid--;
 	t_env_var *env_var;
 	int len;
@@ -144,6 +144,7 @@ int minishell_export(char **args, pid_t pid)
 	{
 		len++;
 	}
+
 	valid = 1;
 
 	ft_update_env("_=", "export");

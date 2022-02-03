@@ -1,7 +1,7 @@
 #include "../incl/minishell.h"
 
 //when UNSETTING PWD, this needs to have a special situation
-void	ft_update_create_OLDPWD(char **argv, t_list *ptr)
+void	ft_update_create_OLDPWD(char **argv, t_list *ptr, pid_t pid)
 {
 	while (ptr != NULL)
 	{
@@ -12,7 +12,7 @@ void	ft_update_create_OLDPWD(char **argv, t_list *ptr)
 		}
 		ptr = ptr->next;
 	}
-	minishell_export(argv, 2); //if OLDPWD does not exist, we create it <-------------
+	minishell_export(argv, pid); //if OLDPWD does not exist, we create it <-------------
 	return ;
 }
 
@@ -37,7 +37,7 @@ void	ft_update_PWD(char *path)
 		ft_update_env("PWD=", path);
 }
 
-char	*ft_handle_cd(char *address, t_list *ptr)
+char	*ft_handle_cd(char *address, t_list *ptr, pid_t pid)
 {
 	if (address == NULL)
 		return (env_value_finder("HOME"));
@@ -54,8 +54,11 @@ char	*ft_handle_cd(char *address, t_list *ptr)
 		{
 			if (ft_strncmp(((t_env_var *)(ptr->content))->name, "OLDPWD", 6) == 0) //IF OLDPWD EXISTS, WE RETURN env_value_finder("OLDPWD") <------
 			{
-				write(1, env_value_finder("OLDPWD"), ft_strlen(env_value_finder("OLDPWD")));
-				write(1, "\n", 1);
+				if (pid == 0)
+				{
+					write(1, env_value_finder("OLDPWD"), ft_strlen(env_value_finder("OLDPWD")));
+					write(1, "\n", 1);
+				}
 				return (env_value_finder("OLDPWD"));
 			}
 			ptr = ptr->next;

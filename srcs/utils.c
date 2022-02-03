@@ -63,7 +63,7 @@ int ft_execve(char **args, pid_t pid)
 
 	while (ptr)
 	{
-		if (ft_strncmp(args[0],((t_builtin_content*)(ptr->content))->cmd, ft_strlen(args[0])) == 0)
+		if (!ft_strncmp(args[0],((t_builtin_content*)(ptr->content))->cmd, (ft_strlen(((t_builtin_content*)(ptr->content))->cmd))))
 		{
 			return(((t_builtin_content *)ptr->content)->minishell_fct(args, pid));
 		}
