@@ -150,7 +150,7 @@ int minishell_export(char **args, pid_t pid)
 	ft_update_env("_=", "export");
 	free(g_access.last_return);
 	g_access.last_return = ft_itoa(0);
-	if (args[1] == NULL)
+	if (args[1] == NULL && pid == 0)
 		return (ft_single_export());
 	j = 0;
 	i = 1;
@@ -167,9 +167,12 @@ int minishell_export(char **args, pid_t pid)
 			else
 			{
 				valid = 0;
-				write(1, "minishell: export: `", 20); //bash: export: `4hehe=he': not a valid identifier
-				write(1 , args[i], ft_strlen(args[i]));
-				write(1, "': not a valid identifier\n", 26);
+				if (pid == 0)
+				{
+					write(2, "minishell: export: `", 20); //bash: export: `4hehe=he': not a valid identifier
+					write(2 , args[i], ft_strlen(args[i]));
+					write(2, "': not a valid identifier\n", 26);
+				}
 				free(g_access.last_return);
 				g_access.last_return = ft_itoa(1);
 				j++;

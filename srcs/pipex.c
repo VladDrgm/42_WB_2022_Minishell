@@ -41,8 +41,8 @@ void make_cmd_list (t_list **cmd_list)
 	// temp = (t_command *)malloc(sizeof(t_command));
 	// temp->comm_len = 3;
 	// temp->comm_table = (char **)malloc(sizeof(char *) * temp->comm_len);
-	// temp->comm_table[0] = "cd";
-	// temp->comm_table[1] = "..";
+	// temp->comm_table[0] = "export";
+	// temp->comm_table[1] = "ABC+=hehe";
 	// temp->comm_table[2] = NULL;
 	// temp->index = 0;
 	// temp->cmd_type = FT_CMD_TYPE_BUILT_IN;
@@ -50,11 +50,11 @@ void make_cmd_list (t_list **cmd_list)
 	// ft_lstadd_back(cmd_list, ft_lstnew(temp));
 
 	// temp = (t_command *)malloc(sizeof(t_command));
-	// temp->comm_len = 3;
+	// temp->comm_len = 2;
 	// temp->comm_table = (char **)malloc(sizeof(char *) * temp->comm_len);
-	// temp->comm_table[0] = "cd";
-	// temp->comm_table[1] = "-";
-	// temp->comm_table[2] = NULL;
+	// temp->comm_table[0] = "export";
+	// // temp->comm_table[1] = "-";
+	// temp->comm_table[1] = NULL;
 	// temp->index = 1;
 	// temp->cmd_type = FT_CMD_TYPE_BUILT_IN;
 	// temp->path = NULL;
