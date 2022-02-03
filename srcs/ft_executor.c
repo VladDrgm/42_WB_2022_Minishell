@@ -5,16 +5,17 @@ int	minishell_execute(void)
 
 	char	**args;
 
-	pid_t	pid;
+	// pid_t	pid;
 
-	pid = 0; //FOR TESTING PID UNTIL IMPLEMENTATION
+	// pid = 0; //FOR TESTING PID UNTIL IMPLEMENTATION
 	args = ((t_command *)(g_access.parser2exec)->content)->comm_table;
 
 	if (args[0] == NULL) // An empty command was entered.
 		return (1);
 
-	if (ft_execve(args, pid) == 1)
-		return (1);
+	if (ft_execve(args, 0) == 1)
+		if (ft_execve(args, 1) == 1)
+			return (1);
 	return (minishell_launch(args));
 }
 
