@@ -195,11 +195,11 @@ int minishell_export(char **args, pid_t pid)
 	@brief Builtin command: unset.
 	@param args List of args.	Not examined. (and no need to)
 	@return Always returns 1, to continue execution.
+	@todo Implement invalid identifier checks
+	@todo check if multiple variables can be unset on the same call
  */
 int minishell_unset(char **args, pid_t pid)
 {
-		pid++;
-	pid--;
 	t_list *ptr;
 	t_list *temp;
 	temp = NULL;

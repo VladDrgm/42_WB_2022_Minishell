@@ -78,8 +78,6 @@ int	minishell_cd(char **args, pid_t pid)
  */
 int	minishell_echo(char **args, pid_t pid)
 {
-	pid++;
-	pid--;
 	int i;
 	int flag;
 	int temp;
@@ -88,31 +86,30 @@ int	minishell_echo(char **args, pid_t pid)
 	free(g_access.last_return);
 	g_access.last_return = ft_itoa(0);
 	ft_update_env("_=", "echo");
-
-	len = 0;
-	while (args[len] != NULL)
+	if (pid == 0)
 	{
-		// printf("args = %s\n", args[len]);
-		len++;
-	}
-	// len--;
-	// printf("len = %d\n", len);
-	flag = 0;
-	if (args[1] == NULL)
-		write(2, "minishell: expected argument to \"echo\"\n", 40);
-	else
-	{
-		i = 1;
-		while (args[i]) //go through all arguments
+		len = 0;
+		while (args[len] != NULL)
 		{
-			temp = echo_flag(args[i]); //checks for -n / -nnnnnnn and returns 1 if so or 0 if the format is not -n / -nnnnn
-			flag += temp; //flag keeps growing by temp
-			if (flag == 0 || temp == 0)
-				break;
-			else
-				i++;
+			len++;
 		}
-		echo_print(args, i, len, flag); //based on the flag, we either print with or without a \n
+		flag = 0;
+		if (args[1] == NULL)
+			write(2, "minishell: expected argument to \"echo\"\n", 40);
+		else
+		{
+			i = 1;
+			while (args[i]) //go through all arguments
+			{
+				temp = echo_flag(args[i]); //checks for -n / -nnnnnnn and returns 1 if so or 0 if the format is not -n / -nnnnn
+				flag += temp; //flag keeps growing by temp
+				if (flag == 0 || temp == 0)
+					break;
+				else
+					i++;
+			}
+			echo_print(args, i, len, flag); //based on the flag, we either print with or without a \n
+		}
 	}
 	return (1);
 }
