@@ -6,8 +6,10 @@
 	 @return Always returns 1, to continue executing.
 	 @todo check after adding two times with export => checked; V.
  */
-int	minishell_env(char **args, ...)
+int	minishell_env(char **args, pid_t pid)
 {
+		pid++;
+	pid--;
 	t_list *ptr;
 
 	if (ft_strncmp(args[0], "env", 3))
@@ -37,8 +39,10 @@ int	minishell_env(char **args, ...)
 	 @return Always returns 0, to terminate execution.
 	 @todo free linked lists etc properly; fix arguments that need to be passed!
  */
-int	minishell_exit(char **args, ...)
+int	minishell_exit(char **args, pid_t pid)
 {
+		pid++;
+	pid--;
 	int i = 0;
 	while (args[i] != NULL)
 	{
@@ -98,9 +102,10 @@ int	minishell_exit(char **args, ...)
 	@param args List of args.	Not examined. (and no need to)
 	@return Always returns 1, to continue execution.
  */
-int minishell_pwd(char **args, ...)
+int minishell_pwd(char **args, pid_t pid)
 {
-
+	pid++;
+	pid--;
 	char *buf;
 	int i = 1;
 	free(g_access.last_return);
@@ -124,8 +129,10 @@ int minishell_pwd(char **args, ...)
 	@return Always returns 1, to continue execution.
 	@todo Check for export directly after minishell execution on MAC. Is OLDPWD printed? If yes, insert exception.
  */
-int minishell_export(char **args, ...)
+int minishell_export(char **args, pid_t pid)
 {
+		pid++;
+	pid--;
 	t_env_var *env_var;
 	int len;
 	int j;
@@ -185,8 +192,10 @@ int minishell_export(char **args, ...)
 	@param args List of args.	Not examined. (and no need to)
 	@return Always returns 1, to continue execution.
  */
-int minishell_unset(char **args, ...)
+int minishell_unset(char **args, pid_t pid)
 {
+		pid++;
+	pid--;
 	t_list *ptr;
 	t_list *temp;
 	temp = NULL;

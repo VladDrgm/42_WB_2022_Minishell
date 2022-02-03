@@ -2,7 +2,7 @@
 #include "../incl/minishell.h"
 
 
-t_builtin_content *ft_init_builtin_content(char *cmd, int (*minishell_fct)(char **args, ...), int i)
+t_builtin_content *ft_init_builtin_content(char *cmd, int (*minishell_fct)(char **args, pid_t pid), int i)
 {
 	t_builtin_content	*content;
 
