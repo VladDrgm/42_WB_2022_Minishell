@@ -8,26 +8,29 @@
  */
 int	minishell_env(char **args, pid_t pid)
 {
-		pid++;
-	pid--;
 	t_list *ptr;
 
+	ft_update_env("_=", "env");
+	free(g_access.last_return);
+	g_access.last_return = ft_itoa(0);
 	if (ft_strncmp(args[0], "env", 3))
 		return (0);
 	ptr = g_access.env;
-	while (ptr != NULL)
+	if (pid == 0)
 	{
-		write(1, ((t_env_var*)(ptr->content))->name, \
-			ft_strlen(((t_env_var*)(ptr->content))->name));
-		write(1, ((t_env_var*)(ptr->content))->value, \
-			ft_strlen(((t_env_var*)(ptr->content))->value));
-		write(1, "\n", 1);
-		if (ptr->next != NULL)
-			ptr = ptr->next;
-		else
-			break;
+		while (ptr != NULL)
+		{
+			write(1, ((t_env_var*)(ptr->content))->name, \
+				ft_strlen(((t_env_var*)(ptr->content))->name));
+			write(1, ((t_env_var*)(ptr->content))->value, \
+				ft_strlen(((t_env_var*)(ptr->content))->value));
+			write(1, "\n", 1);
+			if (ptr->next != NULL)
+				ptr = ptr->next;
+			else
+				break;
+		}
 	}
-	ft_update_env("_=", "env");
 	return (1);
 }
 

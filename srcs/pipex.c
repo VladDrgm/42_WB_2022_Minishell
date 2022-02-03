@@ -52,10 +52,10 @@ void make_cmd_list (t_list **cmd_list)
 	// temp = (t_command *)malloc(sizeof(t_command));
 	// temp->comm_len = 2;
 	// temp->comm_table = (char **)malloc(sizeof(char *) * temp->comm_len);
-	// temp->comm_table[0] = "export";
+	// temp->comm_table[0] = "env";
 	// // temp->comm_table[1] = "-";
 	// temp->comm_table[1] = NULL;
-	// temp->index = 1;
+	// temp->index = 0;
 	// temp->cmd_type = FT_CMD_TYPE_BUILT_IN;
 	// temp->path = NULL;
 	// ft_lstadd_back(cmd_list, ft_lstnew(temp));
