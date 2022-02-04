@@ -38,7 +38,7 @@
 # define FT_EXCL_MARK 33	//futuristic stuff, i dont know
 # define FT_UNDERSCORE 95
 # define FT_PARSER_COMMENT 0
-# define FT_LEXOR_COMMENT 0
+# define FT_LEXOR_COMMENT 0 
 
 # define FT_CMD_TYPE_ERROR -1
 # define FT_CMD_TYPE_SYSTEM 0
@@ -152,6 +152,7 @@ void	ft_free_list(t_list *head);
 void	print_element(void *input);
 void	print_list(t_list *el);
 void	add_string(t_list **list, char	*str);
+int		is_special_char(char ch);
 
 void	add_specialchar_string(t_list **list, char *str);
 int		q_handler(char *str, char **current_str, char q_char);
@@ -164,6 +165,7 @@ void	ft_lex_space_handler(char **current_str, char *args, int i, int begining);
 // LEXOR UTILS
 void	ft_free_parser(void *parser);
 void	print_list_parse(t_list *el);
+char	*join2current_str(char *current_str, char *add_on);
 // UTILS
 int		ft_strcmp(char *s1, char *s2);
 void	ft_free_split(char **split);
