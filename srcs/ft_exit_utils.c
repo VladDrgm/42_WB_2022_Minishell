@@ -43,3 +43,18 @@ long long int	ft_atoll(const char *str)
 	}
 	return (k * j);
 }
+
+int ft_get_index()
+{
+	t_list *ptr;
+	int index;
+
+	index = 0;
+	ptr = g_access.parser2exec;
+	while (ptr)
+	{
+		index++;
+		ptr = ptr->next;
+	}
+	return(index);
+}

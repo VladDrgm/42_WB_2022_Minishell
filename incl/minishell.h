@@ -139,7 +139,7 @@ char	*ft_handle_cd(char *address, t_list *ptr, pid_t pid);
 // EXIT UTILS
 int		ft_digit_check(char *argv);
 long long int	ft_atoll(const char *str);
-
+int		ft_get_index();
 //EXPORT UTILS
 t_list *ft_copy_env(void);
 void ft_print_sorted_copy(t_list *env_cpy);
