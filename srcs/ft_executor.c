@@ -1,53 +1,74 @@
 #include "../incl/minishell.h"
 
-int	minishell_execute(void)
+//IMPORTANT leave for testing
+
+void make_cmd_list (t_list **cmd_list)
 {
+	t_command *temp;
 
-	char	**args;
 
-	// pid_t	pid;
+	// temp = (t_command *)malloc(sizeof(t_command));
+	// temp->comm_len = 3;
+	// temp->comm_table = (char **)malloc(sizeof(char *) * temp->comm_len);
+	// temp->comm_table[0] = ">";
+	// temp->comm_table[1] = "outhouse";
+	// temp->comm_table[2] = NULL;
+	// temp->index = 1;
+	// temp->cmd_type = FT_CMD_TYPE_REDIRECT;
+	// temp->path= NULL;
+	// ft_lstadd_back(cmd_list, ft_lstnew(temp));
 
-	// pid = 0; //FOR TESTING PID UNTIL IMPLEMENTATION
-	args = ((t_command *)(g_access.parser2exec)->content)->comm_table;
+	// temp = (t_command *)malloc(sizeof(t_command));
+	// temp->comm_len = 3;
+	// temp->comm_table = (char **)malloc(sizeof(char *) * temp->comm_len);
+	// temp->comm_table[0] = "<<";
+	// temp->comm_table[1] = "dingus";
+	// temp->comm_table[2] = NULL;
+	// temp->index = 1;
+	// temp->cmd_type = FT_CMD_TYPE_REDIRECT;
+	// temp->path= NULL;
+	// ft_lstadd_back(cmd_list, ft_lstnew(temp));
 
-	if (args[0] == NULL) // An empty command was entered.
-		return (1);
+	temp = (t_command *)malloc(sizeof(t_command));
+	temp->comm_len = 3;
+	temp->comm_table = (char **)malloc(sizeof(char *) * temp->comm_len);
+	temp->comm_table[0] = "cat";
+	temp->comm_table[1] = "-e";
+	temp->comm_table[2] = NULL;
+	temp->index = 0;
+	temp->cmd_type = FT_CMD_TYPE_SYSTEM;
+	temp->path = "/usr/bin/cat";
+	ft_lstadd_back(cmd_list, ft_lstnew(temp));
 
-	if (ft_execve(args, 0) == 1)
-		if (ft_execve(args, 1) == 1)
-			return (1);
-	return (minishell_launch(args));
+	temp = (t_command *)malloc(sizeof(t_command));
+	temp->comm_len = 3;
+	temp->comm_table = (char **)malloc(sizeof(char *) * temp->comm_len);
+	temp->comm_table[0] = "cat";
+	temp->comm_table[1] = "-e";
+	temp->comm_table[2] = NULL;
+	temp->index = 1;
+	temp->cmd_type = FT_CMD_TYPE_SYSTEM;
+	temp->path = "/usr/bin/cat";
+	ft_lstadd_back(cmd_list, ft_lstnew(temp));
+
+	temp = (t_command *)malloc(sizeof(t_command));
+	temp->comm_len = 3;
+	temp->comm_table = (char **)malloc(sizeof(char *) * temp->comm_len);
+	temp->comm_table[0] = "echo";
+	temp->comm_table[1] = "lala";
+	temp->comm_table[2] = NULL;
+	temp->index = 2;
+	temp->cmd_type = FT_CMD_TYPE_SYSTEM;
+	temp->path = "/usr/bin/echo";
+	ft_lstadd_back(cmd_list, ft_lstnew(temp));
+
+
+	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! the last line should be executable by execve !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
 
-/**
-	@brief Launch a program and wait for it to terminate.
-	@param args Null terminated list of arguments (including program).
-	@return Always returns 1, to continue execution.
- */
-int	minishell_launch(char **args)
+int	executor(char **envp)
 {
-	pid_t	pid;
-	pid_t	wpid;
-	int		status;
-
-	wpid = 0;
-	pid = fork();
-	// Error forking
-	if (pid < 0)
-		perror("minishell");
-	// Child process
-	else if (pid == 0)
-	{
-		if (execvp(args[0], args) == -1)
-			perror(ft_strjoin("minishell: ", args[0]));
-		exit(EXIT_FAILURE);
-	}
-	// Parent process
-	else if (wpid == 0) // wpid check only necessary for gcc flags (otherwise unused variable)
-	{
-		wpid = waitpid(pid, &status, WUNTRACED);
-		while (!WIFEXITED(status) && !WIFSIGNALED(status)) //wait related macros
-			wpid = waitpid(pid, &status, WUNTRACED);
-	}
+	pipex(g_access.parser2exec, envp);
 	return (1);
 }
+

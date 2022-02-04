@@ -12,7 +12,9 @@
 # include <string.h>
 # include <sys/wait.h>
 # include <stdarg.h>
-#include <fcntl.h>
+# include <fcntl.h>
+# include <sys/types.h>
+# include <signal.h>
 
 # define FT_SPECIAL_CHAR_STRING 1
 # define FT_STRING 2
@@ -107,6 +109,7 @@ void	free_global(void);
 void	ft_signal_setup(void);
 int		lexor(void);
 int		parser(void);
+int		executor(char **envp);
 void	ft_initiator(char **envp);
 void	ft_init_builtins(void);
 t_builtin_content	*ft_init_builtin_content(char *cmd, int (*minishell_fct)(char **args, pid_t pid), int i);
@@ -191,7 +194,6 @@ typedef struct s_content
 
 
 
-int	ft_super_mario(char **envp);
 
 /*exit_handler.c*/
 void	ft_close_fd(void);
@@ -221,7 +223,7 @@ void	ft_check_output_file(const char *filename);
 char	*ft_check_cmd_path(char **path, char **split, int j, const char *cmd);
 void	ft_exit_on_error2(char *error_msg);
 
-int test(t_list *cmd, char **envp);
+int		pipex(t_list *cmd, char **envp);
 
 
 

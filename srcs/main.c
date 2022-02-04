@@ -36,7 +36,7 @@ int	main(int argc, char **argv, char**envp)
 			//g_access.parser2exec = &parser2executor_list;
 
 			// temp = minishell_execute();
-			temp = ft_super_mario(envp);
+			temp = executor(envp);
 			free(g_access.parser2exec); //This should be handled by executor at some point
 			g_access.parser2exec = NULL;
 			if (temp == 0)
