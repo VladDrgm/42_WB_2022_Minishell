@@ -225,6 +225,10 @@ void	ft_exit_on_error2(char *error_msg);
 
 int		pipex(t_list *cmd, char **envp);
 
+/*ft_heredoc.c*/
+void	heredoc_child(int* fd, int *fd_stream, char *stop_name, char *keyword);
+void	heredoc_parent(int *fd, pid_t pid);
+
 
 
 #endif

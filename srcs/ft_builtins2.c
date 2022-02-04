@@ -75,7 +75,8 @@ int	minishell_cd(char **args, pid_t pid)
 	 @param args List of args.	Not examined.
 	 @return Always returns 1, to continue execution.
 	 @todo edge case fetch -nnnnn -nnnn test / edge case echo $_ -> $_ must be implemented alongside history; implemented -nnnnnnnn and also implemented -nnnnn -nnnn V.
- */
+	 @todo fix flag -n try printing
+*/
 int	minishell_echo(char **args, pid_t pid)
 {
 	int i;
