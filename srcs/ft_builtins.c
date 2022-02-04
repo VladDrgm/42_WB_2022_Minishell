@@ -203,6 +203,7 @@ int minishell_export(char **args, pid_t pid)
  */
 int minishell_unset(char **args, pid_t pid)
 {
+	pid ++; // for gcc flags
 	t_list *ptr;
 	t_list *temp;
 	temp = NULL;
