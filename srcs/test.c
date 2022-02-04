@@ -32,6 +32,7 @@ void parent(int *fd, pid_t pid)
 	// close(fd[0]);
 }
 
+
 void heredoc(char *stop_word, int fd_stream[2], int fd_out, char *keyword)
 {
 	char *out;
@@ -70,11 +71,20 @@ void heredoc(char *stop_word, int fd_stream[2], int fd_out, char *keyword)
 	close(fd_stream[1]);
 	close(STDIN_FILENO);
 	close(STDOUT_FILENO);
+	write(2, "TUKILELE\n", 9);
+}
+
+
+
+void handle_sigterm_heardoc(int sig)
+{
+	close(STDIN_FILENO);
+	close(STDOUT_FILENO);
 }
 
 void heredoc_child(int* fd, int *fd_stream, char *stop_name, char *keyword)
 {
-
+	signal(SIGTERM, handle_sigterm_heardoc);
 	close(fd[0]);
 	heredoc(stop_name, fd_stream, fd[1], keyword);
 	exit(0);
@@ -372,7 +382,7 @@ int test(t_list *cmd_list, char** envp)
 	i = 0;
 
 
-	waitpid(first_input, NULL, 0);
+	//waitpid(first_input, NULL, 0);
 	// if(write(fd_in[1], "", 0) == -1)
 	// 	close(fd_in[1]);
 	while (i <= last_index)
@@ -380,6 +390,8 @@ int test(t_list *cmd_list, char** envp)
 		waitpid(pidt[i], NULL, 0);
 		i++;
 	}
+	kill(first_input, SIGTERM);
+	waitpid(first_input, NULL, 0);
 	// if(write(fd_in[1], "", 0) == -1)
 	// 	close(fd_in[1]);
 	dup2(fd_stream[0], STDIN_FILENO);
