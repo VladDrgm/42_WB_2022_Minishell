@@ -60,8 +60,29 @@ char *ft_getenv(char *str)
 				return (temp_env->value);
 		temp = temp->next;
 	}
-	return "NOSTRING";
+	return "";
 }
+
+char	*env_var_formater(char *env_var)
+{
+	char	**split_list;
+	char	*out;
+	int		i;
+
+	split_list = ft_split(env_var, FT_SPACE);
+	i = 0;
+	out = NULL;
+	while (split_list[i])
+	{
+		out = join2current_str(out, ft_strdup("\'"));
+		out = join2current_str(out, split_list[i]);
+		out = join2current_str(out, ft_strdup("\' "));
+		i++;
+	}
+	free(split_list);
+	return out;
+}
+
 /*
 **	env variables can be alphanumberic characters, it can be underscore,
 **	equal  sign can be inside the value, but cant be inside the name
@@ -75,7 +96,7 @@ void ft_env_check(char **args)
 	int d_quote_flag;
 	char *temp1;
 	char *temp0;
-	char *temp2;
+	//char *temp2;
 
 	i = 0;
 	j = 0;
@@ -115,12 +136,10 @@ void ft_env_check(char **args)
 				temp1 = ft_substr(*args, i + 1, j - i - 1);
 				temp0 = ft_getenv(temp1);
 				free(temp1);
+				temp0 = env_var_formater(temp0);
 				(*args)[i] = '\0';
-				temp1 = ft_strjoin(*args, "\"");
-				temp2 = ft_strjoin(temp1, temp0);
-				free(temp1);
-				temp1 = ft_strjoin(temp2, "\"");
-				free(temp2);
+				temp1 = ft_strjoin(*args, temp0);
+				free(temp0);
 				temp0 = ft_strjoin(temp1, &((*args)[j]));
 				i = ft_strlen(temp1);
 				free(*args);
