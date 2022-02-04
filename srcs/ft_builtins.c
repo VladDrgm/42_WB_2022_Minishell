@@ -44,56 +44,86 @@ int	minishell_env(char **args, pid_t pid)
  */
 int	minishell_exit(char **args, pid_t pid)
 {
-		pid++;
-	pid--;
 	int i = 0;
-	while (args[i] != NULL)
-	{
-		i++;
-	}
+	int counter;
 	long long int num_arg;
 	int len;
-	len = i;
-	if (len > 2 && !ft_digit_check(args[1]))
+
+	counter = ft_get_index();
+	printf("counter: %i, pid: %i\n", counter, pid);
+	if (counter == 1 && pid != 0)
 	{
-		write(1, "minishell: exit: too many arguments\n", 36);
-		free(g_access.last_return);
-		g_access.last_return = ft_itoa(1);
-		return (1);
-	}
-	else if (len == 1)
-	{
-		write(1, "exit\n", 5);
-		exit (0);
-	}
-	else if (!ft_digit_check(args[1]))
-	{
-		num_arg = ft_atoll(args[1]);
-		if (!((num_arg < 0 && args[1][0] != '-') || \
-			(num_arg > 0 && args[1][0] == '-')))
+		while (args[i] != NULL)
 		{
-			if (num_arg >=0 && num_arg <= 255)
+			i++;
+		}
+		len = i;
+		if (len > 2 && !ft_digit_check(args[1]))
+		{
+			write(1, "minishell: exit: too many arguments\n", 36);
+			free(g_access.last_return);
+			g_access.last_return = ft_itoa(1);
+			return (1);
+		}
+		else if (len == 1)
+		{
+			write(1, "exit\n", 5);
+			exit (0);
+		}
+		else if (!ft_digit_check(args[1]))
+		{
+			num_arg = ft_atoll(args[1]);
+			if (!((num_arg < 0 && args[1][0] != '-') || \
+				(num_arg > 0 && args[1][0] == '-')))
 			{
-				write(1, "exit\n", 5);
-				exit(num_arg);
-			}
-			else if (num_arg > 255)
-			{
-				write(1, "exit\n", 5);
-				exit (num_arg % 256);
-			}
-			else if (num_arg < 0)
-			{
-				write(1, "exit\n", 5);
-				exit (256 - ((num_arg * -1) % 256));
+				if (num_arg >=0 && num_arg <= 255)
+				{
+					write(1, "exit\n", 5);
+					exit(num_arg);
+				}
+				else if (num_arg > 255)
+				{
+					write(1, "exit\n", 5);
+					exit (num_arg % 256);
+				}
+				else if (num_arg < 0)
+				{
+					write(1, "exit\n", 5);
+					exit (256 - ((num_arg * -1) % 256));
+				}
 			}
 		}
+		write(1, "exit\n", 5);
+		write(1,"minishell: exit: ", 17);
+		write (1, args[1], ft_strlen(args[1]));
+		write(1, ": numeric argument required\n", 28);
+		exit(2);
 	}
-	write(1, "exit\n", 5);
-	write(1,"minishell: exit: ", 17);
-	write (1, args[1], ft_strlen(args[1]));
-	write(1, ": numeric argument required\n", 28);
-	exit(2);
+	else if(counter != 1 && pid == 0)
+	{
+		while (args[i] != NULL)
+			i++;
+		len = i;
+		if (len > 2 && !ft_digit_check(args[1]))
+			exit (1);
+		else if (len == 1)
+			exit (0);
+		else if (!ft_digit_check(args[1]))
+		{
+			num_arg = ft_atoll(args[1]);
+			if (!((num_arg < 0 && args[1][0] != '-') || \
+				(num_arg > 0 && args[1][0] == '-')))
+			{
+				if (num_arg >=0 && num_arg <= 255)
+					exit(num_arg);
+				else if (num_arg > 255)
+					exit (num_arg % 256);
+				else if (num_arg < 0)
+					exit (256 - ((num_arg * -1) % 256));
+			}
+		}
+		exit(2);
+	}
 	//WE NEED TO LINK THIS WITH FREE
 	//DISCUSS THIS AS A TEAM -> MUST BE CONNECTED
 	// TO SIGNALS SO WE ALL HAVE TO SEE HOW TO FREE MEMORY
