@@ -50,7 +50,6 @@ int	minishell_exit(char **args, pid_t pid)
 	int len;
 
 	counter = ft_get_index();
-	printf("counter: %i, pid: %i\n", counter, pid);
 	if (counter == 1 && pid != 0)
 	{
 		while (args[i] != NULL)
@@ -164,8 +163,6 @@ int minishell_pwd(char **args, pid_t pid)
  */
 int minishell_export(char **args, pid_t pid)
 {
-	pid++;
-	pid--;
 	t_env_var *env_var;
 	int len;
 	int j;
@@ -174,12 +171,8 @@ int minishell_export(char **args, pid_t pid)
 
 	len = 0;
 	while (args[len] != 0)
-	{
 		len++;
-	}
-
 	valid = 1;
-
 	ft_update_env("_=", "export");
 	free(g_access.last_return);
 	g_access.last_return = ft_itoa(0);
@@ -228,54 +221,83 @@ int minishell_export(char **args, pid_t pid)
 	@brief Builtin command: unset.
 	@param args List of args.	Not examined. (and no need to)
 	@return Always returns 1, to continue execution.
-	@todo Implement invalid identifier checks
-	@todo check if multiple variables can be unset on the same call
  */
 int minishell_unset(char **args, pid_t pid)
 {
-	pid ++; // for gcc flags
 	t_list *ptr;
 	t_list *temp;
+	int valid;
+
+	valid = 1;
 	temp = NULL;
-	ft_update_env("_=", "export");
+	ft_update_env("_=", "unset");
 	free(g_access.last_return);
 	g_access.last_return = ft_itoa(0);
 	ptr = g_access.env;
-	if (ft_strlen(args[1]) == ft_strlen(((t_env_var*)(ptr->content))->name) - 1)
+	int len = 0;
+	while (args[len] != 0)
+		len++;
+	valid = 1;
+	int i = 1;
+	while (i < len)
 	{
-		if (!ft_strncmp(args[1], ((t_env_var*)(ptr->content))->name, ft_strlen(args[1])))
+		int j = 0;
+		valid = 1;
+		ptr = g_access.env;
+		while (args[i][j] != '=' && args[i][j] != '\0')
 		{
-			if (!ft_strncmp(((t_env_var*)(ptr->content))->name, "PWD=", 4))
-				g_access.pwd = NULL;
-			g_access.env = ptr->next;
-			ft_lstdelone(ptr, delone(ptr->content));
-			return (1);
-		}
-	}
-	while(ptr->next != NULL)
-	{
-		if (ft_strlen(args[1]) == ft_strlen(((t_env_var*)(ptr->next->content))->name) - 1)
-		{
-			if (!ft_strncmp(args[1], ((t_env_var*)(ptr->next->content))->name, ft_strlen(args[1])))
+			if (j == 0 && (args[i][j] == '_' || ft_isalpha(args[i][j])))
+				j++;
+			else if (j > 0 && (args[i][j] == '_' || ft_isalnum(args[i][j])))
+				j++;
+			else
 			{
-				if (ptr->next->next != NULL)
+				valid = 0;
+				if (pid == 0)
 				{
-					temp = ptr->next;
-					ptr->next = ptr->next->next;
-					ft_lstdelone(temp, delone(temp->content));
-					return (1);
+					write(2, "minishell: export: `", 20); //bash: export: `4hehe=he': not a valid identifier
+					write(2 , args[i], ft_strlen(args[i]));
+					write(2, "': not a valid identifier\n", 26);
 				}
-				else
-				{
-					ft_lstdelone(ptr->next, delone(ptr->next->content));
-					ptr->next = NULL;
-					return (1);
-				}
-				if (!ft_strncmp(((t_env_var*)(ptr->content))->name, "PWD=", 4))
-					g_access.pwd = NULL;
+				free(g_access.last_return);
+				g_access.last_return = ft_itoa(1);
+				j++;
 			}
 		}
-		ptr = ptr->next;
+		if (ft_strlen(args[i]) == ft_strlen(((t_env_var*)(ptr->content))->name) - 1 && valid)
+		{
+			if (!ft_strncmp(args[i], ((t_env_var*)(ptr->content))->name, ft_strlen(args[i])))
+			{
+				if (!ft_strncmp(((t_env_var*)(ptr->content))->name, "PWD=", 4))
+					g_access.pwd = NULL;
+				g_access.env = ptr->next;
+				ft_lstdelone(ptr, delone(ptr->content));
+			}
+		}
+		while(ptr->next != NULL && valid)
+		{
+			if (ft_strlen(args[i]) == ft_strlen(((t_env_var*)(ptr->next->content))->name) - 1)
+			{
+				if (!ft_strncmp(args[i], ((t_env_var*)(ptr->next->content))->name, ft_strlen(args[i])))
+				{
+					if (ptr->next->next != NULL)
+					{
+						temp = ptr->next;
+						ptr->next = ptr->next->next;
+						ft_lstdelone(temp, delone(temp->content));
+					}
+					else
+					{
+						ft_lstdelone(ptr->next, delone(ptr->next->content));
+						ptr->next = NULL;
+					}
+					if (!ft_strncmp(((t_env_var*)(ptr->content))->name, "PWD=", 4))
+						g_access.pwd = NULL;
+				}
+			}
+			ptr = ptr->next;
+		}
+		i++;
 	}
 	return (1);
 }
