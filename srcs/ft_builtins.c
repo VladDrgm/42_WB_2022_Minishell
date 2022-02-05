@@ -265,7 +265,7 @@ int minishell_unset(char **args, pid_t pid)
 				valid = 0;
 				if (pid == 0)
 				{
-					write(2, "minishell: export: `", 20); //bash: export: `4hehe=he': not a valid identifier
+					write(2, "minishell: unset: `", 20);
 					write(2 , args[i], ft_strlen(args[i]));
 					write(2, "': not a valid identifier\n", 26);
 				}
@@ -292,17 +292,21 @@ int minishell_unset(char **args, pid_t pid)
 				{
 					if (ptr->next->next != NULL)
 					{
+						if (!ft_strncmp(((t_env_var*)(ptr->content))->name, "PWD=", 4))
+							g_access.pwd = NULL;
 						temp = ptr->next;
 						ptr->next = ptr->next->next;
 						ft_lstdelone(temp, delone(temp->content));
+						break;
 					}
 					else
 					{
+						if (!ft_strncmp(((t_env_var*)(ptr->content))->name, "PWD=", 4))
+							g_access.pwd = NULL;
 						ft_lstdelone(ptr->next, delone(ptr->next->content));
 						ptr->next = NULL;
+						break;
 					}
-					if (!ft_strncmp(((t_env_var*)(ptr->content))->name, "PWD=", 4))
-						g_access.pwd = NULL;
 				}
 			}
 			ptr = ptr->next;
