@@ -66,16 +66,20 @@ void ft_print_sorted_copy(t_list *env_cpy)
 		{
 			write(1, "declare -x ", 11);
 			write(1, ((t_env_var *)(ptr->content))->name, ft_strlen(((t_env_var *)(ptr->content))->name));
-			write(1, "\"", 1);
-			i = 0;
-			while(((t_env_var *)(ptr->content))->value[i] != '\0')
+			if (((t_env_var *)(ptr->content))->value != NULL)
 			{
-				if (((t_env_var *)(ptr->content))->value[i] == '$' || (((t_env_var *)(ptr->content))->value)[i] == '\"')
-					write(1, "\\", 1);
-				write(1, &((t_env_var *)(ptr->content))->value[i], 1);
-				i++;
+				write(1, "\"", 1);
+				i = 0;
+				while(((t_env_var *)(ptr->content))->value[i] != '\0')
+				{
+					if (((t_env_var *)(ptr->content))->value[i] == '$' || (((t_env_var *)(ptr->content))->value)[i] == '\"')
+						write(1, "\\", 1);
+					write(1, &((t_env_var *)(ptr->content))->value[i], 1);
+					i++;
+				}
+				write(1, "\"", 1);
 			}
-			write(1, "\"\n", 2);
+			write(1, "\n", 1);
 		}
 		ptr=ptr->next;
 	}
