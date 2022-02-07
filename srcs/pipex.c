@@ -28,7 +28,7 @@ int out_redirect(char* filename, int type)
 
 int in_redirect(char* filename, int type)
 {
-	int fd;
+	int fd = 0;
 	int premissions;
 
 	premissions = O_RDONLY;
