@@ -235,7 +235,7 @@ int pipex(t_list *cmd_list, char** envp)
 		waitpid(pidt[i], NULL, 0);
 		i++;
 	}
-	kill(first_input, SIGTERM);
+	kill(first_input, SIGUSR1);
 	waitpid(first_input, NULL, 0);
 	dup2(fd_stream[0], STDIN_FILENO);
 	dup2(fd_stream[1], STDOUT_FILENO);
