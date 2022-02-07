@@ -237,7 +237,7 @@ int pipex(t_list *cmd_list, char** envp)
         g_access.last_return = ft_itoa(WEXITSTATUS(status));
         x++;
     }
-    kill(first_input, SIGUSR1);
+    kill(first_input, SIGTERM);
     waitpid(first_input, NULL, 0);
 	dup2(fd_stream[0], STDIN_FILENO);
 	dup2(fd_stream[1], STDOUT_FILENO);
