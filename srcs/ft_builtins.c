@@ -4,7 +4,6 @@
 	 @brief Bultin command: env.
 	 @param args List of args
 	 @return Always returns 1, to continue executing.
-	 @todo check after adding two times with export => checked; V.
  */
 int	minishell_env(char **args, pid_t pid)
 {
@@ -20,11 +19,14 @@ int	minishell_env(char **args, pid_t pid)
 	{
 		while (ptr != NULL)
 		{
-			write(1, ((t_env_var*)(ptr->content))->name, \
-				ft_strlen(((t_env_var*)(ptr->content))->name));
-			write(1, ((t_env_var*)(ptr->content))->value, \
-				ft_strlen(((t_env_var*)(ptr->content))->value));
-			write(1, "\n", 1);
+			if (((t_env_var*)(ptr->content))->value != NULL)
+			{
+				write(1, ((t_env_var*)(ptr->content))->name, \
+					ft_strlen(((t_env_var*)(ptr->content))->name));
+				write(1, ((t_env_var*)(ptr->content))->value, \
+					ft_strlen(((t_env_var*)(ptr->content))->value));
+				write(1, "\n", 1);
+			}
 			if (ptr->next != NULL)
 				ptr = ptr->next;
 			else
@@ -204,11 +206,19 @@ int minishell_export(char **args, pid_t pid)
 				j++;
 			}
 		}
-		if (args[i][j] == '=' && valid)
+		if ((args[i][j] == '=' || args[i][j] == '\0') && valid)
 		{
 			env_var = (t_env_var *)malloc(sizeof(t_env_var));
-			env_var->name = ft_substr(args[i], 0, j + 1);
-			env_var->value = ft_strdup(&(args[i][j + 1]));
+			if (args[i][j] == '=')
+			{
+				env_var->name = ft_substr(args[i], 0, j + 1);
+				env_var->value = ft_strdup(&(args[i][j + 1]));
+			}
+			else
+			{
+				env_var->name = ft_strdup(&(args[i][0]));
+				env_var->value = NULL;
+			}
 			if (!ft_check_existing_env(&env_var))
 				ft_lstadd_back(&(g_access.env), ft_lstnew(env_var));
 		}
