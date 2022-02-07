@@ -19,6 +19,7 @@ int	main(int argc, char **argv, char**envp)
 	temp = 0;
 	while (1)
 	{
+		temp = 0;
 		g_access.read_line2lexor = readline(">");
 		if (g_access.read_line2lexor == NULL) //dealing with EOF (Ctrl + D)
 			break;
@@ -31,14 +32,18 @@ int	main(int argc, char **argv, char**envp)
 		{
 			//temp = parser(&lexer2parser_list, &parser2executor_list);
 			temp = parser();
-			if (temp != 0)
-				break ;
+			if (temp == -2)
+			{
+				continue;
+				// exit(1);
+			}
+
 			//g_access.parser2exec = &parser2executor_list;
 
 			// temp = minishell_execute();
 			temp = executor(envp);
-			free(g_access.parser2exec); //This should be handled by executor at some point
-			g_access.parser2exec = NULL;
+			//free(g_access.parser2exec); //This should be handled by executor at some point
+			//g_access.parser2exec = NULL;
 			if (temp == 0)
 				break;
 		}

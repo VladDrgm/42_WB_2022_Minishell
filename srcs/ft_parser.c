@@ -152,19 +152,21 @@ int	parser(void)
 	char	**cmd_line_red;
 	int		cmd_len;
 	t_command	*cmd;
+	int return_flag;
 
 	index_counter = 0;
 	lex_element = g_access.lexor2parser;
 	cmd = NULL;
-	while (1)
+	return_flag = 0;
+	while (1 || return_flag != 0)
 	{
 		cmd_line = 0;
 		cmd_len = 0;
-		if (lex_element == NULL)
+		if (lex_element == NULL || return_flag != 0)
 			break;
-		while (1)
-		{	
-			if (lex_element == NULL)
+		while (1 || return_flag != 0)
+		{
+			if (lex_element == NULL )
 				break;
 			if (((t_word *)(lex_element->content))->type == FT_SPECIAL_CHAR_STRING)
 			{
@@ -189,11 +191,15 @@ int	parser(void)
 					executor_element = ft_lstnew((void * ) cmd);
 					ft_lstadd_back(&(g_access.parser2exec), executor_element);
 				}
-				else  if (is_pipe(((t_word *)(lex_element->content))->address)) 
+				else  if (is_pipe(((t_word *)(lex_element->content))->address))
 				{
 					if (cmd_len == 0)
+					{
+						return_flag = -2;
+						write(2, "bash: syntax error near unexpected token `|'\n", 45);
 						error_fun(&(g_access.parser2exec), &(g_access.lexor2parser));
-					else
+					}
+						else
 						lex_element = lex_element->next;
 					break ;
 				}
@@ -207,24 +213,30 @@ int	parser(void)
 				ft_string_handler(lex_element, &cmd_line, &cmd_len);
 			lex_element = lex_element->next;
 		}
-		cmd_line = add_to_line(cmd_line, NULL, &cmd_len);
-		cmd = (t_command *)malloc(sizeof(t_command));
-		cmd->comm_table = cmd_line;
-		cmd->path = NULL;
-		cmd->index = index_counter;
-		cmd->comm_len = cmd_len;
-		cmd->cmd_type = 0;
-		ft_command_check(cmd->comm_table[0], &cmd->path, &cmd->cmd_type);
-		if (FT_PARSER_COMMENT)
-			printf("Path if: %s\n", cmd->path);
-		executor_element = ft_lstnew((void * ) cmd);
-		ft_lstadd_back(&(g_access.parser2exec), executor_element);
-		index_counter++;
+		if (return_flag == 0)
+		{
+			cmd_line = add_to_line(cmd_line, NULL, &cmd_len);
+			cmd = (t_command *)malloc(sizeof(t_command));
+			cmd->comm_table = cmd_line;
+			cmd->path = NULL;
+			cmd->index = index_counter;
+			cmd->comm_len = cmd_len;
+			cmd->cmd_type = 0;
+			ft_command_check(cmd->comm_table[0], &cmd->path, &cmd->cmd_type);
+			if (FT_PARSER_COMMENT)
+				printf("Path if: %s\n", cmd->path);
+			executor_element = ft_lstnew((void * ) cmd);
+			ft_lstadd_back(&(g_access.parser2exec), executor_element);
+			index_counter++;
+		}
 	}
-	ft_free_lex_list(g_access.lexor2parser);
-	g_access.lexor2parser = NULL;
+	if (return_flag == 0)
+	{
+		ft_free_lex_list(g_access.lexor2parser);
+		g_access.lexor2parser = NULL;
+	}
 	if (FT_PARSER_COMMENT)
 		print_list_parse(g_access.parser2exec);
-	return (0);
+	return (return_flag);
 }
 
