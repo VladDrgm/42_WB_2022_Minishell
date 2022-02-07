@@ -76,10 +76,15 @@ char	*env_var_formater(char *env_var)
 	{
 		out = join2current_str(out, ft_strdup("\'"));
 		out = join2current_str(out, split_list[i]);
-		out = join2current_str(out, ft_strdup("\' "));
+		if (split_list[i + 1] == NULL)
+			out = join2current_str(out, ft_strdup("\'"));
+		else
+			out = join2current_str(out, ft_strdup("\' "));
 		i++;
 	}
 	free(split_list);
+	if (out == NULL)
+		out = (char *) ft_calloc(sizeof(char), 1);
 	return out;
 }
 
@@ -241,5 +246,12 @@ int	lexor(void)
 		ft_free_list(g_access.lexor2parser);
 	free(args);
 	args = NULL;
+	if (ft_lstsize(g_access.lexor2parser) == 0)
+	{
+		free(g_access.last_return);
+		g_access.last_return = ft_itoa(0);
+		ft_free_list(g_access.lexor2parser);
+		flag = -1;
+	}
 	return flag;
 }

@@ -69,6 +69,7 @@ void make_cmd_list (t_list **cmd_list)
 int	executor(char **envp)
 {
 	pipex(g_access.parser2exec, envp);
+	ft_lstclear(&g_access.parser2exec, ft_free_parser);
 	return (1);
 }
 
