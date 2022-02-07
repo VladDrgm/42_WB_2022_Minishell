@@ -51,8 +51,9 @@ int	minishell_exit(char **args, pid_t pid)
 	long long int num_arg;
 	int len;
 
-	counter = ft_get_index();
-	if (counter == 1 && pid != 0)
+
+	counter = ((t_command *)ft_lstlast(g_access.parser2exec)->content)->index;
+	if (counter == 0 && pid != 0)
 	{
 		while (args[i] != NULL)
 		{
@@ -94,19 +95,35 @@ int	minishell_exit(char **args, pid_t pid)
 				}
 			}
 		}
-		write(1, "exit\n", 5);
-		write(1,"minishell: exit: ", 17);
-		write (1, args[1], ft_strlen(args[1]));
-		write(1, ": numeric argument required\n", 28);
+		else if (len >= 2)
+		{
+			write(1, "exit\n", 5);
+			write(1,"minishell: exit: ", 17);
+			write (1, args[1], ft_strlen(args[1]));
+			write(1, ": numeric argument required\n", 28);
+			exit(255);
+		}
 		exit(2);
 	}
-	else if(counter != 1 && pid == 0)
+	else if (counter == 0 && pid == 0)
 	{
 		while (args[i] != NULL)
 			i++;
 		len = i;
 		if (len > 2 && !ft_digit_check(args[1]))
+		{
 			exit (1);
+		}
+	}
+	else if(counter != 0 && pid == 0)
+	{
+		while (args[i] != NULL)
+			i++;
+		len = i;
+		if (len > 2 && !ft_digit_check(args[1]))
+		{
+			exit (1);
+		}
 		else if (len == 1)
 			exit (0);
 		else if (!ft_digit_check(args[1]))
@@ -123,6 +140,8 @@ int	minishell_exit(char **args, pid_t pid)
 					exit (256 - ((num_arg * -1) % 256));
 			}
 		}
+		else if (len >= 2)
+			exit(255);
 		exit(2);
 	}
 	//WE NEED TO LINK THIS WITH FREE
