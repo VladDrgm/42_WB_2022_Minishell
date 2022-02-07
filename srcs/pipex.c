@@ -142,7 +142,7 @@ int pipex(t_list *cmd_list, char** envp)
 	ft_initialize_fds(fd_stream);
 	last_index = ((t_command *)ft_lstlast(cmd_list)->content)->index;
 	cmd_list_temp = cmd_list;
-	fd_docks = calloc(last_index, sizeof(int *));  //system function
+	fd_docks = ft_calloc(last_index + 1, sizeof(int *));
 	i = 0;
 	while(cmd_list_temp != NULL)
 	{
@@ -229,14 +229,16 @@ int pipex(t_list *cmd_list, char** envp)
 		i++;
 		cmd_list = cmd_list->next;
 	}
-	i = 0;
-	while (i <= last_index)
-	{
-		waitpid(pidt[i], NULL, 0);
-		i++;
-	}
-	kill(first_input, SIGUSR1);
-	waitpid(first_input, NULL, 0);
+	int x = 0;
+    int status;
+    while (x <= last_index)
+    {
+        waitpid(pidt[x], &status, 0);
+        g_access.last_return = ft_itoa(WEXITSTATUS(status));
+        x++;
+    }
+    kill(first_input, SIGUSR1);
+    waitpid(first_input, NULL, 0);
 	dup2(fd_stream[0], STDIN_FILENO);
 	dup2(fd_stream[1], STDOUT_FILENO);
 	printf("LINE FINSHED\n");
