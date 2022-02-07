@@ -168,7 +168,7 @@ int pipex(t_list *cmd_list, char** envp)
 	if (pipe(fd_out) == -1)
 			ft_exit_on_error(&cmd_list, "Pipe creation failed in line 116");
 	fd_in[1] = fd_out[1];
-	pidt = calloc(last_index, sizeof(int *)); //system function
+	pidt = ft_calloc(last_index + 1, sizeof(int *)); //system function
 	while (cmd_list != NULL)
 	{
 		fd_in[0] = fd_out[0];
@@ -237,7 +237,7 @@ int pipex(t_list *cmd_list, char** envp)
         g_access.last_return = ft_itoa(WEXITSTATUS(status));
         x++;
     }
-    kill(first_input, SIGTERM);
+    kill(first_input, SIGUSR1);
     waitpid(first_input, NULL, 0);
 	dup2(fd_stream[0], STDIN_FILENO);
 	dup2(fd_stream[1], STDOUT_FILENO);
