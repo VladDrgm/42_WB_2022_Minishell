@@ -177,6 +177,9 @@ int	parser(void)
 					lex_element = lex_element->next;
 					if(lex_element == NULL)
 					{
+						return_flag = 2;
+						g_access.last_return = ft_itoa(2);
+						write(2, "bash: syntax error near unexpected token `newline'\n", 51);
 						free(cmd_line_red);
 						error_fun(&(g_access.parser2exec), &(g_access.lexor2parser));
 						break;
@@ -206,6 +209,9 @@ int	parser(void)
 				}
 				else
 				{
+					return_flag = 2;
+					g_access.last_return = ft_itoa(2);
+					write(2, "bash: syntax error near unexpected token'\n", 42);
 					error_fun(&(g_access.parser2exec), &(g_access.lexor2parser));
 					break ;
 				}
