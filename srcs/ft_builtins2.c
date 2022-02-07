@@ -4,14 +4,11 @@
 	 @brief Bultin command: change directory.
 	 @param args List of args. args[0] is "cd". args[1] is the directory.
 	 @return Always returns 1, to continue executing.
-	 @todo CHECK IF PWD EXISTS AND CREATE IT IF IT DOESN'T, AFTER USING CD; (idea: change PWD to PWD1 if using 'unset' on PWD)
  */
 int	minishell_cd(char **args, pid_t pid)
 {
 	char *temp[3];
 	char *path;
-	pid++;
-	pid--;
 
 	ft_update_env("_=", "cd");
 	free(g_access.last_return);

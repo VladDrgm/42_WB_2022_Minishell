@@ -30,11 +30,13 @@ void	ft_update_create_OLDPWD(char **argv, t_list *ptr, pid_t pid)
  */
 void	ft_update_PWD(char *path)
 {
-	g_access.pwd = path;
+	ft_set_global_pwd(&path);
+	//g_access.pwd = path;
 	if (env_value_finder("PWD") == NULL)
 		ft_set_global_pwd(&g_access.pwd);
 	else
 		ft_update_env("PWD=", path);
+		//ft_update_env("PWD=", path);
 }
 
 char	*ft_handle_cd(char *address, t_list *ptr, pid_t pid)
