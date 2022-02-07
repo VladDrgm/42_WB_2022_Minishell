@@ -195,7 +195,8 @@ int	parser(void)
 				{
 					if (cmd_len == 0)
 					{
-						return_flag = -2;
+						return_flag = 2;
+						g_access.last_return = ft_itoa(2);
 						write(2, "bash: syntax error near unexpected token `|'\n", 45);
 						error_fun(&(g_access.parser2exec), &(g_access.lexor2parser));
 					}

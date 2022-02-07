@@ -32,7 +32,7 @@ int	main(int argc, char **argv, char**envp)
 		{
 			//temp = parser(&lexer2parser_list, &parser2executor_list);
 			temp = parser();
-			if (temp == -2)
+			if (temp == 2)
 			{
 				continue;
 				// exit(1);
@@ -48,8 +48,9 @@ int	main(int argc, char **argv, char**envp)
 				break;
 		}
 		else
-			break;
+			continue;
 	}
+	printf("before segfault5\n");
 	free_global();
 	return (0);
 }
