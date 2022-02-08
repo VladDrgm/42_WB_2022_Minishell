@@ -70,12 +70,13 @@ void ft_create_envlist(char **envp)
 		ft_get_home();
 }
 
-void ft_initiator(char **envp)
+void ft_initiator(char **envp, char *executable)
 {
 	g_access.signals = 0;
 	g_access.last_return = ft_itoa(0);
 	g_access.pwd = NULL;
 	ft_create_envlist(envp);
+	ft_update_shell_env(executable);
 	ft_init_builtins();
 	g_access.lexor2parser = NULL;
 	g_access.parser2exec = NULL;
