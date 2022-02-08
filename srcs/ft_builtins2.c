@@ -80,9 +80,6 @@ int	minishell_echo(char **args, pid_t pid)
 	int flag;
 	int temp;
 	int len;
-
-	free(g_access.last_return);
-	g_access.last_return = ft_itoa(0);
 	ft_update_env("_=", "echo");
 	if (pid == 0)
 	{
@@ -93,7 +90,7 @@ int	minishell_echo(char **args, pid_t pid)
 		}
 		flag = 0;
 		if (args[1] == NULL)
-			write(2, "minishell: expected argument to \"echo\"\n", 40);
+			write(1, "\n", 1);
 		else
 		{
 			i = 1;
@@ -109,5 +106,7 @@ int	minishell_echo(char **args, pid_t pid)
 			echo_print(args, i, len, flag); //based on the flag, we either print with or without a \n
 		}
 	}
+	free(g_access.last_return);
+	g_access.last_return = ft_itoa(0);
 	return (1);
 }

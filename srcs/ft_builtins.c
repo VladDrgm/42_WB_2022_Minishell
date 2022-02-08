@@ -222,6 +222,7 @@ int minishell_export(char **args, pid_t pid)
 				}
 				free(g_access.last_return);
 				g_access.last_return = ft_itoa(1);
+				break;
 				j++;
 			}
 		}

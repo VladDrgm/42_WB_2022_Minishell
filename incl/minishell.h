@@ -37,7 +37,7 @@
 # define FT_TILDE 126		//futuristic stuff, i dont know
 # define FT_EXCL_MARK 33	//futuristic stuff, i dont know
 # define FT_UNDERSCORE 95
-# define FT_PARSER_COMMENT 1
+# define FT_PARSER_COMMENT 0
 # define FT_LEXOR_COMMENT 0
 
 # define FT_CMD_TYPE_ERROR -1
@@ -137,6 +137,7 @@ int		echo_flag(char *str);
 void	ft_update_create_OLDPWD(char **argv, t_list *ptr, pid_t pid);
 void	ft_update_PWD(char *path);
 char	*ft_handle_cd(char *address, t_list *ptr, pid_t pid);
+int		ft_cd_error_handler(char *str, pid_t pid);
 // EXIT UTILS
 int		ft_digit_check(char *argv);
 long long int	ft_atoll(const char *str);
