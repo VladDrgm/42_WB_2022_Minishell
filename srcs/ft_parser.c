@@ -15,20 +15,26 @@ static int path_finder(char *str, char **cmd_path)
 	split = ft_split(ft_strchr(path, '/'), ':');
 	temp_path = NULL;
 	i = 0;
-	while (split[i])
+	if (split != NULL)
 	{
-		temp_path = ft_strjoin(split[i], ft_strjoin("/", str));
-		if (access(temp_path, F_OK) == 0)
+		while (split[i])
 		{
-			*cmd_path = temp_path;
-			ft_free_split(split);
-			return (0);
+			temp_path = ft_strjoin(split[i], ft_strjoin("/", str));
+			if (access(temp_path, F_OK) == 0)
+			{
+				*cmd_path = temp_path;
+				ft_free_split(split);
+				return (0);
+			}
+			else if (access(temp_path, F_OK) == -1)
+				free((void *)temp_path);
+			i++;
 		}
-		else if (access(temp_path, F_OK) == -1)
-			free((void *)temp_path);
-		i++;
+		ft_free_split(split);
 	}
-	ft_free_split(split);
+	write(2, "-minishell: ", 12);
+	write(2, str, ft_strlen(str));
+	write(2, ": No such file or directory\n", 28);
 	return (-1);
 }
 
@@ -38,7 +44,6 @@ static int path_finder(char *str, char **cmd_path)
 static int ft_command_check(char *str, char **cmd_path, int *cmd_type)
 {
 	int err;
-
 	*cmd_path = NULL;
 	if (!ft_strcmp(str, "pwd") || !ft_strcmp(str, "cd") || !ft_strcmp(str, "echo")  || !ft_strcmp(str, "export") || !ft_strcmp(str, "unset") ||
 		!ft_strcmp(str, "env") || !ft_strcmp(str, "exit") )

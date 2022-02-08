@@ -46,7 +46,7 @@ void heredoc(char *stop_word, int fd_stream[2], int fd_out, char *keyword)
 
 void handle_sigterm_heardoc(int signum)
 {
-	if (signum == SIGUSR1)
+	if (signum == SIGTERM)
 	{
 		close(STDIN_FILENO);
 		close(STDOUT_FILENO);
@@ -55,7 +55,7 @@ void handle_sigterm_heardoc(int signum)
 
 void heredoc_child(int* fd, int *fd_stream, char *stop_name, char *keyword)
 {
-	signal(SIGUSR1, handle_sigterm_heardoc);
+	signal(SIGTERM, handle_sigterm_heardoc);
 	close(fd[0]);
 	heredoc(stop_name, fd_stream, fd[1], keyword);
 	exit(0);
