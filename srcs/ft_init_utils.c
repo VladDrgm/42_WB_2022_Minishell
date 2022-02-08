@@ -76,3 +76,35 @@ void prerror(char *msg)
 	if (msg)
 		write(1,"For details see: https://rb.gy/enaq3a\n", 38); 
 }
+
+void	ft_update_shell_env(char *executable)
+{
+	char *current_pwd;
+	char *exec_pwd;
+	t_list *ptr;
+
+	ptr = g_access.env;
+	current_pwd = NULL;
+	exec_pwd = NULL;
+	while (ptr)
+	{
+		if (!ft_strncmp(((t_env_var*)(ptr->content))->name, "SHELL=", 6))
+		{
+			ft_set_global_pwd(&current_pwd);
+			exec_pwd = ft_calloc(ft_strlen(executable)-ft_strlen("/minishell") + 1, sizeof(char));
+			ft_strlcpy(exec_pwd,executable, ft_strlen(executable)-ft_strlen("/minishell"));
+			chdir(exec_pwd);
+			free(exec_pwd);
+			exec_pwd = NULL;
+			ft_set_global_pwd(&exec_pwd);
+			chdir(current_pwd);
+			((t_env_var*)(ptr->content))->value = ft_strjoin(exec_pwd, "/minishell");
+			free(current_pwd);
+			current_pwd = NULL;
+			free(exec_pwd);
+			exec_pwd = NULL;
+			break;
+		}
+		ptr = ptr->next;
+	}
+}

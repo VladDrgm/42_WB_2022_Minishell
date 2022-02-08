@@ -110,7 +110,7 @@ void	ft_signal_setup(void);
 int		lexor(void);
 int		parser(void);
 int		executor(char **envp);
-void	ft_initiator(char **envp);
+void	ft_initiator(char **envp, char *executable);
 void	ft_init_builtins(void);
 t_builtin_content	*ft_init_builtin_content(char *cmd, int (*minishell_fct)(char **args, pid_t pid), int i);
 int		minishell_cd(char **args, pid_t pid);
@@ -125,6 +125,7 @@ int		minishell_launch(char **args);
 //INIT UTILS
 void	ft_get_home(void);
 void	prerror(char *msg);
+void	ft_update_shell_env(char *executable);
 // BUILTIN UTILS
 void	ft_update_env(char *to_search, char *to_replace); //check if value finder finds insider env and if not, create a new one; env should not create duplicate env variables;
 char	*env_value_finder(char *name);

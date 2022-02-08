@@ -15,7 +15,7 @@ int	main(int argc, char **argv, char**envp)
 
 	if (argc > 1)
 		printf("Invalid number of arguments for %s with %s\n", argv[0], envp[0]);
-	ft_initiator(envp);
+	ft_initiator(envp, argv[0]);
 	temp = 0;
 	while (1)
 	{
