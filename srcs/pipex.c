@@ -17,7 +17,7 @@ int out_redirect(char* filename, int type)
 		premissions =  O_WRONLY | O_APPEND | O_CREAT ;
 	else
 	{
-		ft_exit_on_error2("Wrong type U moron\n");
+		ft_exit_on_error2("Wrong type 1\n");
 		return -1;
 	}
 	fd = open(filename, premissions, 0777);
@@ -34,7 +34,7 @@ int in_redirect(char* filename, int type)
 	premissions = O_RDONLY;
 	if(type != IN_HEREDOC && type != IN_READFILE)
 	{
-		ft_exit_on_error2("Wrong type U moron\n");
+		ft_exit_on_error2("Wrong type 2\n");
 		return -1;
 	}
 	if (type == IN_READFILE)
