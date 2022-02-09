@@ -62,16 +62,13 @@ int	minishell_exit(char **args, pid_t pid)
 		len = i;
 		if (len > 2 && !ft_digit_check(args[1]))
 		{
-			write(1, "minishell: exit: too many arguments\n", 36);
+			write(2, "minishell: exit: too many arguments\n", 36);
 			free(g_access.last_return);
 			g_access.last_return = ft_itoa(1);
 			return (1);
 		}
 		else if (len == 1)
-		{
-			write(1, "exit\n", 5);
-			exit (0);
-		}
+			ft_exit_error_handler("exit\n", NULL, NULL, ft_atoi(g_access.last_return));
 		else if (!ft_digit_check(args[1]))
 		{
 			num_arg = ft_atoll(args[1]);
@@ -79,30 +76,15 @@ int	minishell_exit(char **args, pid_t pid)
 				(num_arg > 0 && args[1][0] == '-')))
 			{
 				if (num_arg >=0 && num_arg <= 255)
-				{
-					write(1, "exit\n", 5);
-					exit(num_arg);
-				}
+					ft_exit_error_handler("exit\n", NULL, NULL, num_arg);
 				else if (num_arg > 255)
-				{
-					write(1, "exit\n", 5);
-					exit (num_arg % 256);
-				}
+					ft_exit_error_handler("exit\n", NULL, NULL, num_arg % 256);
 				else if (num_arg < 0)
-				{
-					write(1, "exit\n", 5);
-					exit (256 - ((num_arg * -1) % 256));
-				}
+					ft_exit_error_handler("exit\n", NULL, NULL, 256 - ((num_arg * -1) % 256));
 			}
 		}
 		else if (len >= 2)
-		{
-			write(1, "exit\n", 5);
-			write(1,"minishell: exit: ", 17);
-			write (1, args[1], ft_strlen(args[1]));
-			write(1, ": numeric argument required\n", 28);
-			exit(255);
-		}
+			ft_exit_error_handler("exit\nminishell: exit: ", args[1], ": numeric argument required\n", 255);
 		exit(2);
 	}
 	else if (counter == 0 && pid == 0)
@@ -111,9 +93,7 @@ int	minishell_exit(char **args, pid_t pid)
 			i++;
 		len = i;
 		if (len > 2 && !ft_digit_check(args[1]))
-		{
 			exit (1);
-		}
 	}
 	else if(counter != 0 && pid == 0)
 	{
@@ -125,7 +105,7 @@ int	minishell_exit(char **args, pid_t pid)
 			exit (1);
 		}
 		else if (len == 1)
-			exit (0);
+			exit (ft_atoi(g_access.last_return));
 		else if (!ft_digit_check(args[1]))
 		{
 			num_arg = ft_atoll(args[1]);

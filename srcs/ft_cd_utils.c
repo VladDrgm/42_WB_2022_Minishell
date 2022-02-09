@@ -76,3 +76,12 @@ char	*ft_handle_cd(char *address, t_list *ptr, pid_t pid)
 	}
 	return (address);
 }
+
+int ft_cd_error_handler(char *str, pid_t pid)
+{
+	if (pid == 0)
+		write(2, str, ft_strlen(str));
+	free(g_access.last_return);
+	g_access.last_return = ft_itoa(1);
+	return (1);
+}

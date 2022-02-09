@@ -21,35 +21,17 @@ int	minishell_cd(char **args, pid_t pid)
 	//IMPLEMENT ACCESS IN ORDER TO TACKLE INCORRECT PATH
 	path = ft_strdup(ft_handle_cd(args[1], ptr, pid));
 	if (path == NULL)
-	{
-		if (pid == 0)
-			write(2, "minishell: cd: HOME not set\n", 28);
-		free(g_access.last_return);
-		g_access.last_return = ft_itoa(1);
-		return (1);
-	}
+		return(ft_cd_error_handler("minishell: cd: HOME not set\n", pid));
 	else if (!ft_strncmp(path, ";", 1))
-	{
-		if (pid == 0)
-			write(2, "minishell: cd: OLDPWD not set\n", 30);
-		free(g_access.last_return);
-		g_access.last_return = ft_itoa(1);
-		return (1);
-	}
+		return(ft_cd_error_handler("minishell: cd: OLDPWD not set\n", pid));
 	else if (!ft_strncmp(path, "L", 1))
-	{
-		if (pid == 0)
-			write(2, "minishell: cd: --: invalid option\n", 34);
-		free(g_access.last_return);
-		g_access.last_return = ft_itoa(1);
-		return (1);
-	}
-
+		return(ft_cd_error_handler("minishell: cd: --: invalid option\n", pid));
 	if ((pid == 0) && (access(path, X_OK) == -1))
 	{
+		free(g_access.last_return);
+		g_access.last_return = ft_itoa(1);
 		perror(ft_strjoin("minishell: cd: ", path));
 	}
-
 	if (pid != 0)
 	{
 		ft_update_create_OLDPWD(temp, ptr, pid);
