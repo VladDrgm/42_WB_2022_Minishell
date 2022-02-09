@@ -192,7 +192,7 @@ int pipex(t_list *cmd_list, char** envp)
 			if(i == 0)
 				close(fd_in[1]);
 			ft_execute_child(cmd_list, envp, pidt[i]);
-			exit(0);
+			exit(ft_atoi(g_access.last_return));
 		}
 		else
 		{
