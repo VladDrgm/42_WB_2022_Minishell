@@ -7,8 +7,9 @@
  */
 int	minishell_cd(char **args, pid_t pid)
 {
-	char *temp[3];
-	char *path;
+	char	*temp[3];
+	char	*path;
+	DIR		*dir;
 
 	ft_update_env("_=", "cd");
 	free(g_access.last_return);
@@ -26,12 +27,15 @@ int	minishell_cd(char **args, pid_t pid)
 		return(ft_cd_error_handler("minishell: cd: OLDPWD not set\n", pid));
 	else if (!ft_strncmp(path, "L", 1))
 		return(ft_cd_error_handler("minishell: cd: --: invalid option\n", pid));
-	if ((pid == 0) && (access(path, X_OK) == -1))
+	dir = opendir(path);
+	if ((pid == 0) && (dir == NULL))
 	{
 		free(g_access.last_return);
 		g_access.last_return = ft_itoa(1);
 		perror(ft_strjoin("minishell: cd: ", path));
 	}
+	else
+		closedir(dir);
 	if (pid != 0)
 	{
 		ft_update_create_OLDPWD(temp, ptr, pid);
