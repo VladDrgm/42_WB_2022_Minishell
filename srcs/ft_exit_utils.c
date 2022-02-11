@@ -58,3 +58,16 @@ int ft_get_index()
 	}
 	return(index);
 }
+
+int ft_exit_error_handler(char *str1, char *str2, char *str3, int exit_value)
+{
+	if (ft_strncmp(str1, "exit\n", ft_strlen(str1)))
+		write(2, str1, ft_strlen(str1));
+	else
+		write(1, str1, ft_strlen(str1));
+	if (str2 != NULL)
+		write(2, str2, ft_strlen(str2));
+	if (str3 != NULL)
+		write(2, str3, ft_strlen(str3));
+	exit (exit_value);
+}

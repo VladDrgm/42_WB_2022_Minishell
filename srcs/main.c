@@ -50,7 +50,7 @@ int	main(int argc, char **argv, char**envp)
 		else
 			continue;
 	}
-	printf("before segfault5\n");
+	//printf("before segfault5\n");
 	free_global();
 	return (0);
 }
