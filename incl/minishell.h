@@ -15,6 +15,7 @@
 # include <fcntl.h>
 # include <sys/types.h>
 # include <signal.h>
+# include <dirent.h>
 
 # define FT_SPECIAL_CHAR_STRING 1
 # define FT_STRING 2
