@@ -75,6 +75,7 @@ void ft_initiator(char **envp, char *executable)
 	g_access.signals = 0;
 	g_access.last_return = ft_itoa(0);
 	g_access.pwd = NULL;
+	g_access.dp = NULL;
 	ft_create_envlist(envp);
 	ft_update_shell_env(executable);
 	ft_init_builtins();

@@ -56,9 +56,26 @@ char *ft_getenv(char *str)
 	{
 		temp_env = (t_env_var *)(temp->content);
 		if (search_len == (int)(ft_strlen(temp_env->name) - 1))
+		{
 			if (!(ft_strncmp(str, temp_env->name, search_len)))
-				return (temp_env->value);
+			{
+				if (!(ft_strncmp(temp_env->name, "PWD=", ft_strlen(temp_env->name))) && g_access.dp != NULL)
+				{
+					if (*(temp_env->value) != '\0')
+						return (g_access.dp);
+				}
+				else
+					return (temp_env->value);
+			}
+		}
 		temp = temp->next;
+	}
+	if (!ft_strncmp(str, "PWD", ft_strlen(str)) && g_access.pwd != NULL)
+	{
+		if (g_access.dp != NULL)
+			return (g_access.dp);
+		else
+			return (g_access.pwd);
 	}
 	return "";
 }

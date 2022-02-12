@@ -16,6 +16,7 @@
 # include <sys/types.h>
 # include <signal.h>
 # include <dirent.h>
+# include <sys/stat.h>
 
 # define FT_SPECIAL_CHAR_STRING 1
 # define FT_STRING 2
@@ -95,6 +96,7 @@ typedef struct s_global
 	char	*last_return; //for $?
 	char	*pwd;
 	char	*home;
+	char	*dp;
 }				t_global;
 
 typedef struct s_env_var
@@ -139,6 +141,7 @@ void	ft_update_create_OLDPWD(char **argv, t_list *ptr, pid_t pid);
 void	ft_update_PWD(char *path);
 char	*ft_handle_cd(char *address, t_list *ptr, pid_t pid);
 int		ft_cd_error_handler(char *str, pid_t pid);
+void	ft_update_dir(char *arg1, char *path);
 // EXIT UTILS
 int		ft_digit_check(char *argv);
 long long int	ft_atoll(const char *str);

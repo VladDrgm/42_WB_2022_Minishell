@@ -85,3 +85,42 @@ int ft_cd_error_handler(char *str, pid_t pid)
 	g_access.last_return = ft_itoa(1);
 	return (1);
 }
+
+void ft_update_dir(char *arg1, char *path)
+{
+	struct stat buf;
+	char *symlink;
+	char *symlink_dir;
+
+
+	symlink = ft_strrchr(arg1, '/');
+	if (lstat(arg1, &buf) == -1)
+		perror("minishell: ");
+	if (S_ISLNK(buf.st_mode))
+	{
+		if (symlink == NULL)
+		{
+			ft_set_global_pwd(&g_access.dp);
+			g_access.dp = ft_strjoin(g_access.dp,ft_strjoin("/", arg1));
+		}
+		else
+		{
+			symlink_dir = ft_substr(arg1, 0, symlink - arg1);
+			chdir(symlink_dir);
+			ft_set_global_pwd(&symlink_dir);
+			free(g_access.dp);
+			g_access.dp = ft_strjoin(symlink_dir, symlink);
+		}
+	}
+	else
+	{
+		if(g_access.dp != NULL)
+			free(g_access.dp);
+		g_access.dp = NULL;
+	}
+	if (chdir(path) != 0)
+	{
+		free(g_access.last_return);
+		g_access.last_return = ft_itoa(1);
+	}
+}
