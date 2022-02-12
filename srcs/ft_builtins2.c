@@ -39,11 +39,12 @@ int	minishell_cd(char **args, pid_t pid)
 	if (pid != 0)
 	{
 		ft_update_create_OLDPWD(temp, ptr, pid);
-		if (chdir(path) != 0)
+		ft_update_dir(args[1], path);
+/* 		if (chdir(path) != 0)
 		{
 			free(g_access.last_return);
 			g_access.last_return = ft_itoa(1);
-		}
+		} */
 		ft_update_PWD(path);
 	}
 	free(temp[1]);
