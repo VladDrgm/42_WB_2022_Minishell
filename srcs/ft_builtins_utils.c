@@ -1,6 +1,6 @@
 #include "../incl/minishell.h"
 
-void	*delone(void *content)
+void	delone(void *content)
 {
 	t_env_var *env_var;
 
@@ -9,7 +9,6 @@ void	*delone(void *content)
 	free(env_var->name);
 	free(env_var->value);
 	free(content);
-	return NULL;
 }
 
 char *env_value_finder(char *name) //FINDS THE EQUIVALENT VALUE OF A ENV VAR

@@ -6,7 +6,7 @@ t_builtin_content *ft_init_builtin_content(char *cmd, int (*minishell_fct)(char 
 {
 	t_builtin_content	*content;
 
-	content = calloc(sizeof(t_builtin_content), 1);
+	content = ft_calloc(sizeof(t_builtin_content), 1);
 	content->cmd = cmd;
 	content->minishell_fct = minishell_fct;
 	content->index = i;

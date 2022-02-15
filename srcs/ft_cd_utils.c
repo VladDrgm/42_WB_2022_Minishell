@@ -27,15 +27,18 @@ void	ft_update_create_OLDPWD(char **argv, t_list *ptr, pid_t pid)
 	 @todo if we use cd "/etc" (or any variant of any below-mounting-point value), 
 	 	instead of updating PWD to private/etc, we must update it to /etc (or any below mounting-point folder used)
  */
-void	ft_update_PWD(char *path)
+void	ft_update_PWD(void)
 {
+	char *path;
+
+	path = NULL;
 	ft_set_global_pwd(&path);
-	//g_access.pwd = path;
 	if (env_value_finder("PWD") == NULL)
 		ft_set_global_pwd(&g_access.pwd);
 	else
 		ft_update_env("PWD=", path);
-		//ft_update_env("PWD=", path);
+	if (path != NULL)
+		free(path);
 }
 
 char	*ft_handle_cd(char *address, t_list *ptr, pid_t pid)
@@ -77,10 +80,17 @@ char	*ft_handle_cd(char *address, t_list *ptr, pid_t pid)
 	return (address);
 }
 
-int ft_cd_error_handler(char *str, pid_t pid)
+int ft_cd_error_handler(char *str, pid_t pid, char **path, char **temp)
 {
 	if (pid == 0)
 		write(2, str, ft_strlen(str));
+	if (*path != NULL)
+	{
+		free(*path);
+		*path = NULL;
+	}
+	free(temp[0]);
+	free(temp[1]);
 	free(g_access.last_return);
 	g_access.last_return = ft_itoa(1);
 	return (1);
@@ -88,15 +98,19 @@ int ft_cd_error_handler(char *str, pid_t pid)
 
 void ft_update_dir(char *arg1, char *path)
 {
-	struct stat buf;
+	struct stat *buf;
 	char *symlink;
 	char *symlink_dir;
 
-
+	if (arg1 == NULL)
+		return;
+	if (!ft_strncmp(arg1, "-", ft_strlen(arg1)))
+		arg1 = env_value_finder("PWD");	//needs to be adjusted for symlink!
+	buf = ft_calloc(sizeof(struct stat), 1);
 	symlink = ft_strrchr(arg1, '/');
-	if (lstat(arg1, &buf) == -1)
-		perror("minishell: ");
-	if (S_ISLNK(buf.st_mode))
+	if (lstat(arg1, buf) == -1)
+		perror("minishell");
+	if (S_ISLNK(buf->st_mode))
 	{
 		if (symlink == NULL)
 		{
@@ -123,4 +137,5 @@ void ft_update_dir(char *arg1, char *path)
 		free(g_access.last_return);
 		g_access.last_return = ft_itoa(1);
 	}
+	free(buf);
 }

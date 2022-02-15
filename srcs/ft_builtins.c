@@ -292,17 +292,8 @@ int minishell_unset(char **args, pid_t pid)
 		{
 			if (!ft_strncmp(args[i], ((t_env_var*)(ptr->content))->name, ft_strlen(args[i])))
 			{
-/* 				if (!ft_strncmp(((t_env_var*)(ptr->next->content))->name, "PWD=", 4))
-				{
-					if (g_access.pwd != NULL)
-						free(g_access.pwd);
-					g_access.pwd = NULL;
- 					if (g_access.dp != NULL)
-						free(g_access.dp);
-					g_access.dp = NULL;
-				} */
 				g_access.env = ptr->next;
-				ft_lstdelone(ptr, delone(ptr->content));
+				ft_lstdelone(ptr, delone);
 			}
 		}
 		while(ptr->next != NULL && valid)
@@ -313,32 +304,14 @@ int minishell_unset(char **args, pid_t pid)
 				{
 					if (ptr->next->next != NULL)
 					{
-/* 						if (!ft_strncmp(((t_env_var*)(ptr->next->content))->name, "PWD=", 4))
-						{
-							if (g_access.pwd != NULL)
-								free(g_access.pwd);
-							g_access.pwd = NULL;
-							if (g_access.dp != NULL)
-								free(g_access.dp);
-							g_access.dp = NULL;
-						} */
 						temp = ptr->next;
 						ptr->next = ptr->next->next;
-						ft_lstdelone(temp, delone(temp->content));
+						ft_lstdelone(temp, delone);
 						break;
 					}
 					else
 					{
-/* 						if (!ft_strncmp(((t_env_var*)(ptr->next->content))->name, "PWD=", 4))
-						{
-							if (g_access.pwd != NULL)
-								free(g_access.pwd);
-							g_access.pwd = NULL;
-							if (g_access.dp != NULL)
-								free(g_access.dp);
-							g_access.dp = NULL;
-						} */
-						ft_lstdelone(ptr->next, delone(ptr->next->content));
+						ft_lstdelone(ptr->next, delone);
 						ptr->next = NULL;
 						break;
 					}

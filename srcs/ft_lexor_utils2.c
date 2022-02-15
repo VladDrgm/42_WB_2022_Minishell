@@ -18,6 +18,7 @@ void	ft_free_list(t_list *head)
 		free(((t_word *)(tmp->content))->address);
 		free(tmp->content);
 		free(tmp);
+		tmp = NULL;
 	}
 }
 

@@ -21,6 +21,8 @@ void ft_get_home(void)
 			!ft_strncmp(((t_env_var *)(ptr->content))->name, "USERNAME=", 9) || \
 			!ft_strncmp(((t_env_var *)(ptr->content))->name, "LOGNAME=", 8))
 		{
+			if (uname != NULL)
+				free(uname);
 			uname = ft_strdup(((t_env_var *)(ptr->content))->value);
 			home_flag = 1;
 		}
@@ -98,6 +100,8 @@ void	ft_update_shell_env(char *executable)
 			exec_pwd = NULL;
 			ft_set_global_pwd(&exec_pwd);
 			chdir(current_pwd);
+			if (((t_env_var*)(ptr->content))->value != NULL)
+				free(((t_env_var*)(ptr->content))->value);
 			((t_env_var*)(ptr->content))->value = ft_strjoin(exec_pwd, "/minishell");
 			free(current_pwd);
 			current_pwd = NULL;

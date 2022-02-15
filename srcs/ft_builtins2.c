@@ -14,7 +14,6 @@ int	minishell_cd(char **args, pid_t pid)
 	ft_update_env("_=", "cd");
 	free(g_access.last_return);
 	g_access.last_return = ft_itoa(0);
-
 	temp[0] = ft_strdup(args[0]);
 	temp[1] = ft_strjoin("OLDPWD=", g_access.pwd);
 	temp[2] = NULL;
@@ -22,11 +21,11 @@ int	minishell_cd(char **args, pid_t pid)
 	//IMPLEMENT ACCESS IN ORDER TO TACKLE INCORRECT PATH
 	path = ft_strdup(ft_handle_cd(args[1], ptr, pid));
 	if (path == NULL)
-		return(ft_cd_error_handler("minishell: cd: HOME not set\n", pid));
+		return(ft_cd_error_handler("minishell: cd: HOME not set\n", pid, &path, temp));
 	else if (!ft_strncmp(path, ";", 1))
-		return(ft_cd_error_handler("minishell: cd: OLDPWD not set\n", pid));
+		return(ft_cd_error_handler("minishell: cd: OLDPWD not set\n", pid, &path, temp));
 	else if (!ft_strncmp(path, "L", 1))
-		return(ft_cd_error_handler("minishell: cd: --: invalid option\n", pid));
+		return(ft_cd_error_handler("minishell: cd: --: invalid option\n", pid, &path, temp));
 	dir = opendir(path);
 	if ((pid == 0) && (dir == NULL))
 	{
@@ -40,13 +39,10 @@ int	minishell_cd(char **args, pid_t pid)
 	{
 		ft_update_create_OLDPWD(temp, ptr, pid);
 		ft_update_dir(args[1], path);
-/* 		if (chdir(path) != 0)
-		{
-			free(g_access.last_return);
-			g_access.last_return = ft_itoa(1);
-		} */
-		ft_update_PWD(path);
+		ft_update_PWD();
 	}
+	if (path)
+		free(path);
 	free(temp[1]);
 	free(temp[0]);
 	return (1);
@@ -93,6 +89,7 @@ int	minishell_echo(char **args, pid_t pid)
 			echo_print(args, i, len, flag); //based on the flag, we either print with or without a \n
 		}
 	}
+
 	free(g_access.last_return);
 	g_access.last_return = ft_itoa(0);
 	return (1);

@@ -18,6 +18,15 @@ void free_global(void)
 		free(g_access.home);
 	if (g_access.pwd)
 		free(g_access.pwd);
+	if (g_access.dp)
+		free(g_access.dp);
+	g_access.env = NULL;
+	g_access.builtins = NULL;
+	g_access.last_return = NULL;
+	g_access.lexor2parser = NULL;
+	g_access.parser2exec = NULL;
+	g_access.read_line2lexor = NULL;
 	g_access.home = NULL;
 	g_access.pwd = NULL;
+	g_access.dp = NULL;
 }

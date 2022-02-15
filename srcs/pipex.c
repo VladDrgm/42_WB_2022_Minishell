@@ -121,7 +121,6 @@ void	ft_execute_child(t_list *cmd_list, char **envp, pid_t pid)
 	{
 		ft_execve(cmd->comm_table, pid);
 	}
-	pid++;
 }
 
 
@@ -137,8 +136,11 @@ int pipex(t_list *cmd_list, char** envp)
 	int fd_out[2];
 	int last_index;
 	pid_t first_input;
+	int exit_value;
 
 	cmd_list_temp = NULL;
+	fd_stream[0] = 0;
+	fd_stream[1] = 0;
 	ft_initialize_fds(fd_stream);
 	last_index = ((t_command *)ft_lstlast(cmd_list)->content)->index;
 	cmd_list_temp = cmd_list;
@@ -192,7 +194,20 @@ int pipex(t_list *cmd_list, char** envp)
 			if(i == 0)
 				close(fd_in[1]);
 			ft_execute_child(cmd_list, envp, pidt[i]);
-			exit(ft_atoi(g_access.last_return));
+			exit_value = ft_atoi(g_access.last_return);
+			free_global();
+				i = 0;
+			while( i <= last_index)
+			{
+				if(fd_docks[i] != NULL)
+					free(fd_docks[i]);
+				i++;
+			}
+			if (fd_docks != NULL)
+				free(fd_docks);
+			if (pidt != NULL)
+				free(pidt);
+			exit(exit_value);
 		}
 		else
 		{
@@ -234,6 +249,8 @@ int pipex(t_list *cmd_list, char** envp)
     while (x <= last_index)
     {
         waitpid(pidt[x], &status, 0);
+		if (g_access.last_return)
+			free(g_access.last_return);
         g_access.last_return = ft_itoa(WEXITSTATUS(status));
         x++;
     }
@@ -242,5 +259,16 @@ int pipex(t_list *cmd_list, char** envp)
 	dup2(fd_stream[0], STDIN_FILENO);
 	dup2(fd_stream[1], STDOUT_FILENO);
 	//printf("LINE FINSHED\n");
+	i = 0;
+	while( i <= last_index)
+	{
+		if(fd_docks[i] != NULL)
+			free(fd_docks[i]);
+		i++;
+	}
+	if (fd_docks != NULL)
+		free(fd_docks);
+	if (pidt != NULL)
+		free(pidt);
 	return (0);
 }

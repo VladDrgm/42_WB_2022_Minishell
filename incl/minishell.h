@@ -132,15 +132,15 @@ void	ft_update_shell_env(char *executable);
 // BUILTIN UTILS
 void	ft_update_env(char *to_search, char *to_replace); //check if value finder finds insider env and if not, create a new one; env should not create duplicate env variables;
 char	*env_value_finder(char *name);
-void	*delone(void *content);
+void	delone(void *content);
 // ECHO UTILS
 void	echo_print(char **str, int starter, int size, int flag);
 int		echo_flag(char *str);
 // CD UTILS
 void	ft_update_create_OLDPWD(char **argv, t_list *ptr, pid_t pid);
-void	ft_update_PWD(char *path);
+void	ft_update_PWD(void);
 char	*ft_handle_cd(char *address, t_list *ptr, pid_t pid);
-int		ft_cd_error_handler(char *str, pid_t pid);
+int		ft_cd_error_handler(char *str, pid_t pid, char **path, char **temp);
 void	ft_update_dir(char *arg1, char *path);
 // EXIT UTILS
 int		ft_digit_check(char *argv);
