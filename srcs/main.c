@@ -12,7 +12,7 @@ int	main(int argc, char **argv, char**envp)
 	//t_list	*parser2executor_list;
 	int		temp;
 
-
+	ft_signal_setup();
 	if (argc > 1)
 		printf("Invalid number of arguments for %s with %s\n", argv[0], envp[0]);
 	ft_initiator(envp, argv[0]);
@@ -20,6 +20,7 @@ int	main(int argc, char **argv, char**envp)
 	while (1)
 	{
 		temp = 0;
+
 		g_access.read_line2lexor = readline(">");
 		if (g_access.read_line2lexor == NULL) //dealing with EOF (Ctrl + D)
 			break;
