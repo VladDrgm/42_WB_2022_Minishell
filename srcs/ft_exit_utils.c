@@ -69,7 +69,5 @@ int ft_exit_error_handler(char *str1, char *str2, char *str3, int exit_value)
 		write(2, str2, ft_strlen(str2));
 	if (str3 != NULL)
 		write(2, str3, ft_strlen(str3));
-	ft_re_attach_stream();
-	free_global();
 	exit (exit_value);
 }

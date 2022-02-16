@@ -85,8 +85,6 @@ int	minishell_exit(char **args, pid_t pid)
 		}
 		else if (len >= 2)
 			ft_exit_error_handler("exit\nminishell: exit: ", args[1], ": numeric argument required\n", 255);
-		ft_re_attach_stream();
-		free_global();
 		exit(2);
 	}
 	else if (counter == 0 && pid == 0)
