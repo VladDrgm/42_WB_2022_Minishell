@@ -242,6 +242,9 @@ int		pipex(t_list *cmd, char **envp);
 void	heredoc_child(int* fd, int *fd_stream, char *stop_name, char *keyword);
 void	heredoc_parent(int *fd, pid_t pid);
 
-
+/* signals */
+// void ft_sigquit_handler(int sig);
+// void ft_sigint_handler(int sig);
+void	ft_signal_setup(void);
 
 #endif
