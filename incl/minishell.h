@@ -60,6 +60,9 @@
 # define IN_READFILE 2 // <
 # define IN_HEREDOC 3 // <<
 
+# define SYMLINK 1
+# define NOT_SYMLINK 0
+
 
 
 typedef struct s_word
@@ -129,6 +132,7 @@ int		minishell_launch(char **args);
 void	ft_get_home(void);
 void	prerror(char *msg);
 void	ft_update_shell_env(char *executable);
+int 	ft_check_symlink(char *path);
 // BUILTIN UTILS
 void	ft_update_env(char *to_search, char *to_replace); //check if value finder finds insider env and if not, create a new one; env should not create duplicate env variables;
 char	*env_value_finder(char *name);

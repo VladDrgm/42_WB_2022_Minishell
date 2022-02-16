@@ -94,7 +94,7 @@ void	ft_update_shell_env(char *executable)
 		{
 			ft_set_global_pwd(&current_pwd);
 			exec_pwd = ft_calloc(ft_strlen(executable)-ft_strlen("/minishell") + 1, sizeof(char));
-			ft_strlcpy(exec_pwd,executable, ft_strlen(executable)-ft_strlen("/minishell"));
+			ft_strlcpy(exec_pwd,executable, ft_strlen(executable) - ft_strlen("/minishell") + 1);
 			chdir(exec_pwd);
 			free(exec_pwd);
 			exec_pwd = NULL;
@@ -103,12 +103,33 @@ void	ft_update_shell_env(char *executable)
 			if (((t_env_var*)(ptr->content))->value != NULL)
 				free(((t_env_var*)(ptr->content))->value);
 			((t_env_var*)(ptr->content))->value = ft_strjoin(exec_pwd, "/minishell");
-			free(current_pwd);
+			if (current_pwd != NULL)
+				free(current_pwd);
 			current_pwd = NULL;
-			free(exec_pwd);
+			if (exec_pwd != NULL)
+				free(exec_pwd);
 			exec_pwd = NULL;
 			break;
 		}
 		ptr = ptr->next;
+	}
+}
+
+int ft_check_symlink(char *path)
+{
+	struct stat *buf;
+
+	buf = ft_calloc(sizeof(struct stat), 1);
+	if (lstat(path, buf) == -1)
+		perror("minishell");
+	if (S_ISLNK(buf->st_mode))
+	{
+		free(buf);
+		return(SYMLINK);
+	}
+	else
+	{
+		free(buf);
+		return (NOT_SYMLINK);
 	}
 }

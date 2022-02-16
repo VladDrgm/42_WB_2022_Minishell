@@ -66,8 +66,20 @@ void ft_create_envlist(char **envp)
 	}
 	if (g_access.pwd == NULL)
 		ft_set_global_pwd(&g_access.pwd);
+	if (env_value_finder("PWD") == NULL)
+	{
+		env_var = (t_env_var *)malloc(sizeof(t_env_var));
+		env_var->name = ft_substr("PWD=", 0, 4);
+		env_var->value = ft_strdup(g_access.pwd);
+		ft_lstadd_back(&(g_access.env), ft_lstnew(env_var));
+	}
+	else if (ft_strlen(env_value_finder("PWD")) == 0)
+		ft_update_env("PWD", g_access.pwd);
+	if (ft_check_symlink(env_value_finder("PWD")) || ft_check_symlink(g_access.pwd))
+		g_access.dp = ft_strdup(env_value_finder("PWD"));
 	if (g_access.home == NULL)
 		ft_get_home();
+	
 }
 
 void ft_initiator(char **envp, char *executable)
