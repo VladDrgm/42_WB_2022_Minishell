@@ -1,9 +1,9 @@
 #include "../incl/minishell.h"
 
-void	ft_initialize_fds(int *fd_temp)
+void	ft_initialize_fds(void)
 {
-	dup2(STDIN_FILENO, fd_temp[0]);
-	dup2(STDOUT_FILENO, fd_temp[1]);
+	dup2(STDIN_FILENO, g_access.fd_stream[0]);
+	dup2(STDOUT_FILENO, g_access.fd_stream[1]);
 }
 
 int out_redirect(char* filename, int type)
@@ -126,7 +126,7 @@ void	ft_execute_child(t_list *cmd_list, char **envp, pid_t pid)
 
 int pipex(t_list *cmd_list, char** envp)
 {
-	int fd_stream[2];
+
 	pid_t *pidt;
 	t_command *cmd;
 	t_list *cmd_list_temp;
@@ -138,10 +138,9 @@ int pipex(t_list *cmd_list, char** envp)
 	pid_t first_input;
 	int exit_value;
 
+	first_input = 0;
+
 	cmd_list_temp = NULL;
-	fd_stream[0] = 0;
-	fd_stream[1] = 0;
-	ft_initialize_fds(fd_stream);
 	last_index = ((t_command *)ft_lstlast(cmd_list)->content)->index;
 	cmd_list_temp = cmd_list;
 	fd_docks = ft_calloc(last_index + 1, sizeof(int *));
@@ -161,7 +160,7 @@ int pipex(t_list *cmd_list, char** envp)
 				ft_exit_on_error(&cmd_list, "Pipe creation failed");
 			pid_t pid = fork();
 			if (!pid)
-				heredoc_child(fd_docks[cmd->index], fd_stream, cmd->comm_table[1], "> ");
+				heredoc_child(fd_docks[cmd->index], g_access.fd_stream, cmd->comm_table[1], "> ");
 			else
 				heredoc_parent(fd_docks[cmd->index], pid);
 		}
@@ -211,6 +210,7 @@ int pipex(t_list *cmd_list, char** envp)
 		}
 		else
 		{
+			waitpid(pidt[i], NULL, 0);
 			if (i == 0)
 			{
 				first_input = fork();
@@ -218,7 +218,7 @@ int pipex(t_list *cmd_list, char** envp)
 				{
 					close(fd_out[0]);
 					close(fd_out[1]);
-					heredoc_child(fd_in, fd_stream, NULL, "");
+					heredoc_child(fd_in, g_access.fd_stream, NULL, "");
 				}
 				close(fd_in[1]);
 			}
@@ -230,7 +230,15 @@ int pipex(t_list *cmd_list, char** envp)
 				cmd_list = cmd_list->next;
 			}
 			if (cmd->cmd_type == FT_CMD_TYPE_BUILT_IN)
+			{
+
+				if (!ft_strcmp(cmd->comm_table[0], "exit") )
+				{
+					kill(first_input, SIGTERM);
+					waitpid(first_input, NULL, 0);
+				}
 				ft_execve(cmd->comm_table, pidt[i]);
+			}
 			close(fd_in[0]);
 			close(fd_out[1]);
 			if (i == last_index)
@@ -256,8 +264,7 @@ int pipex(t_list *cmd_list, char** envp)
     }
     kill(first_input, SIGTERM);
     waitpid(first_input, NULL, 0);
-	dup2(fd_stream[0], STDIN_FILENO);
-	dup2(fd_stream[1], STDOUT_FILENO);
+	ft_re_attach_stream();
 	//printf("LINE FINSHED\n");
 	i = 0;
 	while( i <= last_index)
@@ -271,4 +278,10 @@ int pipex(t_list *cmd_list, char** envp)
 	if (pidt != NULL)
 		free(pidt);
 	return (0);
+}
+
+void ft_re_attach_stream(void)
+{
+	dup2(g_access.fd_stream[0], STDIN_FILENO);
+	dup2(g_access.fd_stream[1], STDOUT_FILENO);
 }
