@@ -141,7 +141,6 @@ int pipex(t_list *cmd_list, char** envp)
 	first_input = 0;
 
 	cmd_list_temp = NULL;
-	ft_initialize_fds();
 	last_index = ((t_command *)ft_lstlast(cmd_list)->content)->index;
 	cmd_list_temp = cmd_list;
 	fd_docks = ft_calloc(last_index + 1, sizeof(int *));
