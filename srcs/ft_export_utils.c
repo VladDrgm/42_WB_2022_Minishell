@@ -15,8 +15,8 @@ t_list *ft_copy_env(void)
 	{
 		ptr_cpy = env_cpy;
 		env_var = (t_env_var *)malloc(sizeof(t_env_var));
-		env_var->name = ((t_env_var *)(ptr_env->content))->name;
-		env_var->value = ((t_env_var *)(ptr_env->content))->value;
+		env_var->name = ft_strdup(((t_env_var *)(ptr_env->content))->name);
+		env_var->value = ft_strdup(((t_env_var *)(ptr_env->content))->value);
 		if (ft_lstsize(env_cpy) == 0)
 			ft_lstadd_back(&(env_cpy), ft_lstnew(env_var));
 		else if (ft_lstsize(env_cpy) == 1)
@@ -90,8 +90,8 @@ int ft_single_export(void)
 	t_list *env_cpy;
 	env_cpy = ft_copy_env();
 	ft_print_sorted_copy(env_cpy);
-	//if (env_cpy)
-	//	ft_free_linked_list(&env_cpy, FT_LIST_TYPE_ENV_VAR, 1);
+	if (env_cpy)
+		ft_free_linked_list(&env_cpy, FT_LIST_TYPE_ENV_VAR, 1);
 	return (1);
 }
 

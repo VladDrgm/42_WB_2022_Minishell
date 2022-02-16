@@ -9,14 +9,16 @@ void del_word(void* tmp)
 void del_command(void* tmp)
 {
 	if (((t_command *)(tmp))->comm_table != NULL)
-		free(((t_command *)(tmp))->comm_table);
+		ft_free_split(((t_command *)(tmp))->comm_table);
 	if (((t_command *)(tmp))->path != NULL)
 		free(((t_command *)(tmp))->path);
 }
 
-void del_builtin_content() //DUMMY for clear function
+void del_builtin_content(void *tmp)
 {
-	;
+	if (tmp != NULL)
+		free(tmp);
+	tmp = NULL;
 }
 
 void del_env_var(void* tmp)
@@ -25,6 +27,9 @@ void del_env_var(void* tmp)
 		free(((t_env_var *)(tmp))->name);
 	if (((t_env_var *)(tmp))->value != NULL)
 		free(((t_env_var *)(tmp))->value);
+	if (tmp != NULL)
+		free(tmp);
+	tmp = NULL;
 }
 
 int ft_free_linked_list(t_list **lst, int type, int full)

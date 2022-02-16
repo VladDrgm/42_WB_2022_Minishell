@@ -1,6 +1,6 @@
 #include "../incl/minishell.h"
 
-void	*delone(void *content)
+void	delone(void *content)
 {
 	t_env_var *env_var;
 
@@ -9,7 +9,6 @@ void	*delone(void *content)
 	free(env_var->name);
 	free(env_var->value);
 	free(content);
-	return NULL;
 }
 
 char *env_value_finder(char *name) //FINDS THE EQUIVALENT VALUE OF A ENV VAR
@@ -46,7 +45,8 @@ void ft_update_env(char *to_search, char *to_replace)
 	{
 		if (!ft_strncmp(((t_env_var*)(ptr->content))->name, to_search, ft_strlen(to_search)))
 		{
-			free(((t_env_var*)(ptr->content))->value);
+			if (((t_env_var*)(ptr->content))->value != NULL)
+				free(((t_env_var*)(ptr->content))->value);
 			((t_env_var*)(ptr->content))->value = NULL;
 			((t_env_var*)(ptr->content))->value = ft_strdup(to_replace);
 		}

@@ -263,6 +263,7 @@ int	lexor(void)
 		ft_free_list(g_access.lexor2parser);
 	free(args);
 	args = NULL;
+	g_access.read_line2lexor = NULL;
 	if (ft_lstsize(g_access.lexor2parser) == 0)
 	{
 		free(g_access.last_return);

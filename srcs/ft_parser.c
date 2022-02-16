@@ -90,7 +90,7 @@ static void	ft_free_lex_list(t_list *head)
 /*
 ** 	Adds new argument to command table
 */
-static char** add_to_line(char **line, char *new_str, int *line_len)
+static char **add_to_line(char **line, char *new_str, int *line_len)
 {
 	char	**new_line;
 	int		counter;
@@ -231,9 +231,9 @@ int	parser(void)
 				ft_string_handler(lex_element, &cmd_line, &cmd_len);
 			lex_element = lex_element->next;
 		}
+		cmd_line = add_to_line(cmd_line, NULL, &cmd_len);
 		if (return_flag == 0)
 		{
-			cmd_line = add_to_line(cmd_line, NULL, &cmd_len);
 			cmd = (t_command *)malloc(sizeof(t_command));
 			cmd->comm_table = cmd_line;
 			cmd->path = NULL;
@@ -247,6 +247,9 @@ int	parser(void)
 			ft_lstadd_back(&(g_access.parser2exec), executor_element);
 			index_counter++;
 		}
+		else
+			ft_free_split(cmd_line);
+
 	}
 	if (return_flag == 0)
 	{
