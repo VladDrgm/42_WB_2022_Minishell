@@ -100,6 +100,7 @@ typedef struct s_global
 	char	*pwd;
 	char	*home;
 	char	*dp;
+	int		fd_stream[2];
 }				t_global;
 
 typedef struct s_env_var
@@ -224,7 +225,7 @@ char	*ft_strjoin_with_free(char *s1, char const *s2);
 
 /*piping.c*/
 void	ft_pipex(t_list *cmd_list, char **envp);
-void	ft_initialize_fds(int *fd_temp);
+void	ft_initialize_fds(void);
 void	ft_execute_child_process(t_list *cmd_list, char **envp, int *fd, int *fd_stream);
 void	ft_execute_parent_process(int *fd, t_list **cmd_list, pid_t pid);
 void	ft_execute_last_cmd(int *fd, t_list **cmd_list, pid_t pid, int *fd_temp);
@@ -246,5 +247,8 @@ void	heredoc_parent(int *fd, pid_t pid);
 // void ft_sigquit_handler(int sig);
 // void ft_sigint_handler(int sig);
 void	ft_signal_setup(void);
+
+void ft_re_attach_stream(void);
+
 
 #endif
