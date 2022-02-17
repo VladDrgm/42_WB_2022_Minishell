@@ -115,21 +115,86 @@ void	ft_update_shell_env(char *executable)
 	}
 }
 
-int ft_check_symlink(char *path)
+int ft_check_symlink(char *path, char *arg)
 {
 	struct stat *buf;
+	char *path_substr;
+	char *str_ptr;
+	char *path_substr_free;
 
-	buf = ft_calloc(sizeof(struct stat), 1);
-	if (lstat(path, buf) == -1)
-		perror("minishell");
-	if (S_ISLNK(buf->st_mode))
+	str_ptr = NULL;
+	path_substr = ft_strdup(path);
+	path_substr_free = NULL;
+	while (path_substr != NULL)
 	{
-		free(buf);
-		return(SYMLINK);
+
+		buf = ft_calloc(sizeof(struct stat), 1);
+		if (ft_strlen(path_substr) != 0)
+		{
+			if (lstat(path_substr, buf) == -1)
+			{
+				write(2, "minishell: cd: ", 15);
+				write(2, arg, ft_strlen(arg));
+				perror(" ");
+				if(buf != NULL)
+					free(buf);
+				if (path_substr != NULL)
+				{
+					free(path_substr);
+					path_substr = NULL;
+				}
+				if (path_substr_free)
+					free(path_substr_free);
+				return (-1);
+			}
+		}
+		if (S_ISLNK(buf->st_mode))
+		{
+			if(buf)
+				free(buf);
+			if (path_substr)
+			{
+				free(path_substr);
+				path_substr = NULL;
+			}
+			if (path_substr_free)
+				free(path_substr_free);
+			return(SYMLINK);
+		}
+		else
+		{
+			if (buf != NULL)
+				free(buf);
+			buf = NULL;
+			str_ptr = NULL;
+			str_ptr = ft_strrchr(path_substr, '/');
+/* 			if (path_substr) //technically not necessary as we are only entering the loop when path_substr != NULL
+			{
+				free(path_substr);
+				path_substr = NULL;
+			} */
+			if(str_ptr != NULL)
+			{
+				path_substr_free = path_substr;
+				path_substr = ft_substr(path_substr, 0, ft_strlen(path_substr) - ft_strlen(str_ptr));
+				if (path_substr_free)
+				{
+					free(path_substr_free);
+					path_substr_free = NULL;
+				}
+				
+			}
+			else
+			{
+				if (path_substr)
+					free(path_substr);
+				path_substr = NULL;
+			}
+		}
 	}
-	else
-	{
+	if (path_substr != NULL)
+		free(path_substr);
+	if (buf != NULL)
 		free(buf);
-		return (NOT_SYMLINK);
-	}
+	return (NOT_SYMLINK);
 }

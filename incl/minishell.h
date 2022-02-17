@@ -133,7 +133,7 @@ int		minishell_launch(char **args);
 void	ft_get_home(void);
 void	prerror(char *msg);
 void	ft_update_shell_env(char *executable);
-int 	ft_check_symlink(char *path);
+int 	ft_check_symlink(char *path, char *arg);
 // BUILTIN UTILS
 void	ft_update_env(char *to_search, char *to_replace); //check if value finder finds insider env and if not, create a new one; env should not create duplicate env variables;
 char	*env_value_finder(char *name);
@@ -142,11 +142,13 @@ void	delone(void *content);
 void	echo_print(char **str, int starter, int size, int flag);
 int		echo_flag(char *str);
 // CD UTILS
-void	ft_update_create_OLDPWD(char **argv, t_list *ptr, pid_t pid);
+void	ft_update_create_OLDPWD(char *path, pid_t pid);
 void	ft_update_PWD(void);
 char	*ft_handle_cd(char *address, t_list *ptr, pid_t pid);
 int		ft_cd_error_handler(char *str, pid_t pid, char **path, char **temp);
 void	ft_update_dir(char *arg1, char *path);
+void	ft_rtoa_path(char *rel_path, char **abs_path);
+
 // EXIT UTILS
 int		ft_digit_check(char *argv);
 long long int	ft_atoll(const char *str);
@@ -222,6 +224,7 @@ void	ft_make_cmd_list(char **argv, char **envp, int argc, t_list **cmd_list);
 char	*ft_get_cmd_path(const char *cmd, char **path_list);
 char	**ft_split_path(char **env);
 char	*ft_strjoin_with_free(char *s1, char const *s2);
+char	*ft_strjoin_with_dfree(char *s1, char *s2);
 
 /*piping.c*/
 void	ft_pipex(t_list *cmd_list, char **envp);
