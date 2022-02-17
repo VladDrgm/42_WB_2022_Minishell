@@ -1,7 +1,7 @@
 #include "../incl/minishell.h"
 
 //when UNSETTING PWD, this needs to have a special situation
-void	ft_update_create_OLDPWD(char **argv, t_list *ptr, pid_t pid)
+/* void	ft_update_create_OLDPWD(char **argv, t_list *ptr, pid_t pid)
 {
 	while (ptr != NULL)
 	{
@@ -14,6 +14,32 @@ void	ft_update_create_OLDPWD(char **argv, t_list *ptr, pid_t pid)
 	}
 	minishell_export(argv, pid); //if OLDPWD does not exist, we create it <-------------
 	return ;
+} */
+
+
+void	ft_update_create_OLDPWD(char *path, pid_t pid)
+{
+	t_list *ptr;
+	char *args[3];
+
+	ptr = g_access.env;
+	while (ptr != NULL)
+	{
+		if (ft_strncmp(((t_env_var *)(ptr->content))->name, "OLDPWD", 6) == 0) //IF OLDPWD EXISTS, WE UPDATE IT <------
+		{
+			if (((t_env_var *)(ptr->content))->value != NULL)
+				free(((t_env_var *)(ptr->content))->value);
+			((t_env_var *)(ptr->content))->value = ft_strdup(path);
+			return ;
+		}
+		ptr = ptr->next;
+	}
+	args[0] = "export";
+	args[1] = ft_strjoin("OLDPWD=", path);
+	args[2] = NULL;
+	minishell_export(args, pid);
+	if (args[1] != NULL)
+		free(args[1]);
 }
 
 /**
@@ -138,4 +164,65 @@ void ft_update_dir(char *arg1, char *path)
 		g_access.last_return = ft_itoa(1);
 	}
 	free(buf);
+}
+
+/**************************************************/
+
+void ft_rtoa_path(char *rel_path, char **abs_path)
+{
+	char *path_helper;
+	char **arg_split;
+	char **split_ptr;
+	char *path_ptr;
+	char *path_helper_free;
+
+	path_helper = NULL;
+	if (g_access.dp != NULL)
+		path_helper = ft_strdup(g_access.dp);
+	else if (g_access.pwd != NULL)
+		path_helper = ft_strdup(g_access.pwd);
+	else
+		ft_set_global_pwd(&path_helper);
+	arg_split = ft_split(rel_path, '/');
+	split_ptr = arg_split;
+	while(*split_ptr != NULL)
+	{
+		if(!ft_strncmp(*split_ptr, "..", 2) && ft_strlen(*split_ptr) == 2)
+		{
+			path_ptr = ft_strrchr(path_helper, '/');
+			if(path_ptr != NULL)
+			{
+				path_helper_free = path_helper;
+				path_helper = ft_substr(path_helper, 0, ft_strlen(path_helper) - ft_strlen(path_ptr));
+				if (ft_strlen(path_helper) == 0)
+				{
+					path_helper = ft_strjoin_with_free(path_helper, "/");
+					if(path_helper_free)
+					{
+						free(path_helper_free);
+						path_helper_free = NULL;
+					}
+					break;
+				}
+				if (path_helper_free)
+				{
+					free(path_helper_free);
+					path_helper_free = NULL;
+				}
+
+			}
+		}
+		else if (!ft_strncmp(*split_ptr, ".", 1) && ft_strlen(*split_ptr) == 1)
+		{
+			split_ptr++;
+			continue;
+		}
+		else
+		{
+			path_helper = ft_strjoin_with_dfree(path_helper, ft_strjoin("/", *split_ptr));
+		}
+		split_ptr++;
+	}
+	ft_free_split(arg_split);
+	*abs_path = path_helper;
 }
