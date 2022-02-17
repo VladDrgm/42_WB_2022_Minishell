@@ -223,6 +223,9 @@ int minishell_export(char **args, pid_t pid)
 			{
 				env_var->name = ft_substr(args[i], 0, j + 1);
 				env_var->value = ft_strdup(&(args[i][j + 1]));
+				printf("env_var->name: %s\n", env_var->name);
+				printf("env_var->value: %s\n", env_var->value);
+				printf("i: %i and j: %i\n", i, j);
 			}
 			else
 			{
@@ -286,7 +289,7 @@ int minishell_unset(char **args, pid_t pid)
 				j++;
 			}
 		}
-		if (!ft_strncmp(args[1], "PWD", ft_strlen(args[1])))
+		if (!ft_strncmp(args[i], "PWD", ft_strlen(args[i])))
 		{
 			if (g_access.pwd != NULL)
 				free(g_access.pwd);
@@ -299,8 +302,13 @@ int minishell_unset(char **args, pid_t pid)
 		{
 			if (!ft_strncmp(args[i], ((t_env_var*)(ptr->content))->name, ft_strlen(args[i])))
 			{
-				g_access.env = ptr->next;
-				ft_lstdelone(ptr, delone);
+				if (ft_strncmp(args[i], "_", 1))
+				{
+					g_access.env = ptr->next;
+					ft_lstdelone(ptr, delone);
+				}
+				else
+					ft_last_arg(args, pid);
 			}
 		}
 		while(ptr->next != NULL && valid)
@@ -311,15 +319,25 @@ int minishell_unset(char **args, pid_t pid)
 				{
 					if (ptr->next->next != NULL)
 					{
-						temp = ptr->next;
-						ptr->next = ptr->next->next;
-						ft_lstdelone(temp, delone);
+						if (ft_strncmp(args[i], "_", 1))
+						{
+							temp = ptr->next;
+							ptr->next = ptr->next->next;
+							ft_lstdelone(temp, delone);
+						}
+						else
+							ft_last_arg(args, pid);
 						break;
 					}
 					else
 					{
-						ft_lstdelone(ptr->next, delone);
-						ptr->next = NULL;
+						if (ft_strncmp(args[i], "_", 1))
+						{
+							ft_lstdelone(ptr->next, delone);
+							ptr->next = NULL;
+						}
+						else
+							ft_last_arg(args, pid);
 						break;
 					}
 				}

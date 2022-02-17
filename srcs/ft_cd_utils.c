@@ -23,8 +23,6 @@ void	ft_update_create_env(char *env, char *value, pid_t pid)
 	char *args[3];
 
 	ptr = g_access.env;
-	// printf("update/create env = %s\n", env);
-	// printf("update/create value = %s\n", value);
 	while (ptr != NULL)
 	{
 		if (ft_strncmp(((t_env_var *)(ptr->content))->name, env, ft_strlen(env)) == 0)
