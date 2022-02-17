@@ -176,6 +176,11 @@ void ft_rtoa_path(char *rel_path, char **abs_path)
 	char *path_ptr;
 	char *path_helper_free;
 
+	if (ft_strnstr(rel_path, ".", ft_strlen(rel_path)) == NULL)
+	{
+		*abs_path = ft_strdup(rel_path);
+		return;
+	}
 	path_helper = NULL;
 	if (g_access.dp != NULL)
 		path_helper = ft_strdup(g_access.dp);

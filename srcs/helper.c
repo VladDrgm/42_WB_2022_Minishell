@@ -82,3 +82,18 @@ char	*ft_strjoin_with_dfree(char *s1, char *s2)
 	free(s2);
 	return (return_s);
 }
+
+char	*ft_strjoin_with_scnd_free(char *s1, char *s2)
+{
+	char	*return_s;
+
+	if (!s1 || !s2)
+		return (NULL);
+	return_s = ft_calloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2)) + 1, 1);
+	if (return_s == NULL)
+		return (NULL);
+	ft_memcpy(return_s, s1, ft_strlen(s1));
+	ft_memcpy(return_s + ft_strlen(s1), s2, ft_strlen(s2));
+	free(s2);
+	return (return_s);
+}

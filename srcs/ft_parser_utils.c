@@ -59,6 +59,8 @@ void	ft_free_parser(void *parser)
         free(cmd->comm_table[i]);
         i++;
     }
+	if (cmd->path != NULL)
+		free(cmd->path);
 	free(cmd->comm_table);
 	free(parser);
 }

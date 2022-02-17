@@ -72,12 +72,18 @@ int minishell_cd(char **args, pid_t pid)
 	dir = opendir(abs_path);
 	if (dir == NULL)
 	{
+		closedir(dir);
 		free(g_access.last_return);
 		g_access.last_return = ft_itoa(1);
 		if (pid == 0)
-			perror(ft_strjoin("minishell: cd: ", args[1]));
-		free(g_access.last_return);
-		g_access.last_return = ft_itoa(1);
+		{
+			write(2, "minishell: cd: ", 15);
+			write(2, args[1], ft_strlen(args[1]));
+			perror(" ");
+			
+		}
+		if (abs_path != NULL)
+			free(abs_path);
 		ft_last_arg(args, pid);
 		return (1);
 	}
@@ -90,7 +96,6 @@ int minishell_cd(char **args, pid_t pid)
 	sym_check = ft_check_symlink(abs_path, args[1], pid);
 	if (sym_check == -1)
 	{
-		printf("TEST\n");
 		free(g_access.last_return);
 		g_access.last_return = ft_itoa(1);
 		if (current_path != NULL)

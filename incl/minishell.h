@@ -210,7 +210,7 @@ typedef struct s_content
 }	t_content;
 
 
-
+void	print_list_parse(t_list *el); //rm?
 
 /*exit_handler.c*/
 void	ft_close_fd(void);
@@ -226,6 +226,7 @@ char	*ft_get_cmd_path(const char *cmd, char **path_list);
 char	**ft_split_path(char **env);
 char	*ft_strjoin_with_free(char *s1, char const *s2);
 char	*ft_strjoin_with_dfree(char *s1, char *s2);
+char	*ft_strjoin_with_scnd_free(char *s1, char *s2);
 
 /*piping.c*/
 void	ft_pipex(t_list *cmd_list, char **envp);

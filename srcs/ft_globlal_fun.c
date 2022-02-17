@@ -29,4 +29,5 @@ void free_global(void)
 	g_access.home = NULL;
 	g_access.pwd = NULL;
 	g_access.dp = NULL;
+	rl_clear_history();
 }

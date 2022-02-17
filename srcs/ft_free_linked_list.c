@@ -4,6 +4,9 @@ void del_word(void* tmp)
 {
 	if (((t_word *)(tmp))->address != NULL)
 		free(((t_word *)(tmp))->address);
+	if (tmp != NULL)
+		free(tmp);
+	tmp = NULL;
 }
 
 void del_command(void* tmp)
@@ -12,6 +15,9 @@ void del_command(void* tmp)
 		ft_free_split(((t_command *)(tmp))->comm_table);
 	if (((t_command *)(tmp))->path != NULL)
 		free(((t_command *)(tmp))->path);
+	if (tmp != NULL)
+		free(tmp);
+	tmp = NULL;
 }
 
 void del_builtin_content(void *tmp)
