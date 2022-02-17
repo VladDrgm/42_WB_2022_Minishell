@@ -248,13 +248,14 @@ int	parser(void)
 					printf("Path if: %s\n", cmd->path);
 				executor_element = ft_lstnew((void * ) cmd);
 				ft_lstadd_back(&(g_access.parser2exec), executor_element);
-				index_counter++;
+				// index_counter++;
 			}
 
 			index_counter++;
 		}
 		else
 			ft_free_split(cmd_line);
+
 
 	}
 	if (return_flag == 0)
