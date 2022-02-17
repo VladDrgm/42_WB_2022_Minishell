@@ -135,7 +135,6 @@ int pipex(t_list *cmd_list, char** envp)
 	int fd_in[2];
 	int fd_out[2];
 	int last_index;
-	pid_t first_input;
 	int exit_value;
 
 	cmd_list_temp = NULL;
@@ -182,6 +181,13 @@ int pipex(t_list *cmd_list, char** envp)
 		else if(pidt[i] == 0)
 		{
 			close(fd_out[0]);
+			if (i == 0)
+				if (dup2(fd_stream[0], fd_in[0]) == -1)
+					ft_exit_on_error2("File descriptor duplication failed 90");
+			if (i == last_index)
+				if (dup2(fd_stream[1], fd_out[1]) == -1)
+					ft_exit_on_error2("File descriptor duplication failed 90");
+
 			if (dup2(fd_in[0], STDIN_FILENO) == -1)
 				ft_exit_on_error2("File descriptor duplication failed 90");
 			if (dup2(fd_out[1], STDOUT_FILENO) == -1)
@@ -212,16 +218,7 @@ int pipex(t_list *cmd_list, char** envp)
 		else
 		{
 			if (i == 0)
-			{
-				first_input = fork();
-				if (!first_input)
-				{
-					close(fd_out[0]);
-					close(fd_out[1]);
-					heredoc_child(fd_in, fd_stream, NULL, "");
-				}
 				close(fd_in[1]);
-			}
 			while (cmd_list != NULL)
 			{
 				cmd = (t_command *)cmd_list->content;
@@ -235,9 +232,9 @@ int pipex(t_list *cmd_list, char** envp)
 			close(fd_out[1]);
 			if (i == last_index)
 			{
-				char ccc;
-				while (read(fd_out[0], &ccc, 1))
-					write(1, &ccc, 1);
+				//char ccc;
+				//while (read(fd_out[0], &ccc, 1))
+				//	write(1, &ccc, 1);
 				close(fd_out[0]);
 			}
 		}
@@ -254,8 +251,6 @@ int pipex(t_list *cmd_list, char** envp)
         g_access.last_return = ft_itoa(WEXITSTATUS(status));
         x++;
     }
-    kill(first_input, SIGTERM);
-    waitpid(first_input, NULL, 0);
 	dup2(fd_stream[0], STDIN_FILENO);
 	dup2(fd_stream[1], STDOUT_FILENO);
 	//printf("LINE FINSHED\n");
