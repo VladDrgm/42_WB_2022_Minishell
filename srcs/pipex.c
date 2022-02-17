@@ -239,7 +239,12 @@ int pipex(t_list *cmd_list, char** envp)
 			}
 		}
 		i++;
-		cmd_list = cmd_list->next;
+		if (cmd_list)
+		{
+			cmd_list = cmd_list->next;
+		}
+
+
 	}
 	int x = 0;
     int status;

@@ -234,17 +234,23 @@ int	parser(void)
 		cmd_line = add_to_line(cmd_line, NULL, &cmd_len);
 		if (return_flag == 0)
 		{
-			cmd = (t_command *)malloc(sizeof(t_command));
-			cmd->comm_table = cmd_line;
-			cmd->path = NULL;
-			cmd->index = index_counter;
-			cmd->comm_len = cmd_len;
-			cmd->cmd_type = 0;
-			ft_command_check(cmd->comm_table[0], &cmd->path, &cmd->cmd_type);
-			if (FT_PARSER_COMMENT)
-				printf("Path if: %s\n", cmd->path);
-			executor_element = ft_lstnew((void * ) cmd);
-			ft_lstadd_back(&(g_access.parser2exec), executor_element);
+			if(cmd_len > 1)
+			{
+				cmd = (t_command *)malloc(sizeof(t_command));
+				cmd->comm_table = cmd_line;
+				cmd->path = NULL;
+				cmd->index = index_counter;
+				cmd->comm_len = cmd_len;
+				cmd->cmd_type = 0;
+
+				ft_command_check(cmd->comm_table[0], &cmd->path, &cmd->cmd_type);
+				if (FT_PARSER_COMMENT)
+					printf("Path if: %s\n", cmd->path);
+				executor_element = ft_lstnew((void * ) cmd);
+				ft_lstadd_back(&(g_access.parser2exec), executor_element);
+				index_counter++;
+			}
+
 			index_counter++;
 		}
 		else
