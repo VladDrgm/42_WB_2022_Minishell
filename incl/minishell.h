@@ -100,6 +100,7 @@ typedef struct s_global
 	char	*pwd;
 	char	*home;
 	char	*dp;
+	int		inter;
 }				t_global;
 
 typedef struct s_env_var

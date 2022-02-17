@@ -6,9 +6,9 @@
 
 void ft_sigint_handler(int sig)
 {
-	if(sig == SIGINT)
+	if(sig == SIGINT && g_access.inter == 1)
 	{
-		printf("\b\b  ");
+		printf("\b\b    ");
 		printf("\n");
 		rl_replace_line("", 0);
 		rl_on_new_line();
@@ -18,7 +18,7 @@ void ft_sigint_handler(int sig)
 
 void ft_sigquit_handler(int sig)
 {
-	if(sig == SIGQUIT)
+	if(sig == SIGQUIT && g_access.inter == 1)
 	{
 		write(1, "\b\b  \b\b", 6);
 		rl_redisplay();

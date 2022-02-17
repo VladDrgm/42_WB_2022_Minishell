@@ -32,11 +32,11 @@ void ft_init_builtins(void)
 */
 
 /**
-	 @brief Creating a copy of the original env list. 
+	 @brief Creating a copy of the original env list.
 	 @param envp Original environmental variables list.
 	 @return None.
 	 @exception As per start of a shell OLPWD is not existent.
-	 @exception As per start of a shell PWD is always existent, 
+	 @exception As per start of a shell PWD is always existent,
 	 			even if unset in parent shell
  */
 void ft_create_envlist(char **envp)
@@ -79,12 +79,13 @@ void ft_create_envlist(char **envp)
 		g_access.dp = ft_strdup(env_value_finder("PWD"));
 	if (g_access.home == NULL)
 		ft_get_home();
-	
+
 }
 
 void ft_initiator(char **envp, char *executable)
 {
 	g_access.signals = 0;
+	g_access.inter = 0;
 	g_access.last_return = ft_itoa(0);
 	g_access.pwd = NULL;
 	g_access.dp = NULL;

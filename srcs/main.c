@@ -20,8 +20,9 @@ int	main(int argc, char **argv, char**envp)
 	while (1)
 	{
 		temp = 0;
-
+		g_access.inter = 1;
 		g_access.read_line2lexor = readline(">");
+		g_access.inter = 0;
 		if (g_access.read_line2lexor == NULL) //dealing with EOF (Ctrl + D)
 			break;
 		if (*(g_access.read_line2lexor) == 0) //dealing with Enter (empty input)
