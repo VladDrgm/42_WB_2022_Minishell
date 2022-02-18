@@ -207,6 +207,11 @@ int	parser(void)
 							free(g_access.last_return);
 						g_access.last_return = ft_itoa(2);
 						write(2, "minshe11: syntax error near unexpected token `newline'\n", 55);
+						if (cmd_line_red[0] != NULL)
+						{
+							free(cmd_line_red[0]);
+							cmd_line_red[0] = NULL;
+						}
 						free(cmd_line_red);
 						error_fun(&(g_access.parser2exec), &(g_access.lexor2parser));
 						break;
@@ -218,6 +223,11 @@ int	parser(void)
 							free(g_access.last_return);
 						g_access.last_return = ft_itoa(2);
 						write(2, "minishe11: syntax error near unexpected token'\n", 47);
+						if (cmd_line_red[0] != NULL)
+						{
+							free(cmd_line_red[0]);
+							cmd_line_red[0] = NULL;
+						}
 						free(cmd_line_red);
 						error_fun(&(g_access.parser2exec), &(g_access.lexor2parser));
 						break;
