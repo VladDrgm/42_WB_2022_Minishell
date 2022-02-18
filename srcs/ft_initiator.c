@@ -93,6 +93,7 @@ void ft_initiator(char **envp, char *executable)
 	g_access.dp = NULL;
 	ft_create_envlist(envp);
 	ft_update_shell_env(executable);
+	ft_get_PATH();
 	ft_init_builtins();
 	g_access.lexor2parser = NULL;
 	g_access.parser2exec = NULL;
