@@ -287,9 +287,9 @@ int minishell_unset(char **args, pid_t pid)
 			if (g_access.pwd != NULL)
 				free(g_access.pwd);
 			g_access.pwd = NULL;
-			if (g_access.dp != NULL)
-				free(g_access.dp);
-			g_access.dp = NULL;
+			// if (g_access.dp != NULL)
+			// 	free(g_access.dp);
+			// g_access.dp = NULL;
 		}
 		if (ft_strlen(args[i]) == ft_strlen(((t_env_var*)(ptr->content))->name) - 1 && valid)
 		{
