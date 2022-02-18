@@ -55,8 +55,16 @@ int minishell_cd(char **args, pid_t pid)
 	char *current_path;
 	DIR		*dir;
 
+	free(g_access.last_return);
+	g_access.last_return = ft_itoa(0);
 	if (args[1] == NULL)
+	{
+		if (pid == 0)
+			write(2, "cd without an argument not permitted in this minishell.\n", 56);
+		free(g_access.last_return);
+		g_access.last_return = ft_itoa(1);
 		return(1);
+	}
 	abs_path = NULL;
 	current_path = NULL;
 	ft_rtoa_path(args[1], &abs_path);
@@ -67,6 +75,8 @@ int minishell_cd(char **args, pid_t pid)
 		g_access.last_return = ft_itoa(1);
 		if (pid == 0)
 			perror(ft_strjoin("minishell: cd: ", args[1]));
+		free(g_access.last_return);
+		g_access.last_return = ft_itoa(1);
 		return (1);
 	}
 	else
@@ -74,13 +84,13 @@ int minishell_cd(char **args, pid_t pid)
 	if (g_access.dp != NULL)
 		current_path = ft_strdup(g_access.dp);
 	else
-		ft_set_global_pwd(&current_path);
-	if (pid != 0) 				//adjust to pipex approach
-		sym_check = ft_check_symlink(abs_path, args[1]);
-	else
-		sym_check = -1;
+		ft_set_global_pwd(&current_path);			//adjust to pipex approach
+	sym_check = ft_check_symlink(abs_path, args[1]);
 	if (sym_check == -1)
 	{
+		printf("TEST\n");
+		free(g_access.last_return);
+		g_access.last_return = ft_itoa(1);
 		if (current_path != NULL)
 			free(current_path);
 		if (abs_path != NULL)
