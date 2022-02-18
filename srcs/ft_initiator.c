@@ -75,7 +75,7 @@ void ft_create_envlist(char **envp)
 	}
 	else if (ft_strlen(env_value_finder("PWD")) == 0)
 		ft_update_env("PWD", g_access.pwd);
-	if (ft_check_symlink(env_value_finder("PWD"), NULL) || ft_check_symlink((g_access.pwd), NULL))
+	if (ft_check_symlink(env_value_finder("PWD"), NULL, 0) || ft_check_symlink((g_access.pwd), NULL, 0))
 	{
 		g_access.dp = ft_strdup(env_value_finder("PWD"));
 	}
