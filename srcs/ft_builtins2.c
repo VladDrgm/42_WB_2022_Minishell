@@ -84,8 +84,8 @@ int minishell_cd(char **args, pid_t pid)
 	if (g_access.dp != NULL)
 		current_path = ft_strdup(g_access.dp);
 	else
-		ft_set_global_pwd(&current_path);			//adjust to pipex approach
-	sym_check = ft_check_symlink(abs_path, args[1]);
+		ft_set_global_pwd(&current_path);
+	sym_check = ft_check_symlink(abs_path, args[1], pid);
 	if (sym_check == -1)
 	{
 		printf("TEST\n");

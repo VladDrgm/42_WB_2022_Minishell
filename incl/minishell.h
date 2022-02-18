@@ -133,7 +133,7 @@ int		minishell_launch(char **args);
 void	ft_get_home(void);
 void	prerror(char *msg);
 void	ft_update_shell_env(char *executable);
-int 	ft_check_symlink(char *path, char *arg);
+int 	ft_check_symlink(char *path, char *arg, pid_t pid);
 // BUILTIN UTILS
 void	ft_update_env(char *to_search, char *to_replace); //check if value finder finds insider env and if not, create a new one; env should not create duplicate env variables;
 char	*env_value_finder(char *name);
