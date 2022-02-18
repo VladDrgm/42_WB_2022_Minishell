@@ -63,6 +63,7 @@ int minishell_cd(char **args, pid_t pid)
 			write(2, "cd without an argument not permitted in this minishell.\n", 56);
 		free(g_access.last_return);
 		g_access.last_return = ft_itoa(1);
+		ft_last_arg(args, pid);
 		return(1);
 	}
 	abs_path = NULL;
@@ -77,6 +78,7 @@ int minishell_cd(char **args, pid_t pid)
 			perror(ft_strjoin("minishell: cd: ", args[1]));
 		free(g_access.last_return);
 		g_access.last_return = ft_itoa(1);
+		ft_last_arg(args, pid);
 		return (1);
 	}
 	else
@@ -95,14 +97,15 @@ int minishell_cd(char **args, pid_t pid)
 			free(current_path);
 		if (abs_path != NULL)
 			free(abs_path);
+		ft_last_arg(args, pid);
 		return (1);
 	}
 	else if (sym_check == SYMLINK)
 	{
 		if (env_value_finder("PWD") == NULL || ft_strlen(env_value_finder("PWD")) == 0)
-			ft_update_create_OLDPWD("", pid);
+			ft_update_create_env("OLDPWD", "", pid);
 		else
-			ft_update_create_OLDPWD(current_path, pid);
+			ft_update_create_env("OLDPWD", current_path, pid);
 		chdir(abs_path);
 		if (g_access.dp != NULL)
 			free(g_access.dp);
@@ -116,9 +119,9 @@ int minishell_cd(char **args, pid_t pid)
 	else if (sym_check == NOT_SYMLINK)
 	{
 		if (env_value_finder("PWD") == NULL || ft_strlen(env_value_finder("PWD")) == 0)
-			ft_update_create_OLDPWD("", pid);
+			ft_update_create_env("OLDPWD", "", pid);
 		else
-			ft_update_create_OLDPWD(current_path, pid);
+			ft_update_create_env("OLDPWD", current_path, pid);
 		chdir(abs_path);
 		if (g_access.dp != NULL)
 		{
@@ -134,6 +137,7 @@ int minishell_cd(char **args, pid_t pid)
 		free(abs_path);
 	if (current_path != NULL)
 		free(current_path);
+	ft_last_arg(args, pid);
 	return(1);
 }
 
@@ -154,7 +158,7 @@ int	minishell_echo(char **args, pid_t pid)
 	int flag;
 	int temp;
 	int len;
-	ft_update_env("_=", "echo");
+
 	if (pid == 0)
 	{
 		len = 0;
@@ -180,7 +184,7 @@ int	minishell_echo(char **args, pid_t pid)
 			echo_print(args, i, len, flag); //based on the flag, we either print with or without a \n
 		}
 	}
-
+	ft_last_arg(args, pid);
 	free(g_access.last_return);
 	g_access.last_return = ft_itoa(0);
 	return (1);

@@ -9,7 +9,7 @@ int	minishell_env(char **args, pid_t pid)
 {
 	t_list *ptr;
 
-	ft_update_env("_=", "env");
+	ft_last_arg(args, pid);
 	free(g_access.last_return);
 	g_access.last_return = ft_itoa(0);
 	if (ft_strncmp(args[0], "env", 3))
@@ -51,7 +51,7 @@ int	minishell_exit(char **args, pid_t pid)
 	long long int num_arg;
 	int len;
 
-
+	ft_last_arg(args, pid);
 	counter = ((t_command *)ft_lstlast(g_access.parser2exec)->content)->index;
 	if (counter == 0 && pid != 0)
 	{
@@ -139,6 +139,8 @@ int minishell_pwd(char **args, pid_t pid)
 {
 	char *buf;
 	int i = 1;
+
+	ft_last_arg(args, pid);
 	free(g_access.last_return);
 	g_access.last_return = ft_itoa(0);
 	if (args[0] == NULL) //in order to prevent compiler errors
@@ -158,8 +160,6 @@ int minishell_pwd(char **args, pid_t pid)
 			write(1, g_access.dp, ft_strlen(g_access.dp));
 		write(1, "\n", 1);
 	}
-
-	ft_update_env("_=", "pwd");
 	return (1);
 }
 
@@ -181,11 +181,14 @@ int minishell_export(char **args, pid_t pid)
 	while (args[len] != 0)
 		len++;
 	valid = 1;
-	ft_update_env("_=", "export");
+
 	free(g_access.last_return);
 	g_access.last_return = ft_itoa(0);
 	if (args[1] == NULL && pid == 0)
+	{
+		ft_last_arg(args, pid);
 		return (ft_single_export());
+	}
 	j = 0;
 	i = 1;
 	while (i < len)
@@ -231,6 +234,7 @@ int minishell_export(char **args, pid_t pid)
 		}
 		i++;
 	}
+	ft_last_arg(args, pid);
 	return (1);
 }
 
@@ -247,7 +251,7 @@ int minishell_unset(char **args, pid_t pid)
 
 	valid = 1;
 	temp = NULL;
-	ft_update_env("_=", "unset");
+	ft_last_arg(args, pid);
 	free(g_access.last_return);
 	g_access.last_return = ft_itoa(0);
 	ptr = g_access.env;

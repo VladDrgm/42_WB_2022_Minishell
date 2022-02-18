@@ -53,3 +53,24 @@ void ft_update_env(char *to_search, char *to_replace)
 		ptr = ptr->next;
 	}
 }
+
+void ft_last_arg(char **args, pid_t pid)
+{
+	int	i;
+
+	i = 0;
+	if (!args)
+		ft_update_create_env("_", "", pid);
+	while (args[i] != NULL)
+		i++;
+	printf("i = %d\n", i);
+	printf("0 = %s\n", args[0]);
+	printf("1 = %s\n", args[1]);
+	printf("1 = %s\n", args[i - 1]);
+	ft_update_create_env("_", args[i - 1], pid);
+}
+
+// void ft_update_create_(char *to_update)
+// {
+
+// }
