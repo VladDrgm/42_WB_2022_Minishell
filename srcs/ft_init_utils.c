@@ -115,7 +115,7 @@ void	ft_update_shell_env(char *executable)
 	}
 }
 
-int ft_check_symlink(char *path, char *arg)
+int ft_check_symlink(char *path, char *arg, pid_t pid)
 {
 	struct stat *buf;
 	char *path_substr;
@@ -133,9 +133,12 @@ int ft_check_symlink(char *path, char *arg)
 		{
 			if (lstat(path_substr, buf) == -1)
 			{
-				write(2, "minishell: cd: ", 15);
-				write(2, arg, ft_strlen(arg));
-				perror(" ");
+				if (pid == 0)
+				{
+					write(2, "minishell: cd: ", 15);
+					write(2, arg, ft_strlen(arg));
+					perror(" ");
+				}
 				if(buf != NULL)
 					free(buf);
 				if (path_substr != NULL)
