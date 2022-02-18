@@ -53,13 +53,27 @@ int minishell_cd(char **args, pid_t pid)
 	char *abs_path;
 	int sym_check;
 	char *current_path;
+	DIR		*dir;
 
-
+	// dir = NULL;
 	if (args[1] == NULL)
 		return(1);
 	abs_path = NULL;
 	current_path = NULL;
 	ft_rtoa_path(args[1], &abs_path);
+	dir = opendir(abs_path);
+	if (dir == NULL)
+	{
+		free(g_access.last_return);
+		g_access.last_return = ft_itoa(1);
+		if (pid == 0)
+			perror(ft_strjoin("minishell: cd: ", args[1]));
+		// printf("TEST\n");
+		// closedir(dir);
+		return (1);
+	}
+	else
+		closedir(dir);
 	if (g_access.dp != NULL)
 		current_path = ft_strdup(g_access.dp);
 	else
