@@ -138,11 +138,12 @@ int 	ft_check_symlink(char *path, char *arg, pid_t pid);
 void	ft_update_env(char *to_search, char *to_replace); //check if value finder finds insider env and if not, create a new one; env should not create duplicate env variables;
 char	*env_value_finder(char *name);
 void	delone(void *content);
+void	ft_last_arg(char **args, pid_t pid);
 // ECHO UTILS
 void	echo_print(char **str, int starter, int size, int flag);
 int		echo_flag(char *str);
 // CD UTILS
-void	ft_update_create_OLDPWD(char *path, pid_t pid);
+void	ft_update_create_env(char *env, char *value, pid_t pid);
 void	ft_update_PWD(void);
 char	*ft_handle_cd(char *address, t_list *ptr, pid_t pid);
 int		ft_cd_error_handler(char *str, pid_t pid, char **path, char **temp);
