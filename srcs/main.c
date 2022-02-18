@@ -52,8 +52,8 @@ int	main(int argc, char **argv, char**envp)
 		else
 			continue;
 	}
-	//printf("before segfault5\n");
+	// printf("before segfault5\n");
 	free_global();
-	rl_clear_history();
+	// rl_clear_history();
 	return (0);
 }

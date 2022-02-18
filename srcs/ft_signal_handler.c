@@ -9,8 +9,8 @@ void ft_sigint_handler(int sig)
 	if(sig == SIGINT && g_access.inter == 1)
 	{
 		printf("\b\b    ");
-		printf("\n");
-		rl_replace_line("", 0);
+		// printf("\n");
+		// rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
 	}
