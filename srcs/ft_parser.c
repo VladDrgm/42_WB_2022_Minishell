@@ -27,6 +27,7 @@ static int path_finder(char *str, char **cmd_path)
 				ft_free_split(split);
 				if(temp_path != NULL)
 					free(temp_path);
+				temp_path = NULL;
 				return (0);
 			}
 			else if (access(str, F_OK) == 0)
@@ -36,9 +37,10 @@ static int path_finder(char *str, char **cmd_path)
 				ft_free_split(split);
 				if(temp_path != NULL)
 					free(temp_path);
+				temp_path = NULL;
 				return (0);
 			}
-			else if (access(temp_path, F_OK) == -1)
+			else
 			{
 				if (temp_path != NULL)
 					free((void *)temp_path);
