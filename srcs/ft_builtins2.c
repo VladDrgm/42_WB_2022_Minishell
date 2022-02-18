@@ -55,7 +55,6 @@ int minishell_cd(char **args, pid_t pid)
 	char *current_path;
 	DIR		*dir;
 
-	// dir = NULL;
 	if (args[1] == NULL)
 		return(1);
 	abs_path = NULL;
@@ -68,8 +67,6 @@ int minishell_cd(char **args, pid_t pid)
 		g_access.last_return = ft_itoa(1);
 		if (pid == 0)
 			perror(ft_strjoin("minishell: cd: ", args[1]));
-		// printf("TEST\n");
-		// closedir(dir);
 		return (1);
 	}
 	else
