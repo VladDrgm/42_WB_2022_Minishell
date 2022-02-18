@@ -89,7 +89,10 @@ int minishell_cd(char **args, pid_t pid)
 	}
 	else if (sym_check == SYMLINK)
 	{
-		ft_update_create_OLDPWD(current_path, pid);
+		if (env_value_finder("PWD") == NULL || ft_strlen(env_value_finder("PWD")) == 0)
+			ft_update_create_OLDPWD("", pid);
+		else
+			ft_update_create_OLDPWD(current_path, pid);
 		chdir(abs_path);
 		if (g_access.dp != NULL)
 			free(g_access.dp);
@@ -102,7 +105,10 @@ int minishell_cd(char **args, pid_t pid)
 	}
 	else if (sym_check == NOT_SYMLINK)
 	{
-		ft_update_create_OLDPWD(current_path, pid);
+		if (env_value_finder("PWD") == NULL || ft_strlen(env_value_finder("PWD")) == 0)
+			ft_update_create_OLDPWD("", pid);
+		else
+			ft_update_create_OLDPWD(current_path, pid);
 		chdir(abs_path);
 		if (g_access.dp != NULL)
 		{
