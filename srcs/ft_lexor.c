@@ -91,12 +91,9 @@ char	*env_var_formater(char *env_var)
 	out = NULL;
 	while (split_list[i])
 	{
-		out = join2current_str(out, ft_strdup("\'"));
 		out = join2current_str(out, split_list[i]);
-		if (split_list[i + 1] == NULL)
-			out = join2current_str(out, ft_strdup("\'"));
-		else
-			out = join2current_str(out, ft_strdup("\' "));
+		if (!(split_list[i + 1] == NULL))
+			out = join2current_str(out, ft_strdup(" "));
 		i++;
 	}
 	free(split_list);
@@ -208,6 +205,8 @@ int	lexor(void)
 	if (FT_LEXOR_COMMENT)
 		printf("************AFTER COMMENT CHECK********** \n%s\n and the length is %ld\n", args, ft_strlen(args));
 	ft_env_check(&args);
+	if (FT_LEXOR_COMMENT)
+		printf("************AFTER ENV CHECK********** \n%s\n and the length is %ld\n", args, ft_strlen(args));
 	current_str = NULL;
 	while (args[i] != '\0')
 	{
