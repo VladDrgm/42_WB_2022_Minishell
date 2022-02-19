@@ -63,7 +63,9 @@ char	*ft_strjoin_with_free(char *s1, char const *s2)
 		return (NULL);
 	ft_memcpy(return_s, s1, ft_strlen(s1));
 	ft_memcpy(return_s + ft_strlen(s1), s2, ft_strlen(s2));
-	free (s1);
+	if (s1 == NULL)
+		free (s1);
+	s1 = NULL;
 	return (return_s);
 }
 
@@ -78,8 +80,12 @@ char	*ft_strjoin_with_dfree(char *s1, char *s2)
 		return (NULL);
 	ft_memcpy(return_s, s1, ft_strlen(s1));
 	ft_memcpy(return_s + ft_strlen(s1), s2, ft_strlen(s2));
-	free(s1);
-	free(s2);
+	if (s1 == NULL)
+		free (s1);
+	s1 = NULL;
+	if (s2 == NULL)
+		free (s2);
+	s2 = NULL;
 	return (return_s);
 }
 
@@ -94,6 +100,8 @@ char	*ft_strjoin_with_scnd_free(char *s1, char *s2)
 		return (NULL);
 	ft_memcpy(return_s, s1, ft_strlen(s1));
 	ft_memcpy(return_s + ft_strlen(s1), s2, ft_strlen(s2));
-	free(s2);
+	if (s2 == NULL)
+		free (s2);
+	s2 = NULL;
 	return (return_s);
 }
