@@ -155,6 +155,7 @@ int		ft_digit_check(char *argv);
 long long int	ft_atoll(const char *str);
 int		ft_get_index();
 int		ft_exit_error_handler(char *str1, char *str2, char *str3, int exit_value);
+void	ft_child_exit(int exit_value);
 //EXPORT UTILS
 t_list *ft_copy_env(void);
 void ft_print_sorted_copy(t_list *env_cpy);

@@ -93,7 +93,8 @@ int	minishell_exit(char **args, pid_t pid)
 			i++;
 		len = i;
 		if (len > 2 && !ft_digit_check(args[1]))
-			exit (1);
+			ft_child_exit(1);
+		//exit (1);
 	}
 	else if(counter != 0 && pid == 0)
 	{
@@ -102,10 +103,12 @@ int	minishell_exit(char **args, pid_t pid)
 		len = i;
 		if (len > 2 && !ft_digit_check(args[1]))
 		{
-			exit (1);
+			ft_child_exit(1);
+			//exit (1);
 		}
 		else if (len == 1)
-			exit (ft_atoi(g_access.last_return));
+			ft_child_exit(ft_atoi(g_access.last_return));
+			//exit (ft_atoi(g_access.last_return));
 		else if (!ft_digit_check(args[1]))
 		{
 			num_arg = ft_atoll(args[1]);
@@ -113,16 +116,21 @@ int	minishell_exit(char **args, pid_t pid)
 				(num_arg > 0 && args[1][0] == '-')))
 			{
 				if (num_arg >=0 && num_arg <= 255)
-					exit(num_arg);
+					ft_child_exit(num_arg);
+				//exit(num_arg);
 				else if (num_arg > 255)
-					exit (num_arg % 256);
+					ft_child_exit(num_arg % 256);
+					//exit (num_arg % 256);
 				else if (num_arg < 0)
-					exit (256 - ((num_arg * -1) % 256));
+					ft_child_exit(256 - ((num_arg * -1) % 256));
+					//exit (256 - ((num_arg * -1) % 256));
 			}
 		}
 		else if (len >= 2)
-			exit(255);
-		exit(2);
+			ft_child_exit(255);
+			//exit(255);
+		ft_child_exit(2);
+		//exit(2);
 	}
 	//WE NEED TO LINK THIS WITH FREE
 	//DISCUSS THIS AS A TEAM -> MUST BE CONNECTED

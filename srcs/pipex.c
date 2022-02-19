@@ -202,10 +202,7 @@ int pipex(t_list *cmd_list, char** envp)
 			ft_file_checker(&cmd_list, i, fd_in[0], fd_out[1], fd_docks[i]);
 			if(i == 0)
 				close(fd_in[1]);
-			ft_execute_child(cmd_list, envp, pidt[i]);
-			exit_value = ft_atoi(g_access.last_return);
-			free_global();
-				i = 0;
+			i = 0;
 			while( i <= last_index)
 			{
 				if(fd_docks[i] != NULL)
@@ -214,8 +211,15 @@ int pipex(t_list *cmd_list, char** envp)
 			}
 			if (fd_docks != NULL)
 				free(fd_docks);
+			int temp = pidt[i];
 			if (pidt != NULL)
 				free(pidt);
+			ft_execute_child(cmd_list, envp, temp);
+			exit_value = ft_atoi(g_access.last_return);
+			free_global();
+			close(STDERR_FILENO);
+			close(STDIN_FILENO);
+			close(STDOUT_FILENO);
 			exit(exit_value);
 		}
 		else

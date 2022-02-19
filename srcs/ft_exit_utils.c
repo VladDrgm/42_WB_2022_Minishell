@@ -71,3 +71,12 @@ int ft_exit_error_handler(char *str1, char *str2, char *str3, int exit_value)
 		write(2, str3, ft_strlen(str3));
 	exit (exit_value);
 }
+
+void ft_child_exit(int exit_value)
+{
+	free_global();
+	close(STDERR_FILENO);
+	close(STDIN_FILENO);
+	close(STDOUT_FILENO);
+	exit(exit_value);
+}
