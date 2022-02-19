@@ -262,6 +262,8 @@ int	parser(void)
 				ft_lstadd_back(&(g_access.parser2exec), executor_element);
 				// index_counter++;
 			}
+			else
+				ft_free_split(cmd_line);
 
 			index_counter++;
 		}

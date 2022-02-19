@@ -112,7 +112,10 @@ void	ft_execute_child(t_list *cmd_list, char **envp, pid_t pid)
 {
 	t_command *cmd;
 
-	cmd = (t_command *)(cmd_list->content);
+	if (cmd_list != NULL)
+		cmd = (t_command *)(cmd_list->content);
+	else
+		return ;
 
 	if (cmd->cmd_type == FT_CMD_TYPE_SYSTEM)
 		if (execve(cmd->path,cmd->comm_table, envp) == -1)

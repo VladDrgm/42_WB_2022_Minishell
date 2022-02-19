@@ -57,7 +57,9 @@ void ft_get_home(void)
 	}
 	if (!home_flag)
 	{
-		g_access.home = g_access.pwd;
+		if (g_access.home != NULL)
+			free(g_access.home);
+		g_access.home = ft_strdup(g_access.pwd);
 		prerror("Critical error: HOME variable failed to be assigned!");
 	
 	}
@@ -171,11 +173,6 @@ int ft_check_symlink(char *path, char *arg, pid_t pid)
 			buf = NULL;
 			str_ptr = NULL;
 			str_ptr = ft_strrchr(path_substr, '/');
-/* 			if (path_substr) //technically not necessary as we are only entering the loop when path_substr != NULL
-			{
-				free(path_substr);
-				path_substr = NULL;
-			} */
 			if(str_ptr != NULL)
 			{
 				path_substr_free = path_substr;
