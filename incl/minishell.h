@@ -200,6 +200,9 @@ char	*ft_strchr_gnl(const char *s, int c);
 char	*ft_strjoin_gnl(char *s1, char *s2, int j);
 size_t	ft_strlen_gnl(char *s);
 
+//ft_get_path_linux.c
+void	ft_get_PATH(void);
+
 
 //pipex
 
