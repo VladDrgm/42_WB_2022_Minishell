@@ -19,28 +19,40 @@ static int path_finder(char *str, char **cmd_path)
 	{
 		while (split[i])
 		{
-			temp_path = ft_strjoin(split[i], ft_strjoin("/", str));
+			temp_path = ft_strjoin_with_scnd_free(split[i], ft_strjoin("/", str));
 			if (access(temp_path, F_OK) == 0)
 			{
-				*cmd_path = temp_path;
+				errno = 0;
+				*cmd_path = ft_strdup(temp_path);
 				ft_free_split(split);
+				if(temp_path != NULL)
+					free(temp_path);
 				return (0);
 			}
 			else if (access(str, F_OK) == 0)
 			{
-				*cmd_path = str;
+				errno = 0;
+				*cmd_path = ft_strdup(str);
 				ft_free_split(split);
+				if(temp_path != NULL)
+					free(temp_path);
 				return (0);
 			}
 			else if (access(temp_path, F_OK) == -1)
-				free((void *)temp_path);
+			{
+				if (temp_path != NULL)
+					free((void *)temp_path);
+				temp_path = NULL;
+			}
 			i++;
 		}
 		ft_free_split(split);
 	}
-	write(2, "-minishell: ", 12);
+	write(2, "minishell: ", 12);
 	write(2, str, ft_strlen(str));
 	write(2, ": No such file or directory\n", 28);
+	if(temp_path != NULL)
+		free(temp_path);
 	return (-1);
 }
 
@@ -189,6 +201,8 @@ int	parser(void)
 					if(lex_element == NULL)
 					{
 						return_flag = 2;
+						if (g_access.last_return != NULL)
+							free(g_access.last_return);
 						g_access.last_return = ft_itoa(2);
 						write(2, "bash: syntax error near unexpected token `newline'\n", 51);
 						free(cmd_line_red);
@@ -210,6 +224,8 @@ int	parser(void)
 					if (cmd_len == 0)
 					{
 						return_flag = 2;
+						if (g_access.last_return != NULL)
+							free(g_access.last_return);
 						g_access.last_return = ft_itoa(2);
 						write(2, "bash: syntax error near unexpected token `|'\n", 45);
 						error_fun(&(g_access.parser2exec), &(g_access.lexor2parser));
@@ -221,6 +237,8 @@ int	parser(void)
 				else
 				{
 					return_flag = 2;
+					if (g_access.last_return != NULL)
+						free(g_access.last_return);
 					g_access.last_return = ft_itoa(2);
 					write(2, "bash: syntax error near unexpected token'\n", 42);
 					error_fun(&(g_access.parser2exec), &(g_access.lexor2parser));
@@ -250,6 +268,8 @@ int	parser(void)
 				ft_lstadd_back(&(g_access.parser2exec), executor_element);
 				// index_counter++;
 			}
+			else
+				ft_free_split(cmd_line);
 
 			index_counter++;
 		}

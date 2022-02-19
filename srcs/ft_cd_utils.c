@@ -175,7 +175,22 @@ void ft_rtoa_path(char *rel_path, char **abs_path)
 	char **split_ptr;
 	char *path_ptr;
 	char *path_helper_free;
+	char *buf;
+	int i = 0;
 
+	if (ft_strnstr(rel_path, ".", ft_strlen(rel_path)) == NULL)
+	{
+		if (g_access.dp == NULL)
+		{
+			buf = getcwd(NULL, 0);
+			while(getcwd(buf, i) == NULL)
+				i++;
+			*abs_path = ft_strjoin_with_free(ft_strjoin_with_free(buf, "/"), rel_path);
+		}
+		else
+			*abs_path = ft_strjoin_with_free(ft_strjoin(g_access.dp, "/"), rel_path);
+		return;
+	}
 	path_helper = NULL;
 	if (g_access.dp != NULL)
 		path_helper = ft_strdup(g_access.dp);

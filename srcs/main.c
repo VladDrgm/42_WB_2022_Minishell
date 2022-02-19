@@ -1,5 +1,8 @@
 #include "../incl/minishell.h"
 
+#define CRED "\001\e[0;31m\002"
+#define RESET   "\001\e[0m\002"
+
 t_global g_access;
 
 int	main(int argc, char **argv, char**envp)
@@ -21,7 +24,8 @@ int	main(int argc, char **argv, char**envp)
 	{
 		temp = 0;
 		g_access.inter = 1;
-		g_access.read_line2lexor = readline(">");
+		// g_access.read_line2lexor = readline(">");
+		g_access.read_line2lexor = readline(CRED "minishe11 1.0> " RESET);
 		g_access.inter = 0;
 		if (g_access.read_line2lexor == NULL) //dealing with EOF (Ctrl + D)
 			break;
@@ -54,6 +58,5 @@ int	main(int argc, char **argv, char**envp)
 	}
 	// printf("before segfault5\n");
 	free_global();
-	// rl_clear_history();
 	return (0);
 }

@@ -223,9 +223,6 @@ int minishell_export(char **args, pid_t pid)
 			{
 				env_var->name = ft_substr(args[i], 0, j + 1);
 				env_var->value = ft_strdup(&(args[i][j + 1]));
-				printf("env_var->name: %s\n", env_var->name);
-				printf("env_var->value: %s\n", env_var->value);
-				printf("i: %i and j: %i\n", i, j);
 			}
 			else
 			{
