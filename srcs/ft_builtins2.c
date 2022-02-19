@@ -72,8 +72,8 @@ int minishell_cd(char **args, pid_t pid)
 	dir = opendir(abs_path);
 	if (dir == NULL)
 	{
-		closedir(dir);
-		free(g_access.last_return);
+		if (g_access.last_return != NULL)
+			free(g_access.last_return);
 		g_access.last_return = ft_itoa(1);
 		if (pid == 0)
 		{

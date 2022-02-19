@@ -178,8 +178,14 @@ void ft_rtoa_path(char *rel_path, char **abs_path)
 	char *buf;
 	int i = 0;
 
+	buf = NULL;
 	if (ft_strnstr(rel_path, ".", ft_strlen(rel_path)) == NULL)
 	{
+		if (rel_path[0] == '/')
+		{
+			*abs_path = ft_strdup(rel_path);
+			return;
+		}
 		if (g_access.dp == NULL)
 		{
 			buf = getcwd(NULL, 0);
