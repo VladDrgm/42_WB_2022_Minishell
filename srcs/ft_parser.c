@@ -183,13 +183,13 @@ int	parser(void)
 	lex_element = g_access.lexor2parser;
 	cmd = NULL;
 	return_flag = 0;
-	while (1 || return_flag != 0)
+	while (return_flag == 0)
 	{
 		cmd_line = 0;
 		cmd_len = 0;
 		if (lex_element == NULL || return_flag != 0)
 			break;
-		while (1 || return_flag != 0)
+		while (return_flag == 0)
 		{
 			if (lex_element == NULL )
 				break;
@@ -249,6 +249,16 @@ int	parser(void)
 			}
 			else if (((t_word *)(lex_element->content))->type == FT_STRING)
 				ft_string_handler(lex_element, &cmd_line, &cmd_len);
+			if (cmd_len > PARSER_TABLE_LEN_LIMIT)
+			{
+				return_flag = 2;
+				if (g_access.last_return != NULL)
+					free(g_access.last_return);
+				g_access.last_return = ft_itoa(2);
+				write(2, "minishell: parser overflow\n", 28);
+				error_fun(&(g_access.parser2exec), &(g_access.lexor2parser));
+				break;
+			}
 			lex_element = lex_element->next;
 		}
 		cmd_line = add_to_line(cmd_line, NULL, &cmd_len);
@@ -268,12 +278,20 @@ int	parser(void)
 					printf("Path if: %s\n", cmd->path);
 				executor_element = ft_lstnew((void * ) cmd);
 				ft_lstadd_back(&(g_access.parser2exec), executor_element);
-				// index_counter++;
 			}
 			else
 				ft_free_split(cmd_line);
 
 			index_counter++;
+			if (index_counter > PIPE_LIMIT)
+			{
+				return_flag = 2;
+				if (g_access.last_return != NULL)
+					free(g_access.last_return);
+				g_access.last_return = ft_itoa(2);
+				write(2, "minishell: pipe limit reached\n", 30);
+				error_fun(&(g_access.parser2exec), &(g_access.lexor2parser));
+			}
 		}
 		else
 			ft_free_split(cmd_line);
