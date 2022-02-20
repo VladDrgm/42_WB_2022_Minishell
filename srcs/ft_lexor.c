@@ -255,7 +255,6 @@ int	lexor(void)
 			ft_lex_string_reminder_handler(&current_str, args, begining, i);
 		}
 	}
-
 	if (FT_LEXOR_COMMENT)
 	{
 		printf("We are in lexor %s\n", args);
@@ -263,15 +262,17 @@ int	lexor(void)
 		printf("Flag is %d\n", flag);
 	}
 	if (flag == -1)
+	{
 		ft_free_list(g_access.lexor2parser);
+		g_access.lexor2parser = NULL;
+	}
 	free(args);
 	args = NULL;
 	g_access.read_line2lexor = NULL;
-	if (ft_lstsize(g_access.lexor2parser) == 0)
+	if (ft_lstsize(g_access.lexor2parser) == 0 && flag == 0)
 	{
-		free(g_access.last_return);
-		g_access.last_return = ft_itoa(0);
 		ft_free_list(g_access.lexor2parser);
+		g_access.lexor2parser = NULL;
 		flag = -1;
 	}
 	return flag;
