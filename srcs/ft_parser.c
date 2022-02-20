@@ -11,6 +11,11 @@ static int path_finder(char *str, char **cmd_path)
 	char	*temp_path;
 	int		i;
 
+	if (access(str, F_OK) == 0)
+	{
+		*cmd_path = ft_strdup(str);
+		return (0);
+	}
 	path = env_value_finder("PATH");
 	split = ft_split(ft_strchr(path, '/'), ':');
 	temp_path = NULL;
@@ -24,16 +29,6 @@ static int path_finder(char *str, char **cmd_path)
 			{
 				errno = 0;
 				*cmd_path = ft_strdup(temp_path);
-				ft_free_split(split);
-				if(temp_path != NULL)
-					free(temp_path);
-				temp_path = NULL;
-				return (0);
-			}
-			else if (access(str, F_OK) == 0)
-			{
-				errno = 0;
-				*cmd_path = ft_strdup(str);
 				ft_free_split(split);
 				if(temp_path != NULL)
 					free(temp_path);
