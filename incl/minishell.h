@@ -63,7 +63,8 @@
 # define SYMLINK 1
 # define NOT_SYMLINK 0
 
-
+# define PARSER_TABLE_LEN_LIMIT 10
+# define PIPE_LIMIT 10
 
 typedef struct s_word
 {
