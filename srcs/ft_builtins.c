@@ -287,10 +287,11 @@ int minishell_unset(char **args, pid_t pid)
 					write(2, "minishell: unset: `", 20);
 					write(2 , args[i], ft_strlen(args[i]));
 					write(2, "': not a valid identifier\n", 26);
-					break;
+
 				}
 				free(g_access.last_return);
 				g_access.last_return = ft_itoa(1);
+				break;
 				j++;
 			}
 		}

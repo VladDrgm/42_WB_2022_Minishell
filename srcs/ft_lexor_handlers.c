@@ -59,7 +59,12 @@ int	ft_lex_single_quote_handler(char **current_str, char *args, int begining, in
 	if (flag == -1)
 	{
 		errorfun();
-		printf("Unfinsihed single quote\n");
+		free(*current_str);
+		*current_str = NULL;
+		printf("minishe11: Unfinished single quote\n");
+		if (g_access.last_return != NULL)
+			free(g_access.last_return);
+		g_access.last_return = ft_itoa(3);
 		return (flag);
 	}
 	return flag;
@@ -84,7 +89,12 @@ int ft_lex_double_quote_handler(char **current_str, char *args, int begining, in
 	if (flag == -1)
 	{
 		errorfun();
-		printf("Unfinsihed double quote\n");
+		free(*current_str);
+		*current_str = NULL;
+		printf("minishe11: Unfinished double quote\n");
+		if (g_access.last_return != NULL)
+			free(g_access.last_return);
+		g_access.last_return = ft_itoa(3);
 		return (flag);
 	}
 	return (flag);

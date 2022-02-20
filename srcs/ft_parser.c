@@ -191,7 +191,7 @@ int	parser(void)
 			break;
 		while (return_flag == 0)
 		{
-			if (lex_element == NULL )
+			if (lex_element == NULL)
 				break;
 			if (((t_word *)(lex_element->content))->type == FT_SPECIAL_CHAR_STRING)
 			{
@@ -206,7 +206,28 @@ int	parser(void)
 						if (g_access.last_return != NULL)
 							free(g_access.last_return);
 						g_access.last_return = ft_itoa(2);
-						write(2, "bash: syntax error near unexpected token `newline'\n", 51);
+						write(2, "minshe11: syntax error near unexpected token `newline'\n", 55);
+						if (cmd_line_red[0] != NULL)
+						{
+							free(cmd_line_red[0]);
+							cmd_line_red[0] = NULL;
+						}
+						free(cmd_line_red);
+						error_fun(&(g_access.parser2exec), &(g_access.lexor2parser));
+						break;
+					}
+					if(((t_word *)(lex_element->content))->type == FT_SPECIAL_CHAR_STRING)
+					{
+						return_flag = 2;
+						if (g_access.last_return != NULL)
+							free(g_access.last_return);
+						g_access.last_return = ft_itoa(2);
+						write(2, "minishe11: syntax error near unexpected token'\n", 47);
+						if (cmd_line_red[0] != NULL)
+						{
+							free(cmd_line_red[0]);
+							cmd_line_red[0] = NULL;
+						}
 						free(cmd_line_red);
 						error_fun(&(g_access.parser2exec), &(g_access.lexor2parser));
 						break;
@@ -229,11 +250,22 @@ int	parser(void)
 						if (g_access.last_return != NULL)
 							free(g_access.last_return);
 						g_access.last_return = ft_itoa(2);
-						write(2, "bash: syntax error near unexpected token `|'\n", 45);
+						write(2, "minishe11: syntax error near unexpected token `|'\n", 50);
 						error_fun(&(g_access.parser2exec), &(g_access.lexor2parser));
 					}
-						else
+					else
+					{
 						lex_element = lex_element->next;
+						if (lex_element == NULL)
+						{
+							return_flag = 2;
+							if (g_access.last_return != NULL)
+								free(g_access.last_return);
+							g_access.last_return = ft_itoa(2);
+							write(2, "minishe11: syntax error near unexpected token `|'\n", 50);
+						error_fun(&(g_access.parser2exec), &(g_access.lexor2parser));
+						}
+					}
 					break ;
 				}
 				else
@@ -242,7 +274,7 @@ int	parser(void)
 					if (g_access.last_return != NULL)
 						free(g_access.last_return);
 					g_access.last_return = ft_itoa(2);
-					write(2, "bash: syntax error near unexpected token'\n", 42);
+					write(2, "minishe11: syntax error near unexpected token'\n", 47);
 					error_fun(&(g_access.parser2exec), &(g_access.lexor2parser));
 					break ;
 				}
@@ -255,7 +287,7 @@ int	parser(void)
 				if (g_access.last_return != NULL)
 					free(g_access.last_return);
 				g_access.last_return = ft_itoa(2);
-				write(2, "minishell: parser overflow\n", 28);
+				write(2, "minishe11: argument overflow\n", 29);
 				error_fun(&(g_access.parser2exec), &(g_access.lexor2parser));
 				break;
 			}
@@ -289,14 +321,12 @@ int	parser(void)
 				if (g_access.last_return != NULL)
 					free(g_access.last_return);
 				g_access.last_return = ft_itoa(2);
-				write(2, "minishell: pipe limit reached\n", 30);
+				write(2, "minishe11: pipe limit reached\n", 30);
 				error_fun(&(g_access.parser2exec), &(g_access.lexor2parser));
 			}
 		}
 		else
 			ft_free_split(cmd_line);
-
-
 	}
 	if (return_flag == 0)
 	{
