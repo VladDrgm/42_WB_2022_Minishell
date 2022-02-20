@@ -53,6 +53,11 @@ int	q_handler(char *str, char **current_str, char q_char)
 	int	i;
 
 	i = 0;
+	// if (str[i] != '\0')
+	// {
+	// 	free(current_str);
+	// }
+
 	while (str[i] != '\0')
 	{
 		if (str[i] == q_char)

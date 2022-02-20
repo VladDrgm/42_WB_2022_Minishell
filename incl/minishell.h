@@ -2,7 +2,6 @@
 # define MINISHELL_H
 
 # include "../libft/incl/libft.h"
-// # include "pipex.h"
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -63,8 +62,8 @@
 # define SYMLINK 1
 # define NOT_SYMLINK 0
 
-# define PARSER_TABLE_LEN_LIMIT 10
-# define PIPE_LIMIT 10
+# define PARSER_TABLE_LEN_LIMIT 1000
+# define PIPE_LIMIT 1000
 
 typedef struct s_word
 {

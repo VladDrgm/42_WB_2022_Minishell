@@ -248,10 +248,14 @@ int	lexor(void)
 		last = args[i];
 		i++;
 	}
-	if(!is_space(args[i - 1]) && i > 0 && flag != -1)
+	if(flag != -1)
 	{
-		ft_lex_string_reminder_handler(&current_str, args, begining, i);
+		if(!is_space(args[i - 1]) && i > 0)
+		{
+			ft_lex_string_reminder_handler(&current_str, args, begining, i);
+		}
 	}
+
 	if (FT_LEXOR_COMMENT)
 	{
 		printf("We are in lexor %s\n", args);
