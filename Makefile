@@ -2,10 +2,27 @@ CC			= gcc
 CFLAGS		= -g3 -Wall -Wextra -Werror
 RM			= rm -f
 SRCD		= ./srcs/
+
+
+UNAME = $(shell uname)
+#echo $(UNAME)
+
+ifeq ($(UNAME), Linux)
+
 SRC			=  main.c ft_lexor.c ft_parser.c ft_executor.c ft_initiator.c ft_echo_utils.c ft_builtins2.c ft_builtins.c ft_globlal_fun.c \
 				ft_builtins_utils.c ft_cd_utils.c ft_lexor_utils.c ft_lexor_utils2.c ft_lexor_handlers.c ft_parser_utils.c utils.c \
 				ft_free_linked_list.c ft_exit_utils.c ft_export_utils.c get_next_line.c get_next_line_utils.c ft_init_utils.c \
-				pipex.c helper.c exit_handler.c ft_heredoc.c ft_signal_handler.c ft_get_path_mac.c #ft_get_path_linux.c
+				pipex.c helper.c exit_handler.c ft_heredoc.c ft_signal_handler.c ft_get_path_linux.c
+
+endif
+
+ifeq ($(UNAME), Darwin)
+SRC			=  main.c ft_lexor.c ft_parser.c ft_executor.c ft_initiator.c ft_echo_utils.c ft_builtins2.c ft_builtins.c ft_globlal_fun.c \
+				ft_builtins_utils.c ft_cd_utils.c ft_lexor_utils.c ft_lexor_utils2.c ft_lexor_handlers.c ft_parser_utils.c utils.c \
+				ft_free_linked_list.c ft_exit_utils.c ft_export_utils.c get_next_line.c get_next_line_utils.c ft_init_utils.c \
+				pipex.c helper.c exit_handler.c ft_heredoc.c ft_signal_handler.c ft_get_path_mac.c
+endif
+
 
 # Command to add the source folder prefix (instead of having it added manually to SRC)
 SRCF		= $(addprefix $(SRCD),$(SRC))
@@ -25,6 +42,8 @@ LIBFTL		= libft.a
 
 LIBFT_OBJF    = ${LIBFTD}${LIBFT_OBJD}/*.o
 LIBFT_MAKE    = make -C ${LIBFTD}
+
+
 
 #if to the respective c file in the source directory no matching o file in the object
 #directory is available, then create it according to the following rules:
