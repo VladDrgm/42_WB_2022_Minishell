@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_builtins.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vdragomi <vdragomi@42student.wolfsburg.de> +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/21 11:55:30 by vdragomi          #+#    #+#             */
+/*   Updated: 2022/02/21 11:55:30 by vdragomi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../incl/minishell.h"
 
 /**
@@ -9,9 +21,10 @@ int	minishell_env(char **args, pid_t pid)
 {
 	t_list *ptr;
 
-	ft_last_arg(args, pid);
-	free(g_access.last_return);
-	g_access.last_return = ft_itoa(0);
+	// ft_last_arg(args, pid);
+	// free(g_access.last_return);
+	// g_access.last_return = ft_itoa(0);
+	ft_set_last(args, pid, 0);
 	if (ft_strncmp(args[0], "env", 3))
 		return (0);
 	ptr = g_access.env;
