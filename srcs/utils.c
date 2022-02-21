@@ -71,3 +71,10 @@ int ft_execve(char **args, pid_t pid)
 	}
 	return (0);
 }
+
+void ft_smart_free(void **ptr)
+{
+	if (*ptr != NULL)
+		free(*ptr);
+	*ptr = NULL;
+}
