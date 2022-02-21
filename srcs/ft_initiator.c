@@ -43,18 +43,13 @@ void	ft_init_builtins(void)
 }
 
 /*
-**	WHEN CREATING ENV LIST, WE MUST ALSO ADD THE _= VARIABLE \
-**	EVEN WHEN WE MANIPULATE IT IN OUR BUILTINS;
-**	AT THIS MOMENT, THE _= DOES NOT EXIST;
-**	COMMENTED LINES INSIDE THE FUNCTION ARE FOR TESTING PURPOSES;
-*/
-
-/*
 **	 @brief Creating a copy of the original env list.
 **	 @param envp Original environmental variables list.
 **	 @return None.
 **	 @exception As per start of a shell OLPWD is not existent.
 **	 @exception As per start of a shell PWD is always existent,
+**	 			even if unset in parent shell
+**	 @exception As per start of a shell PATH is always existent,
 **	 			even if unset in parent shell
 */
 
@@ -121,7 +116,3 @@ void	ft_initiator(char **envp, char *executable)
 	g_access.parser2exec = NULL;
 	g_access.read_line2lexor = NULL;
 }
-
-/*
-**	g_access.read_line2lexor = NULL; //allocated in main by readline
-*/

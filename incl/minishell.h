@@ -17,6 +17,8 @@
 # include <dirent.h>
 # include <sys/stat.h>
 
+#define CRED "\001\e[0;31m\002"
+#define RESET   "\001\e[0m\002"
 # define FT_SPECIAL_CHAR_STRING 1
 # define FT_STRING 2
 # define FT_TAB 9
