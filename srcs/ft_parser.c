@@ -48,6 +48,9 @@ static int path_finder(char *str, char **cmd_path)
 	write(2, "minishell: ", 12);
 	write(2, str, ft_strlen(str));
 	write(2, ": No such file or directory\n", 28);
+	if (g_access.last_return != NULL)
+		free(g_access.last_return);
+	g_access.last_return = ft_itoa(127);
 	if(temp_path != NULL)
 		free(temp_path);
 	return (-1);
