@@ -155,7 +155,10 @@ int		ft_digit_check(char *argv);
 long long int	ft_atoll(const char *str);
 int		ft_get_index();
 int		ft_exit_error_handler(char *str1, char *str2, char *str3, int exit_value);
-void	ft_child_exit(int exit_value);
+void	ft_exit(int exit_value);
+int		ft_parent_exiter(int pid, char **args);
+void	ft_child_exiter(char **args);
+
 //EXPORT UTILS
 t_list *ft_copy_env(void);
 void ft_print_sorted_copy(t_list *env_cpy);
@@ -204,7 +207,7 @@ size_t	ft_strlen_gnl(char *s);
 void	ft_get_PATH(void);
 
 //GLOBAL UTILS
-void	ft_set_last(char **args, int pid, int lreturn);
+void	ft_set_lasts(char **args, int pid, int lreturn);
 
 
 //pipex
