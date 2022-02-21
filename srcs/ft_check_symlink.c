@@ -6,12 +6,18 @@
 /*   By: mamuller <mamuller@student.42wolfsburg>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 15:12:48 by dbanfi            #+#    #+#             */
-/*   Updated: 2022/02/21 18:11:06 by mamuller         ###   ########.fr       */
+/*   Updated: 2022/02/21 19:38:39 by mamuller         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incl/minishell.h"
 
+/**
+	 @brief Function to find the next subdirectory in a path string.
+	 @param buf Pointer to be freed.
+	 @param path_substr String to be manipulated.
+	 @return None.
+ */
 static void	ft_next_sub_dir(struct stat **buf, char **path_substr)
 {
 	char	*str_ptr;
@@ -32,6 +38,12 @@ static void	ft_next_sub_dir(struct stat **buf, char **path_substr)
 		ft_smart_free((void **)path_substr);
 }
 
+/**
+	 @brief Function to free multiple variables.
+	 @param buf Pointer to be freed.
+	 @param path_substr Pointer to be freed.
+	 @return None.
+ */
 static void	ft_full_free(struct stat *buf, char *path_substr)
 {
 	if (buf != NULL)
@@ -40,6 +52,12 @@ static void	ft_full_free(struct stat *buf, char *path_substr)
 		free(path_substr);
 }
 
+/**
+	 @brief Print error message if pid is 0.
+	 @param arg argument passed by user that will be shown in error msg.
+	 @param pid Process id in case the check is called in pipes. Print on pid 0.
+	 @return None.
+ */
 static void	ft_error_message(char *arg, pid_t pid)
 {
 	if (pid == 0)
@@ -50,6 +68,13 @@ static void	ft_error_message(char *arg, pid_t pid)
 	}
 }
 
+/**
+	 @brief Entry function to check if path contains sym links.
+	 @param path Path that needs to be checked.
+	 @param arg argument passed by user, necessary in case of failure for error msg
+	 @param pid Process id in case the check is called in pipes.
+	 @return 1 on symllink, 0 on normal directory and -1 on non-directories.
+ */
 int	ft_check_symlink(char *path, char *arg, pid_t pid)
 {
 	struct stat	*buf;

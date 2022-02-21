@@ -56,7 +56,7 @@ static t_builtin_content	*ft_init_builtin_content(char *cmd, \
 }
 
 /**
-	@brief Builds linked list with all buildins.
+	@brief Builds linked list with all builtins.
 	@return None.
 */
 void	ft_init_builtins(void)
@@ -113,7 +113,6 @@ void	ft_envlist_cpy(char **envp)
 
 /**
 	 @brief Handling unexistent PWD in copied list.
-	 @param envp Original environmental variables list.
 	 @return None.
 	 @exception As per start of a shell PWD is always existent,
 	 			even if unset in parent shell
