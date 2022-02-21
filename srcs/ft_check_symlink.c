@@ -3,23 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   ft_check_symlink.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dbanfi <dbanfi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mamuller <mamuller@student.42wolfsburg>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 15:12:48 by dbanfi            #+#    #+#             */
-/*   Updated: 2022/02/21 17:46:22 by dbanfi           ###   ########.fr       */
+/*   Updated: 2022/02/21 18:11:06 by mamuller         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incl/minishell.h"
 
-static int	ft_next_sub_dir(struct stat *buf, char **path_substr)
+static void	ft_next_sub_dir(struct stat **buf, char **path_substr)
 {
 	char	*str_ptr;
 	char	*path_substr_free;
-
 	path_substr_free = NULL;
 	str_ptr = NULL;
-	ft_smart_free((void **)&buf);
+	ft_smart_free((void **)buf);
 	str_ptr = NULL;
 	str_ptr = ft_strrchr(*path_substr, '/');
 	if (str_ptr != NULL)
@@ -55,7 +54,6 @@ int	ft_check_symlink(char *path, char *arg, pid_t pid)
 {
 	struct stat	*buf;
 	char		*path_substr;
-
 	path_substr = ft_strdup(path);
 	while (path_substr != NULL)
 	{
@@ -72,7 +70,7 @@ int	ft_check_symlink(char *path, char *arg, pid_t pid)
 			return (SYMLINK);
 		}
 		else
-			ft_next_sub_dir(buf, &path_substr);
+			ft_next_sub_dir(&buf, &path_substr);
 	}
 	ft_full_free(buf, path_substr);
 	return (NOT_SYMLINK);
