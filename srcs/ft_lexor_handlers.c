@@ -58,7 +58,6 @@ int	ft_lex_single_quote_handler(char **current_str, char *args, int begining, in
 	flag = q_handler(&(args[i + 1]), current_str, FT_SINGLE_QUOTE);
 	if (flag == -1)
 	{
-		errorfun();
 		free(*current_str);
 		*current_str = NULL;
 		printf("minishe11: Unfinished single quote\n");
@@ -88,7 +87,6 @@ int ft_lex_double_quote_handler(char **current_str, char *args, int begining, in
 	flag = q_handler(&(args[i + 1]), current_str, FT_DOUBLE_QUOTE);
 	if (flag == -1)
 	{
-		errorfun();
 		free(*current_str);
 		*current_str = NULL;
 		printf("minishe11: Unfinished double quote\n");

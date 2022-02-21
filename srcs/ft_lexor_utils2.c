@@ -1,26 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_lexor_utils2.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mamuller <mamuller@student.42wolfsburg>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/21 21:17:43 by mamuller          #+#    #+#             */
+/*   Updated: 2022/02/21 21:17:48 by mamuller         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../incl/minishell.h"
-
-/*
-**	@brief Generic function for freeing linked lists
-**	@param t_list **list . Function used for cleaning the linked lists and its content.
-**	@return /
-**	@todo /
-*/
-
-void	ft_free_list(t_list *head)
-{
-	t_list	*tmp;
-
-	while (head != NULL)
-	{
-		tmp = head;
-		head = head->next;
-		free(((t_word *)(tmp->content))->address);
-		free(tmp->content);
-		free(tmp);
-		tmp = NULL;
-	}
-}
 
 /*
 **	@brief Adding Special Characters to a linked list
@@ -28,7 +18,6 @@ void	ft_free_list(t_list *head)
 **	@return /
 **	@todo /
 */
-
 void	add_specialchar_string(t_list **list, char *str)
 {
 	t_word	*word;
@@ -42,28 +31,23 @@ void	add_specialchar_string(t_list **list, char *str)
 }
 
 /*
-**	@brief Function used for handling single and double quotes from the read_line input
-**	@param char *str, char **current_str, char q_char. q_char variable represents Single or Double Quote
-**	@return on success command returns positive integer, on failuler it returns -1.
+**	@brief Function used for handling single and double quotes
+	from the read_line input
+**	@param char *str, char **current_str, char q_char. q_char variable 
+	represents Single or Double Quote
+**	@return on success command returns positive integer, 
+	on failuler it returns -1.
 **	@todo /
 */
-
 int	q_handler(char *str, char **current_str, char q_char)
 {
 	int	i;
 
 	i = 0;
-	// if (str[i] != '\0')
-	// {
-	// 	free(current_str);
-	// }
-
 	while (str[i] != '\0')
 	{
 		if (str[i] == q_char)
 		{
-			if (FT_LEXOR_COMMENT)
-				printf("at 6-> begin: %d, i:%d, args: %s\n", 0, i , str);
 			*current_str = join2current_str(*current_str, ft_substr(str, 0, i));
 			return (i);
 		}
@@ -72,15 +56,45 @@ int	q_handler(char *str, char **current_str, char q_char)
 	return (-1);
 }
 
-/*
-**	@brief Function implemented on possible error places.
-**	@param /
-**	@return /
-**	@todo Include this function for error handling in lexor.
-*/
-
-void	errorfun(void)
+static void	ft_quote_counter(char c, int *s_quote_flag, int *d_quote_flag)
 {
-	//to be implemented
-	;
+	if (c == FT_SINGLE_QUOTE)
+		(*s_quote_flag)++;
+	if (c == FT_DOUBLE_QUOTE)
+		(*d_quote_flag)++;
+}
+
+/*
+**	@brief Function used for comment check from standard input
+**	@param char **args. If args containes # everything afterwards is being removed
+**	@return No Return Value.
+**	@todo /
+*/
+void	ft_comment_check(char **args)
+{
+	int		i;
+	int		s_quote_flag;
+	int		d_quote_flag;
+	char	*temp;
+
+	i = 0;
+	s_quote_flag = 0;
+	d_quote_flag = 0;
+	while ((*args)[i])
+	{
+		ft_quote_counter((*args)[i], &s_quote_flag, &d_quote_flag);
+		if ((*args)[i] == FT_HASHTAG)
+		{
+			if (i == 0)
+				break ;
+			if (s_quote_flag % 2 == 0 && d_quote_flag % 2 == 0)
+				if ((*args)[i - 1] == FT_SPACE || (*args)[i - 1] == FT_PIPE \
+				|| (*args)[i - 1] == FT_LESSER || (*args)[i - 1] == FT_GREATER)
+					break ;
+		}
+		i++;
+	}
+	temp = ft_substr(*args, 0, i);
+	free(*args);
+	*args = temp;
 }
