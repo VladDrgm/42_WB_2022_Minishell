@@ -29,5 +29,5 @@ void free_global(void)
 	if (g_access.dp)
 		free(g_access.dp);
 	g_access.dp = NULL;
-	rl_clear_history();
+	// rl_clear_history();
 }
