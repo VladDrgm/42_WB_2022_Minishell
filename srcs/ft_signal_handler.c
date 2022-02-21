@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_signal_handler.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzivanov <dzivanov@student.42wolfsburg.de> +#+  +:+       +#+        */
+/*   By: vdragomi <vdragomi@42student.wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 11:54:27 by dzivanov          #+#    #+#             */
-/*   Updated: 2022/02/21 11:56:45 by dzivanov         ###   ########.fr       */
+/*   Updated: 2022/02/21 13:26:22 by vdragomi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	ft_sigint_handler(int sig)
 	{
 		printf("\b\b    ");
 		printf("\n");
-		rl_replace_line("", 0);
+		// rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
 	}
@@ -38,7 +38,7 @@ void	ft_sigquit_handler(int sig)
 	if (sig == SIGQUIT && g_access.inter == 1)
 	{
 		write(1, "\b\b  \b\b", 6);
-		rl_redisplay();
+		// rl_redisplay();
 	}
 }
 

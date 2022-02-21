@@ -34,7 +34,11 @@ void ft_get_PATH(void)
 		if (ft_strlen(path) != 0)
 			path = ft_strjoin_with_dfree(temp, ft_strjoin_with_scnd_free(":", path));
 		else
+		{
 			path = ft_strdup(temp);
+			if (temp != NULL)
+				free(temp);
+		}
 		s = get_next_line(fd);
 	}
 	close(fd);

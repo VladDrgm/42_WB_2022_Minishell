@@ -72,7 +72,7 @@ int ft_exit_error_handler(char *str1, char *str2, char *str3, int exit_value)
 	exit (exit_value);
 }
 
-void ft_child_exit(int exit_value)
+void ft_exit(int exit_value)
 {
 	free_global();
 	close(STDERR_FILENO);
