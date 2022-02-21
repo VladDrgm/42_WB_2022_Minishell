@@ -28,7 +28,10 @@ int	main(int argc, char **argv, char**envp)
 		g_access.read_line2lexor = readline(CRED "minishe11 1.0> " RESET);
 		g_access.inter = 0;
 		if (g_access.read_line2lexor == NULL) //dealing with EOF (Ctrl + D)
+		{
+			write(1, "\b\bexit\n", 7);
 			break;
+		}
 		if (*(g_access.read_line2lexor) == 0) //dealing with Enter (empty input)
 			continue;
 		add_history(g_access.read_line2lexor);
@@ -57,6 +60,7 @@ int	main(int argc, char **argv, char**envp)
 			continue;
 	}
 	// printf("before segfault5\n");
+	temp = ft_atoi(g_access.last_return);
 	free_global();
-	return (0);
+	exit (temp);
 }

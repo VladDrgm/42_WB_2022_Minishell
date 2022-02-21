@@ -117,9 +117,6 @@ void	ft_signal_setup(void);
 int		lexor(void);
 int		parser(void);
 int		executor(char **envp);
-void	ft_initiator(char **envp, char *executable);
-void	ft_init_builtins(void);
-t_builtin_content	*ft_init_builtin_content(char *cmd, int (*minishell_fct)(char **args, pid_t pid), int i);
 int		minishell_cd(char **args, pid_t pid);
 int		minishell_env(char **args, pid_t pid);
 int		minishell_echo(char **args, pid_t pid);
@@ -130,9 +127,9 @@ int 	minishell_unset(char **args, pid_t pid);
 int		minishell_execute(void);
 int		minishell_launch(char **args);
 //INIT UTILS
-void	ft_get_home(void);
-void	prerror(char *msg);
-void	ft_update_shell_env(char *executable);
+//void	ft_get_home(void);
+//void	prerror(char *msg);
+
 int 	ft_check_symlink(char *path, char *arg, pid_t pid);
 // BUILTIN UTILS
 void	ft_update_env(char *to_search, char *to_replace); //check if value finder finds insider env and if not, create a new one; env should not create duplicate env variables;
@@ -189,6 +186,7 @@ int		ft_free_linked_list(t_list **lst, int type, int full);
 void	ft_set_global_pwd(char **env);
 int		ft_count_arguments(t_list *cmd_list);
 int		ft_execve(char **args, pid_t pid);
+void 	ft_smart_free(void **ptr);
 //GNL
 int		get_next_line_prev(int fd, char **line);
 char	*get_next_line(int fd);
@@ -200,9 +198,14 @@ char	*ft_strchr_gnl(const char *s, int c);
 char	*ft_strjoin_gnl(char *s1, char *s2, int j);
 size_t	ft_strlen_gnl(char *s);
 
-//ft_get_path_linux.c
-void	ft_get_PATH(void);
+/*INITIATOR*/
 
+void	ft_check_path_env(void);
+void	ft_check_pwd_env(void);
+void	ft_envlist_cpy(char **envp);
+void	ft_init_builtins(void);
+void	ft_update_shell_env(char *executable);
+void	ft_initiator(char **envp, char *executable);
 
 //pipex
 
