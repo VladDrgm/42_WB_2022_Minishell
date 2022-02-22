@@ -12,6 +12,15 @@
 
 #include "../incl/minishell.h"
 
+/**
+	 @brief Checks for single and double quotes.
+	 @param current_str Pointer to substring of users input that is 
+	 		analyzed in this call.
+	 @param args String of users input.
+	 @param strt Pointer to starting index of the current string.
+	 @param i Pointer to current character.
+	 @return None.
+ */
 static int	ft_check_qu(char **current_str, char *args, int *begining, int *i)
 {
 	int	flag;
@@ -36,6 +45,15 @@ static int	ft_check_qu(char **current_str, char *args, int *begining, int *i)
 	return (flag);
 }
 
+/**
+	 @brief Checks for special character in a string like space, >, < and |.
+	 @param current_str Pointer to substring of users input that is 
+	 		analyzed in this call.
+	 @param args String of users input.
+	 @param strt Pointer to starting index of the current string.
+	 @param i Pointer to current character.
+	 @return None.
+ */
 static void	ft_check_sp_char(char **current_str, char *args, int *strt, int *i)
 {
 	char	last;
@@ -63,6 +81,11 @@ static void	ft_check_sp_char(char **current_str, char *args, int *strt, int *i)
 	}
 }
 
+/**
+	 @brief Checks if input contains only spaces.
+	 @param flag Pointer to error flag sets error flag in calling function.
+	 @return None.
+ */
 static void	ft_check_empty_input(int *flag)
 {
 	if (ft_lstsize(g_access.lexor2parser) == 0 && *flag == 0)
@@ -72,6 +95,13 @@ static void	ft_check_empty_input(int *flag)
 	}
 }
 
+/**
+	 @brief Processing string readline to lexor into a linked list
+	 		to be used by parser.
+	 @return Error flag. -1 on error else 0.
+	 @exception Removes comments.
+	 @exception Handles env variables ($).
+ */
 int	lexor(void)
 {
 	int		i;

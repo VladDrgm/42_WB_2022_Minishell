@@ -1,19 +1,30 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_env_check.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mamuller <mamuller@student.42wolfsburg>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/22 12:24:09 by mamuller          #+#    #+#             */
+/*   Updated: 2022/02/22 12:24:09 by mamuller         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../incl/minishell.h"
 
-char *ft_getenv(char *str)
+/**
+	 @brief Loops through the env list and searches for the respective value
+	 		to given env name.
+	 @param str Name of the env variabel to search for.
+	 @return The respective env value or if not found NULL .
+	 @exception For empty PWD global variables are used as return value.
+ */
+static char	*ft_env_lst_search(char *str, int search_len)
 {
-	int	search_len;
-	t_env_var *temp_env;
-	t_list *temp;
+	t_env_var	*temp_env;
+	t_list		*temp;
 
-	search_len = ft_strlen(str);
-	if (str[0] == '?' && search_len == 1)
-	{
-		return g_access.last_return;
-	}
 	temp = g_access.env;
-	if (!str)
-		return "NOINPUT";
 	while (temp)
 	{
 		temp_env = (t_env_var *)(temp->content);
@@ -21,7 +32,8 @@ char *ft_getenv(char *str)
 		{
 			if (!(ft_strncmp(str, temp_env->name, search_len)))
 			{
-				if (!(ft_strncmp(temp_env->name, "PWD=", ft_strlen(temp_env->name))) && g_access.dp != NULL)
+				if (!(ft_strncmp(temp_env->name, "PWD=", \
+					ft_strlen(temp_env->name))) && g_access.dp != NULL)
 				{
 					if (*(temp_env->value) != '\0')
 						return (g_access.dp);
@@ -32,6 +44,29 @@ char *ft_getenv(char *str)
 		}
 		temp = temp->next;
 	}
+	return (NULL);
+}
+
+/**
+	 @brief Gets the env value depending on the given str (env key).
+	 @param str Name of the env variabel to search for.
+	 @return None.
+	 @exception $? returns the global variable for the last exit value.
+	 @exception For unset PWD global variables are used as return value.
+ */
+static char	*ft_getenv(char *str)
+{
+	int		search_len;
+	char	*return_str;
+
+	if (!str)
+		return ("");
+	search_len = ft_strlen(str);
+	if (str[0] == '?' && search_len == 1)
+		return (g_access.last_return);
+	return_str = ft_env_lst_search(str, search_len);
+	if (return_str != NULL)
+		return (return_str);
 	if (!ft_strncmp(str, "PWD", ft_strlen(str)) && g_access.pwd != NULL)
 	{
 		if (g_access.dp != NULL)
@@ -39,45 +74,84 @@ char *ft_getenv(char *str)
 		else
 			return (g_access.pwd);
 	}
-	return "";
+	return ("");
 }
 
-char	*env_var_formater(char *env_var)
+/**
+	 @brief Replaces the user input env var ($) wit the respective value 
+	 	of the env var.
+	 @param args Pointer to a string of users input.
+	 @param i Index of the start point of the variable name.
+	 @param j Index of the end point of the variable name.
+	 @return None.
+ */
+static void	ft_env_replace(char **args, int i, int j)
 {
-	char	**split_list;
-	char	*out;
-	int		i;
+	char	*temp1;
+	char	*temp0;
 
-	split_list = ft_split(env_var, FT_SPACE);
-	i = 0;
-	out = NULL;
-	while (split_list[i])
+	temp1 = ft_substr(*args, i + 1, j - i - 1);
+	temp0 = ft_getenv(temp1);
+	ft_smart_free((void **)&temp1);
+	(*args)[i] = '\0';
+	temp1 = ft_strjoin(*args, temp0);
+	temp0 = ft_strjoin(temp1, &((*args)[j]));
+	i = ft_strlen(temp1);
+	ft_smart_free((void **)args);
+	*args = temp0;
+	ft_smart_free((void **)&temp1);
+}
+
+/**
+	 @brief Finds env var names in string and calls fuction to replace them.
+	 @param s Pointer to a string of users input.
+	 @param s_quote_flag Amount of single quotes before current call.
+	 @param i Pointer to index of the start point of the variable name.
+	 @param j Pointer to index of the end point of the variable name.
+	 @return 1 on found env var name else 0.
+	 @exception Doesn't look in single quote surronded strings (as they are not 
+	 	transformed).
+ */
+static int	ft_env_finder(char **s, int s_quote_flag, int *i, int *j)
+{
+	if (s_quote_flag % 2 == 0)
 	{
-		out = join2current_str(out, split_list[i]);
-		if (!(split_list[i + 1] == NULL))
-			out = join2current_str(out, ft_strdup(" "));
-		i++;
+		*j = *i + 1;
+		while (ft_isalnum((*s)[*j]) || (*s)[*j] == FT_UNDERSCORE)
+		{
+			(*j)++;
+			if (ft_isdigit((*s)[*j - 1]))
+				break ;
+		}
+		if (*j == *i + 1)
+		{
+			if ((*s)[*j] == '*' || (*s)[*j] == '@' || (*s)[*j] == '#' || \
+				(*s)[*j] == '?' || (*s)[*j] == '-' || (*s)[*j] == '$' || \
+				(*s)[*j] == '!')
+				(*j)++;
+			else
+			{
+				(*i)++;
+				return (0);
+			}
+		}
+		ft_env_replace(s, *i, *j);
+		(*i)--;
 	}
-	free(split_list);
-	if (out == NULL)
-		out = (char *) ft_calloc(sizeof(char), 1);
-	return out;
+	return (1);
 }
 
-/*
-**	env variables can be alphanumberic characters, it can be underscore,
-**	equal  sign can be inside the value, but cant be inside the name
-*/
-
-void ft_env_check(char **args)
+/**
+	 @brief Checks and replaces string on env variables input ($) if needed.
+	 @param args Pointer to a string of users input.
+	 @return None.
+ */
+void	ft_env_check(char **args)
 {
-	int i;
-	int j;
-	int s_quote_flag;
-	int d_quote_flag;
-	char *temp1;
-	char *temp0;
-	//char *temp2;
+	int	i;
+	int	j;
+	int	s_quote_flag;
+	int	d_quote_flag;
 
 	i = 0;
 	j = 0;
@@ -92,43 +166,8 @@ void ft_env_check(char **args)
 			if (s_quote_flag % 2 == 0)
 				d_quote_flag++;
 		if ((*args)[i] == FT_DOLLAR_SIGN)
-		{
-			if (s_quote_flag % 2 == 0)
-			{
-				j = i + 1;
-				while (ft_isalnum((*args)[j]) || (*args)[j] == FT_UNDERSCORE)
-				{
-					j++;
-					if (ft_isdigit((*args)[j - 1]))
-						break;
-				}
-				if (j == i + 1)
-				{
-					if ((*args)[j] == '*' || (*args)[j] == '@' || (*args)[j] == '#' ||
-					 	(*args)[j] == '?' || (*args)[j] == '-' || (*args)[j] == '$' ||
-						(*args)[j] == '!')
-						j++;
-					else
-					{
-						i++;
-						continue;
-					}
-				}
-				temp1 = ft_substr(*args, i + 1, j - i - 1);
-				temp0 = ft_getenv(temp1);
-				ft_smart_free((void **)&temp1);
-				temp0 = env_var_formater(temp0);
-				(*args)[i] = '\0';
-				temp1 = ft_strjoin(*args, temp0);
-				ft_smart_free((void **)&temp0);
-				temp0 = ft_strjoin(temp1, &((*args)[j]));
-				i = ft_strlen(temp1);
-				ft_smart_free((void **)args);
-				*args = temp0;
-				ft_smart_free((void **)&temp1);
-				i--;
-			}
-		}
+			if (ft_env_finder(args, s_quote_flag, &i, &j) == 0)
+				continue ;
 		i++;
 	}
 }

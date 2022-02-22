@@ -6,17 +6,19 @@
 /*   By: mamuller <mamuller@student.42wolfsburg>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 21:17:43 by mamuller          #+#    #+#             */
-/*   Updated: 2022/02/21 21:17:48 by mamuller         ###   ########.fr       */
+/*   Updated: 2022/02/22 11:05:21 by mamuller         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incl/minishell.h"
 
-/*
-**	@brief Adding Special Characters to a linked list
-**	@param t_list **list, char c.
-**	@return /
-**	@todo /
+/**
+	@brief Adds new node with input string and special char string type to 
+			lexor2parser linked list.
+	@param list Linked list to be expanded.
+	@param str String to be added to the content of a liked
+			list node.
+	@return None.
 */
 void	add_specialchar_string(t_list **list, char *str)
 {
@@ -30,14 +32,15 @@ void	add_specialchar_string(t_list **list, char *str)
 	ft_lstadd_back(list, new_el);
 }
 
-/*
-**	@brief Function used for handling single and double quotes
-	from the read_line input
-**	@param char *str, char **current_str, char q_char. q_char variable 
-	represents Single or Double Quote
-**	@return on success command returns positive integer, 
-	on failuler it returns -1.
-**	@todo /
+/**
+	@brief Handles adding characters to current string in case of 
+			opened single or double quote.
+	@param str String from the starting of the opening quote.
+			Doesnt contain opening quote.
+	@param current_str Pointer to substring of users input that is 
+	 		analyzed in this call.
+	@param q_char Type of quote character (single or double).
+	@return On success number of added characters -1 else -1.
 */
 int	q_handler(char *str, char **current_str, char q_char)
 {
@@ -56,6 +59,14 @@ int	q_handler(char *str, char **current_str, char q_char)
 	return (-1);
 }
 
+/**
+	@brief Checks if char is quote and increases the counter values
+		of calling function.
+	@param c Character to be checked.
+	@param s_quote_flag Pointer to a counter for single quotes.
+	@param d_quote_flag Pointer to a counter for double quotes.
+	@return None.
+*/
 static void	ft_quote_counter(char c, int *s_quote_flag, int *d_quote_flag)
 {
 	if (c == FT_SINGLE_QUOTE)
@@ -64,11 +75,11 @@ static void	ft_quote_counter(char c, int *s_quote_flag, int *d_quote_flag)
 		(*d_quote_flag)++;
 }
 
-/*
-**	@brief Function used for comment check from standard input
-**	@param char **args. If args containes # everything afterwards is being removed
-**	@return No Return Value.
-**	@todo /
+/**
+	@brief Checks for comments (#) in user input and removes them 
+		by changing input string.
+	@param args Pointer to a string to be checked for comments.
+	@return None.
 */
 void	ft_comment_check(char **args)
 {
