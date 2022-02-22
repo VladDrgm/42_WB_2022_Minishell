@@ -123,7 +123,7 @@ static int	ft_error_handler(t_list **parser_list, t_list **lexor_list, char *msg
 }
 
 
-static void ft_string_handler(t_list *lex_element, char	***cmd_line, int *cmd_len)
+static void ft_normal_char_string_handler(t_list *lex_element, char	***cmd_line, int *cmd_len)
 {
 	char *str;
 
@@ -226,6 +226,59 @@ static int	ft_pipe_handler(t_list **lex_element, int *return_flag, int cmd_len)
 	return (-1) ;
 }
 
+static int	ft_special_char_string_handler(t_list **lex_element, int *return_flag, int cmd_len, int index_counter)
+{
+	if (is_redirect(((t_word *)((*lex_element)->content))->address))
+	{
+		if (ft_redirection_handler(lex_element, return_flag, index_counter) == -1)
+			return (1);
+	}
+	else if (is_pipe(((t_word *)((*lex_element)->content))->address))
+	{
+		if (ft_pipe_handler(lex_element, return_flag, cmd_len) == -1)
+			return (1);
+	}
+	else
+	{
+		*return_flag = ft_error_handler(&(g_access.parser2exec), &(g_access.lexor2parser), "minishell: syntax error near unexpected token'\n");
+		return (1);
+	}
+	return (0);
+}
+
+static int	ft_string_handler(t_list **lex_element, char ***cmd_line, int *cmd_len, int index_counter)
+{
+	int	return_flag;
+
+	return_flag = 0;
+	if (((t_word *)((*lex_element)->content))->type == FT_SPECIAL_CHAR_STRING)
+	{
+		if (ft_special_char_string_handler(lex_element, &return_flag, *cmd_len, index_counter))
+			return (return_flag) ;
+	}
+	else if (((t_word *)((*lex_element)->content))->type == FT_STRING)
+		ft_normal_char_string_handler(*lex_element, cmd_line, cmd_len);
+	if (*cmd_len > PARSER_TABLE_LEN_LIMIT)
+	{
+		return_flag = ft_error_handler(&(g_access.parser2exec), &(g_access.lexor2parser), "minishell: argument overflow\n");
+		return (return_flag) ;
+	}
+	return (return_flag);
+}
+
+static void	ft_add_command_handler(int cmd_len, char **cmd_line, int *index_counter, int *return_flag)
+{
+	if (*return_flag == 0)
+		{
+			ft_add_command(cmd_len, cmd_line, *index_counter);
+			(*index_counter)++;
+			if (*index_counter > PIPE_LIMIT)
+				*return_flag = ft_error_handler(&(g_access.parser2exec), &(g_access.lexor2parser), "minishell: pipe limit reached\n");
+		}
+		else
+			ft_free_split(cmd_line);
+}
+
 int	parser(void)
 {
 	int		index_counter;
@@ -243,43 +296,11 @@ int	parser(void)
 		cmd_len = 0;
 		while (return_flag == 0 && lex_element != NULL)
 		{
-			if (((t_word *)(lex_element->content))->type == FT_SPECIAL_CHAR_STRING)
-			{
-				if (is_redirect(((t_word *)(lex_element->content))->address))
-				{
-					if (ft_redirection_handler(&lex_element, &return_flag, index_counter) == -1)
-						break ;
-				}
-				else  if (is_pipe(((t_word *)(lex_element->content))->address))
-				{
-					if (ft_pipe_handler(&lex_element, &return_flag, cmd_len) == -1)
-						break ;
-				}
-				else
-				{
-					return_flag = ft_error_handler(&(g_access.parser2exec), &(g_access.lexor2parser), "minishell: syntax error near unexpected token'\n");
-					break ;
-				}
-			}
-			else if (((t_word *)(lex_element->content))->type == FT_STRING)
-				ft_string_handler(lex_element, &cmd_line, &cmd_len);
-			if (cmd_len > PARSER_TABLE_LEN_LIMIT)
-			{
-				return_flag = ft_error_handler(&(g_access.parser2exec), &(g_access.lexor2parser), "minishell: argument overflow\n");
-				break;
-			}
+			ft_string_handler(&lex_element, &cmd_line, &cmd_len, index_counter);
 			lex_element = lex_element->next;
 		}
 		cmd_line = add_to_line(cmd_line, NULL, &cmd_len);
-		if (return_flag == 0)
-		{
-			ft_add_command(cmd_len, cmd_line, index_counter);
-			index_counter++;
-			if (index_counter > PIPE_LIMIT)
-				return_flag = ft_error_handler(&(g_access.parser2exec), &(g_access.lexor2parser), "minishell: pipe limit reached\n");
-		}
-		else
-			ft_free_split(cmd_line);
+		ft_add_command_handler(cmd_len, cmd_line, &index_counter, &return_flag);
 	}
 	if (return_flag == 0)
 		ft_free_linked_list(&(g_access.lexor2parser),FT_LIST_TYPE_WORD, 1);
