@@ -47,7 +47,7 @@ void	print_list_parse(t_list *el)
 **  @brief Free linked list of with t_command in content
 **  @param input: t_list pointer to first element in linked list
 */
-void	ft_free_parser(void *parser)
+/* void	ft_free_parser(void *parser)
 {
 	int i;
 	t_command *cmd;
@@ -63,4 +63,4 @@ void	ft_free_parser(void *parser)
 		free(cmd->path);
 	free(cmd->comm_table);
 	free(parser);
-}
+} */

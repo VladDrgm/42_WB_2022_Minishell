@@ -177,10 +177,8 @@ void	ft_lex_space_handler(char **current_str, char *args, int i, int begining);
 int		is_space(char ch);
 int		is_special_char(char ch);
 void	ft_comment_check(char **args);
-// LEXOR UTILS
-void	ft_free_parser(void *parser);
+//PARSER
 void	print_list_parse(t_list *el);
-char	*join2current_str(char *current_str, char *add_on);
 // UTILS
 int		ft_strcmp(char *s1, char *s2);
 void	ft_free_split(char **split);
