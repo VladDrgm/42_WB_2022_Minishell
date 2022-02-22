@@ -166,15 +166,17 @@ void	print_element(void *input);
 void	print_list(t_list *el);
 void	add_string(t_list **list, char	*str);
 int		is_special_char(char ch);
-
+void	ft_env_check(char **args);
 void	add_specialchar_string(t_list **list, char *str);
 int		q_handler(char *str, char **current_str, char q_char);
-void	errorfun(void);
 void	ft_lex_string_reminder_handler(char **current_str, char *args, int begining, int i);
 int		ft_lex_double_quote_handler(char **current_str, char *args, int begining, int i);
 int		ft_lex_single_quote_handler(char **current_str, char *args, int begining, int i);
 void	ft_lex_operand_handler(char **current_str, char *args, int begining, int i);
 void	ft_lex_space_handler(char **current_str, char *args, int i, int begining);
+int		is_space(char ch);
+int		is_special_char(char ch);
+void	ft_comment_check(char **args);
 // LEXOR UTILS
 void	ft_free_parser(void *parser);
 void	print_list_parse(t_list *el);
@@ -222,10 +224,6 @@ void	print_list_parse(t_list *el); //rm?
 /*exit_handler.c*/
 void	ft_close_fd(void);
 void	ft_free_split(char **split);
-// void	ft_free_list(t_list *head);
-void	ft_exit_on_error(t_list **cmd_list, char *error_msg);
-void	ft_exit_on_invalid_cmd(char **path_list, t_list **cmd_list, \
-		t_content *content, t_list *elem);
 
 /*helper.c*/
 void	ft_make_cmd_list(char **argv, char **envp, int argc, t_list **cmd_list);

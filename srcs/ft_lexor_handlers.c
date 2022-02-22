@@ -1,64 +1,76 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_lexor_handlers.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mamuller <mamuller@student.42wolfsburg>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/22 11:10:40 by mamuller          #+#    #+#             */
+/*   Updated: 2022/02/22 11:33:04 by mamuller         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../incl/minishell.h"
 
-/*
-**	@brief Function used for handling space cgaracters from standard input
-**	@param char **current_str, char *args, int i, int begining.
-**	@return No Return Value
-**	@todo /
-*/
-
-void ft_lex_space_handler(char **current_str, char *args, int begining, int i)
+/**
+	 @brief Handling of substring.
+	 @param current_str Pointer to substring of users input that is 
+	 		analyzed in this call.
+	 @param args String of users input.
+	 @param begining Start index of the current string.
+	 @param i End index of the current string.
+	 @return None.
+ */
+void	ft_lex_space_handler(char **current_str, char *args, \
+	int begining, int i)
 {
-	if (FT_LEXOR_COMMENT)
-		printf("at 1-> begin: %d, i:%d, args: %s\n", begining, i , args);
-	*current_str = join2current_str(*current_str, ft_substr(args, begining, i - begining));
+	*current_str = join2current_str(*current_str, \
+		ft_substr(args, begining, i - begining));
 	if (ft_strlen(*current_str))
 		add_string(&(g_access.lexor2parser), *current_str);
-	free(*current_str);
-	*current_str = NULL;
-	free(*current_str);
-	*current_str = NULL;
+	ft_smart_free((void **)current_str);
 }
 
-/*
-**	@brief Function used for handling operands like pipe, less or greater than,
-**	@param char **current_str, char *args, int i, int begining.
-**	@return No Return Value
-**	@todo /
-*/
-
-void	ft_lex_operand_handler(char **current_str, char *args, int begining, int i)
+/**
+	 @brief Handling of substring of special characters like |, >, and <.
+	 @param current_str Pointer to substring of users input that is 
+	 		analyzed in this call.
+	 @param args String of users input.
+	 @param begining Start index of the current string.
+	 @param i End index of the current string.
+	 @return None.
+ */
+void	ft_lex_operand_handler(char **current_str, char *args, \
+	int begining, int i)
 {
-	if (FT_LEXOR_COMMENT)
-		printf("at 1-> begin: %d, i:%d, args: %s\n", begining, i , args);
-	*current_str = join2current_str(*current_str, ft_substr(args, begining, i - begining));
+	*current_str = join2current_str(*current_str, \
+		ft_substr(args, begining, i - begining));
 	if (ft_strlen(*current_str))
 		add_specialchar_string(&(g_access.lexor2parser), *current_str);
-	free(*current_str);
-	*current_str = NULL;
-	free(*current_str);
-	*current_str = NULL;
+	ft_smart_free((void **)current_str);
 }
 
-/*
-**	@brief Function used for handling single quotes,
-**	@param char **current_str, char *args, int i, int begining.
-**	@return Return value is integer
-**	@todo /
-*/
-
-int	ft_lex_single_quote_handler(char **current_str, char *args, int begining, int i)
+/**
+	 @brief Handles single quotes by joining substring to current string,
+	 		calling respective quote handler and handling resulting errors.
+	 @param current_str Pointer to substring of users input that is 
+	 		analyzed in this call.
+	 @param args String of users input.
+	 @param begining Start index of the current string.
+	 @param i End index of the current string.
+	 @return On success number of added characters -1 else -1.
+ */
+int	ft_lex_single_quote_handler(char **current_str, char *args, \
+	int begining, int i)
 {
-	int flag;
+	int	flag;
 
 	flag = 0;
-	if (FT_LEXOR_COMMENT)
-		printf("at 3-> begin: %d, i:%d, args: %s\n", begining, i , args);
-	*current_str = join2current_str(*current_str, ft_substr(args, begining, i - begining));
+	*current_str = join2current_str(*current_str, \
+		ft_substr(args, begining, i - begining));
 	flag = q_handler(&(args[i + 1]), current_str, FT_SINGLE_QUOTE);
 	if (flag == -1)
 	{
-		errorfun();
 		free(*current_str);
 		*current_str = NULL;
 		printf("minishe11: Unfinished single quote\n");
@@ -67,28 +79,30 @@ int	ft_lex_single_quote_handler(char **current_str, char *args, int begining, in
 		g_access.last_return = ft_itoa(3);
 		return (flag);
 	}
-	return flag;
+	return (flag);
 }
 
-/*
-**	@brief Function used for handling double quotes,
-**	@param char **current_str, char *args, int i, int begining.
-**	@return Return value is integer
-**	@todo /
-*/
-
-int ft_lex_double_quote_handler(char **current_str, char *args, int begining, int i)
+/**
+	 @brief Handles double quotes by joining substring to current string,
+	 		calling respective quote handler and handling resulting errors.
+	 @param current_str Pointer to substring of users input that is 
+	 		analyzed in this call.
+	 @param args String of users input.
+	 @param begining Start index of the current string.
+	 @param i End index of the current string.
+	 @return On success number of added characters -1 else -1.
+ */
+int	ft_lex_double_quote_handler(char **current_str, char *args, \
+	int begining, int i)
 {
-	int flag;
+	int	flag;
 
 	flag = 0;
-	if (FT_LEXOR_COMMENT)
-		printf("at 4-> begin: %d, i:%d, args: %s\n", begining, i , args);
-	*current_str = join2current_str(*current_str, ft_substr(args, begining, i - begining));
+	*current_str = join2current_str(*current_str, \
+		ft_substr(args, begining, i - begining));
 	flag = q_handler(&(args[i + 1]), current_str, FT_DOUBLE_QUOTE);
 	if (flag == -1)
 	{
-		errorfun();
 		free(*current_str);
 		*current_str = NULL;
 		printf("minishe11: Unfinished double quote\n");
@@ -100,19 +114,20 @@ int ft_lex_double_quote_handler(char **current_str, char *args, int begining, in
 	return (flag);
 }
 
-
-/*
-**	@brief Function used for handling rest of the string at the end of the input.,
-**	@param char **current_str, char *args, int i, int begining.
-**	@return No Return Value
-**	@todo /
-*/
-
-void ft_lex_string_reminder_handler(char **current_str, char *args, int begining, int i)
+/**
+	 @brief Handling rest of the string at the end of the input.
+	 @param current_str Pointer to substring of users input that is 
+	 		analyzed in this call.
+	 @param args String of users input.
+	 @param begining Start index of the current string.
+	 @param i End index of the current string.
+	 @return None.
+ */
+void	ft_lex_string_reminder_handler(char **current_str, char *args, \
+	int begining, int i)
 {
-	if (FT_LEXOR_COMMENT)
-		printf("at 5-> begin: %d, i:%d, args: %s\n", begining, i , args);
-	*current_str = join2current_str(*current_str, ft_substr(args, begining, i - begining));
+	*current_str = join2current_str(*current_str, \
+		ft_substr(args, begining, i - begining));
 	if (ft_strlen(*current_str))
 	{
 		if (is_special_char(args[begining]))
@@ -120,6 +135,5 @@ void ft_lex_string_reminder_handler(char **current_str, char *args, int begining
 		else
 			add_string(&(g_access.lexor2parser), *current_str);
 	}
-	free(*current_str);
-	*current_str = NULL;
+	ft_smart_free((void **)current_str);
 }

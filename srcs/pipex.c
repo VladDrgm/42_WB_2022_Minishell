@@ -119,7 +119,7 @@ void	ft_execute_child(t_list *cmd_list, char **envp, pid_t pid)
 
 	if (cmd->cmd_type == FT_CMD_TYPE_SYSTEM)
 		if (execve(cmd->path,cmd->comm_table, envp) == -1)
-			ft_exit_on_error(&cmd_list, "Command execution failed");
+			ft_exit_on_error2("Command execution failed");
 	if (cmd->cmd_type == FT_CMD_TYPE_BUILT_IN)
 	{
 		ft_execve(cmd->comm_table, pid);
@@ -160,7 +160,7 @@ int pipex(t_list *cmd_list, char** envp)
 			}
 			fd_docks[cmd->index] = (int *)malloc(sizeof(int) * 2);
 			if (pipe(fd_docks[cmd->index]) == -1)
-				ft_exit_on_error(&cmd_list, "Pipe creation failed");
+				ft_exit_on_error2("Pipe creation failed");
 			pid_t pid = fork();
 			if (!pid)
 				heredoc_child(fd_docks[cmd->index], fd_stream, cmd->comm_table[1], "> ");
@@ -170,17 +170,17 @@ int pipex(t_list *cmd_list, char** envp)
 		cmd_list_temp = cmd_list_temp->next;
 	}
 	if (pipe(fd_out) == -1)
-			ft_exit_on_error(&cmd_list, "Pipe creation failed in line 116");
+			ft_exit_on_error2("Pipe creation failed in line 116");
 	fd_in[1] = fd_out[1];
 	pidt = ft_calloc(last_index + 1, sizeof(int *)); //system function
 	while (cmd_list != NULL)
 	{
 		fd_in[0] = fd_out[0];
 		if (pipe(fd_out) == -1)
-			ft_exit_on_error(&cmd_list, "Pipe creation failed in line 124");
+			ft_exit_on_error2("Pipe creation failed in line 124");
 		pidt[i] = fork();
 		if (pidt[i] == -1)
-			ft_exit_on_error(&cmd_list, "Pipe creation failed in line 127");
+			ft_exit_on_error2("Pipe creation failed in line 127");
 		else if(pidt[i] == 0)
 		{
 			close(fd_out[0]);

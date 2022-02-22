@@ -12,6 +12,13 @@
 
 #include "../incl/minishell.h"
 
+/**
+	 @brief Initiates all necessary variables for running the minishell.
+	 @param envp Original environmental variables list.
+	 @param executable Name of the minishell executable.
+	 @return None.
+	 @exception Runtime linked lists are initialized to NULL.
+ */
 void	ft_initiator(char **envp, char *executable)
 {
 	g_access.signals = 0;
