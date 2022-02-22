@@ -40,7 +40,7 @@ int	main(int argc, char **argv, char**envp)
 		if (temp != -1)
 		{
 			//temp = parser(&lexer2parser_list, &parser2executor_list);
-			temp = parser();
+			temp = ft_parser();
 			if (temp == 2)
 			{
 				continue;
