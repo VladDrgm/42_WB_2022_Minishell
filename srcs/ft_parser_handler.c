@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parser_handler.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mamuller <mamuller@student.42wolfsburg>    +#+  +:+       +#+        */
+/*   By: dbanfi <dbanfi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 21:57:51 by mamuller          #+#    #+#             */
-/*   Updated: 2022/02/22 22:06:25 by mamuller         ###   ########.fr       */
+/*   Updated: 2022/02/23 10:21:53 by dbanfi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int	ft_string_handler(t_list **lex_element, \
 	{
 		if (ft_special_char_string_handler(lex_element, &return_flag, \
 			*cmd_len, index_counter))
-			return (return_flag);
+			return (return_flag + 1);
 	}
 	else if (((t_word *)((*lex_element)->content))->type == FT_STRING)
 		ft_normal_char_string_handler(*lex_element, cmd_line, cmd_len);

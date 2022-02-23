@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parser.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mamuller <mamuller@student.42wolfsburg>    +#+  +:+       +#+        */
+/*   By: dbanfi <dbanfi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 21:57:05 by mamuller          #+#    #+#             */
-/*   Updated: 2022/02/22 22:09:53 by mamuller         ###   ########.fr       */
+/*   Updated: 2022/02/23 10:25:39 by dbanfi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,6 +213,12 @@ static void	ft_parser_init(int *index, t_list **lex_element, int *return_flag)
 	*return_flag = 0;
 }
 
+static void	ft_parser_cmd_line_reset(int *cmd_len, char ***cmd_line)
+{
+	*cmd_len = 0;
+	*cmd_line = NULL;
+}
+
 int	ft_parser(void)
 {
 	int		index;
@@ -224,8 +230,7 @@ int	ft_parser(void)
 	ft_parser_init(&index, &lex_element, &return_flag);
 	while (return_flag == 0 && lex_element != NULL)
 	{
-		cmd_line = 0;
-		cmd_len = 0;
+		ft_parser_cmd_line_reset(&cmd_len, &cmd_line);
 		while (return_flag == 0 && lex_element != NULL)
 		{
 			return_flag = ft_string_handler(&lex_element, &cmd_line, \
@@ -234,10 +239,11 @@ int	ft_parser(void)
 				break ;
 			lex_element = lex_element->next;
 		}
+		if (return_flag == 1 || return_flag == 3)
+			return_flag--;
 		cmd_line = add_to_line(cmd_line, NULL, &cmd_len);
 		ft_add_main_cmd(cmd_len, cmd_line, &index, &return_flag);
 	}
-	if (return_flag == 0)
-		ft_free_linked_list(&(g_access.lexor2parser), FT_LIST_TYPE_WORD, 1);
+	ft_free_linked_list(&(g_access.lexor2parser), FT_LIST_TYPE_WORD, 1);
 	return (return_flag);
 }
