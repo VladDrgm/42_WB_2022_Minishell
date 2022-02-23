@@ -65,6 +65,12 @@
 # define PARSER_TABLE_LEN_LIMIT 1000
 # define PIPE_LIMIT 1000
 
+# define FT_ERROR_PARSER_PIPE_LIMIT "minishell: pipe limit reached\n"
+# define FT_ERROR_PARSER_ARG_OVERFLOW "minishell: argument overflow\n"
+# define FT_ERROR_PARSER_UNEX_TOKEN "minishell: syntax error near unexpected token'\n"
+# define FT_ERROR_PARSER_UNEX_TOKEN_PIPE "minishell: syntax error near unexpected token `|'\n"
+# define FT_ERROR_PARSER_UNEX_TOKEN_NL "minshell: syntax error near unexpected token `newline'\n"
+
 typedef struct s_word
 {
 	char	*address;
@@ -115,7 +121,7 @@ void    ft_free_split(char **split);
 void	free_global(void);
 void	ft_signal_setup(void);
 int		lexor(void);
-int		parser(void);
+int		ft_parser(void);
 int		executor(char **envp);
 int		minishell_cd(char **args, pid_t pid);
 int		minishell_env(char **args, pid_t pid);
@@ -177,10 +183,16 @@ void	ft_lex_space_handler(char **current_str, char *args, int i, int begining);
 int		is_space(char ch);
 int		is_special_char(char ch);
 void	ft_comment_check(char **args);
-// LEXOR UTILS
-void	ft_free_parser(void *parser);
+//PARSER
 void	print_list_parse(t_list *el);
-char	*join2current_str(char *current_str, char *add_on);
+int		ft_parser_string_handler(t_list **lex_element, char ***cmd_line, int *cmd_len, int index_counter);
+int		ft_parser_error_handler(t_list **parser_list, t_list **lexor_list, const char *msg);
+void	ft_add_command(int cmd_len, char **cmd_line, int index_counter);
+int		is_pipe(char *str);
+int		is_redirect(char *str);
+char	**add_to_line(char **line, char *new_str, int *line_len);
+int		path_finder(char *str, char **cmd_path);
+int		ft_command_check(char *str, char **cmd_path, int *cmd_type);
 // UTILS
 int		ft_strcmp(char *s1, char *s2);
 void	ft_free_split(char **split);

@@ -40,6 +40,8 @@ void del_env_var(void* tmp)
 
 int ft_free_linked_list(t_list **lst, int type, int full)
 {
+	if(lst == NULL)
+		return(-2);
 	if (type == FT_LIST_TYPE_WORD)
 		ft_lstclear(lst, del_word);
 	else if(type == FT_LIST_TYPE_COMMAND)

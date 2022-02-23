@@ -70,7 +70,7 @@ int	executor(char **envp)
 {
 	pipex(g_access.parser2exec, envp);
 /* 	print_list_parse(g_access.parser2exec); */
-	ft_lstclear(&g_access.parser2exec, ft_free_parser);
+	ft_free_linked_list(&g_access.parser2exec, FT_LIST_TYPE_COMMAND, 1);
 	return (1);
 }
 
