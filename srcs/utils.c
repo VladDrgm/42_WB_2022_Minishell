@@ -78,3 +78,16 @@ void ft_smart_free(void **ptr)
 		free(*ptr);
 	*ptr = NULL;
 }
+
+void	ft_free_split(char **split)
+{
+	int	i;
+
+	i = 0;
+	while (split[i] != NULL)
+	{
+		free(split[i]);
+		i++;
+	}
+	free(split);
+}

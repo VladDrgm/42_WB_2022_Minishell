@@ -1,20 +1,18 @@
 #include "../incl/minishell.h"
 
-void	ft_free_split(char **split)
-{
-	int	i;
-
-	i = 0;
-	while (split[i] != NULL)
-	{
-		free(split[i]);
-		i++;
-	}
-	free(split);
-}
-
-
-void	ft_pipex_error_handler_child(char *error_msg, int **fd_docks, int fd_stream[2], pid_t *pidt)
+/**
+	@brief Error handler that closes file desriptors and frees allocated
+	memory in case of error in child process. Afterwards exits the programm.
+	(ft_pipex_error_handler_child)
+	@param error_msg Error message to be printed.
+	@param fd_docks File descriptors from heredocs.
+	@param fd_stream File descprictors for terminal streams.
+	@param pidt Array of created pids of forked child processes
+		that need to be closed in case of pipe failure.
+	@return None.
+	@exception inherited system filedesriptors from parent need to be closed.
+*/
+void	ft_err_ch(char *error_msg, int **fd_docks, int fd_stream[2], pid_t *pidt)
 {
 	ft_smart_free((void **)&pidt);
 	ft_free_heredoc_fds(fd_docks);
@@ -32,7 +30,18 @@ void	ft_pipex_error_handler_child(char *error_msg, int **fd_docks, int fd_stream
 	exit(EXIT_FAILURE);
 }
 
-void	ft_pipex_error_handler_parent(char *error_msg, int **fd_docks, int fd_stream[2], pid_t *pidt)
+/**
+	@brief Error handler that closes file desriptors and frees allocated
+	memory in case of error in parent process. Afterwards exits the programm.
+	(ft_pipex_error_handler_parent)
+	@param error_msg Error message to be printed.
+	@param fd_docks File descriptors from heredocs.
+	@param fd_stream File descprictors for terminal streams.
+	@param pidt Array of created pids of forked child processes
+		that need to be closed in case of pipe failure.
+	@return None.
+*/
+void	ft_err_par(char *error_msg, int **fd_docks, int fd_stream[2], pid_t *pidt)
 {
 
 	ft_smart_free((void **)&pidt);

@@ -130,12 +130,12 @@ typedef struct s_fd
 	int	out[2];
 }	t_fd;
 
-void    ft_free_split(char **split);
+void	ft_free_split(char **split);
 void	free_global(void);
 void	ft_signal_setup(void);
 int		lexor(void);
 int		ft_parser(void);
-int		ft_executor(char **envp);
+void	ft_executor(char **envp);
 int		minishell_cd(char **args, pid_t pid);
 int		minishell_env(char **args, pid_t pid);
 int		minishell_echo(char **args, pid_t pid);
@@ -243,8 +243,8 @@ typedef struct s_content
 	int		index;
 }	t_content;
 
-void	ft_pipex_error_handler_child(char *error_msg, int **fd_docks, int fd_stream[2], pid_t *pidt);
-void	ft_pipex_error_handler_parent(char *error_msg, int **fd_docks, int fd_stream[2], pid_t *pidt);
+void	ft_err_ch(char *error_msg, int **fd_docks, int fd_stream[2], pid_t *pidt);
+void	ft_err_par(char *error_msg, int **fd_docks, int fd_stream[2], pid_t *pidt);
 
 void	print_list_parse(t_list *el); //rm?
 
@@ -278,7 +278,7 @@ void	ft_free_heredoc_fds(int **fd_docks);
 int		pipex(t_list *cmd, char **envp);
 
 /*ft_heredoc.c*/
-void	heredoc_child(int* fd, int *fd_stream, char *stop_name, char *keyword);
+void	ft_hd_ch(int* fd, int *fd_stream, char *stop_word, char *keyword);
 void	heredoc_parent(int *fd, pid_t pid);
 
 /* signals */
