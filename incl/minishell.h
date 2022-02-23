@@ -71,6 +71,13 @@
 # define FT_ERROR_PARSER_UNEX_TOKEN_PIPE "minishell: syntax error near unexpected token `|'\n"
 # define FT_ERROR_PARSER_UNEX_TOKEN_NL "minshell: syntax error near unexpected token `newline'\n"
 
+# define FT_ERROR_PIPEX_EXEC_FAIL "minishell: command execution failed"
+# define FT_ERROR_PIPEX_FD_DUP_FAIL "minishell: file descriptor duplication failed"
+# define FT_ERROR_PIPEX_PIPE_FAIL "minishell: pipe creation failed"
+# define FT_ERROR_PIPEX_FORK_FAIL "minishell: fork creation failed"
+# define FT_ERROR_PIPEX_OUTFILE_FAIL "minishell: error on opening output file"
+# define FT_ERROR_PIPEX_INFILE_FAIL "minishell: error on opening input file"
+
 typedef struct s_word
 {
 	char	*address;
@@ -117,12 +124,18 @@ typedef struct s_env_var
 
 extern t_global g_access;
 
+typedef struct s_fd
+{
+	int	in[2];
+	int	out[2];
+}	t_fd;
+
 void    ft_free_split(char **split);
 void	free_global(void);
 void	ft_signal_setup(void);
 int		lexor(void);
 int		ft_parser(void);
-int		executor(char **envp);
+int		ft_executor(char **envp);
 int		minishell_cd(char **args, pid_t pid);
 int		minishell_env(char **args, pid_t pid);
 int		minishell_echo(char **args, pid_t pid);
@@ -230,6 +243,8 @@ typedef struct s_content
 	int		index;
 }	t_content;
 
+void	ft_pipex_error_handler_child(char *error_msg, int **fd_docks, int fd_stream[2], pid_t *pidt);
+void	ft_pipex_error_handler_parent(char *error_msg, int **fd_docks, int fd_stream[2], pid_t *pidt);
 
 void	print_list_parse(t_list *el); //rm?
 
@@ -246,8 +261,9 @@ char	*ft_strjoin_with_dfree(char *s1, char *s2);
 char	*ft_strjoin_with_scnd_free(char *s1, char *s2);
 
 /*piping.c*/
-void	ft_pipex(t_list *cmd_list, char **envp);
-void	ft_initialize_fds(int *fd_temp);
+//void	ft_pipex(t_list *cmd_list, char **envp);
+//void	ft_initialize_fds(int (*fd_temp)[2]);
+void    ft_initialize_fds(int *fd_temp);
 void	ft_execute_child_process(t_list *cmd_list, char **envp, int *fd, int *fd_stream);
 void	ft_execute_parent_process(int *fd, t_list **cmd_list, pid_t pid);
 void	ft_execute_last_cmd(int *fd, t_list **cmd_list, pid_t pid, int *fd_temp);
@@ -257,7 +273,7 @@ void	ft_execute_last_cmd(int *fd, t_list **cmd_list, pid_t pid, int *fd_temp);
 void	ft_check_input_file(char *filename, char *outputfile);
 void	ft_check_output_file(const char *filename);
 char	*ft_check_cmd_path(char **path, char **split, int j, const char *cmd);
-void	ft_exit_on_error2(char *error_msg);
+void	ft_free_heredoc_fds(int **fd_docks);
 
 int		pipex(t_list *cmd, char **envp);
 

@@ -1,12 +1,5 @@
 #include "../incl/minishell.h"
 
-void	ft_close_fd(void)
-{
-	close(STDIN_FILENO);
-	close(STDOUT_FILENO);
-	close(STDERR_FILENO);
-}
-
 void	ft_free_split(char **split)
 {
 	int	i;
@@ -21,9 +14,36 @@ void	ft_free_split(char **split)
 }
 
 
-void	ft_exit_on_error2(char *error_msg)
+void	ft_pipex_error_handler_child(char *error_msg, int **fd_docks, int fd_stream[2], pid_t *pidt)
 {
+	ft_smart_free((void **)&pidt);
+	ft_free_heredoc_fds(fd_docks);
+	if (fd_stream != NULL)
+	{
+		close(fd_stream[0]);
+		close(fd_stream[1]);
+
+	}
 	perror(error_msg);
-	ft_close_fd();
+	free_global();
+	close(STDIN_FILENO);
+	close(STDOUT_FILENO);
+	close(STDERR_FILENO);
+	exit(EXIT_FAILURE);
+}
+
+void	ft_pipex_error_handler_parent(char *error_msg, int **fd_docks, int fd_stream[2], pid_t *pidt)
+{
+
+	ft_smart_free((void **)&pidt);
+	ft_free_heredoc_fds(fd_docks);
+	if (fd_stream != NULL)
+	{
+		close(fd_stream[0]);
+		close(fd_stream[1]);
+		
+	}
+	perror(error_msg);
+	free_global();
 	exit(EXIT_FAILURE);
 }

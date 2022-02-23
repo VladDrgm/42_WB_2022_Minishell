@@ -65,12 +65,11 @@ void make_cmd_list (t_list **cmd_list)
 
 	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! the last line should be executable by execve !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
-
+/* 
 int	executor(char **envp)
 {
 	pipex(g_access.parser2exec, envp);
-/* 	print_list_parse(g_access.parser2exec); */
-	ft_free_linked_list(&g_access.parser2exec, FT_LIST_TYPE_COMMAND, 1);
-	return (1);
-}
+	print_list_parse(g_access.parser2exec);
+
+} */
 
