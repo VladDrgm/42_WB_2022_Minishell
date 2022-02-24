@@ -12,8 +12,8 @@ ifeq ($(UNAME), Linux)
 SRC			=  main.c ft_lexor.c ft_parser.c ft_initiator.c ft_echo_utils.c ft_builtins2.c ft_builtins.c ft_globlal_fun.c \
 				ft_builtins_utils.c ft_cd_utils.c ft_lexor_utils.c ft_lexor_utils2.c ft_lexor_handlers.c ft_parser_utils.c utils.c \
 				ft_free_linked_list.c ft_exit_utils.c ft_export_utils.c get_next_line.c get_next_line_utils.c ft_init_utils.c \
-				pipex.c helper.c exit_handler.c ft_heredoc.c ft_signal_handler.c ft_check_path_env_linux.c ft_check_symlink.c ft_env_check.c \
-				ft_parser_handler.c ft_path_finder.c
+				pipex.c helper.c ft_heredoc.c ft_signal_handler.c ft_check_path_env_linux.c ft_check_symlink.c ft_env_check.c \
+				ft_parser_handler.c ft_path_finder.c ft_pipex_error_handling.c
 
 endif
 
@@ -21,8 +21,8 @@ ifeq ($(UNAME), Darwin)
 SRC			=  main.c ft_lexor.c ft_parser.c ft_initiator.c ft_echo_utils.c ft_builtins2.c ft_builtins.c ft_globlal_fun.c \
 				ft_builtins_utils.c ft_cd_utils.c ft_lexor_utils.c ft_lexor_utils2.c ft_lexor_handlers.c ft_parser_utils.c utils.c \
 				ft_free_linked_list.c ft_exit_utils.c ft_export_utils.c get_next_line.c get_next_line_utils.c ft_init_utils.c \
-				pipex.c helper.c exit_handler.c ft_heredoc.c ft_signal_handler.c ft_check_path_env_mac.c ft_check_symlink.c ft_env_check.c \
-				ft_parser_handler.c ft_path_finder.c
+				pipex.c helper.c ft_heredoc.c ft_signal_handler.c ft_check_path_env_mac.c ft_check_symlink.c ft_env_check.c \
+				ft_parser_handler.c ft_path_finder.c ft_pipex_error_handling.c
 endif
 
 

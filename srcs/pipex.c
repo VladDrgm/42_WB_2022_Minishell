@@ -13,18 +13,6 @@
 #include "../incl/minishell.h"
 
 /**
-	@brief Inititalizes the stream file descriptor with terminal 
-		stdin and stdout.
-	@param fd_stream File descprictors for terminal streams
-	@return None.
-*/
-void	ft_initialize_fds(int *fd_stream)
-{
-	dup2(STDIN_FILENO, fd_stream[0]);
-	dup2(STDOUT_FILENO, fd_stream[1]);
-}
-
-/**
 	@brief Checks the filetype (output) and opens file with necessar
 		 permissions to respective file descriptor.
 	@param filename Filename of output file.
@@ -210,7 +198,7 @@ static int	ft_fc(t_list **cmd_list, int i, t_fd fd, int *fd_docks)
 	@exception If system function execve fails, file desriptors and
 		memory are cleaned.
 */
-void	ft_execute_child(t_list *cmd_list, char **envp, pid_t pid)
+void	ft_pipex_execute_child(t_list *cmd_list, char **envp, pid_t pid)
 {
 	t_command	*cmd;
 
@@ -397,7 +385,7 @@ static void	ft_pipex_clean_child_exec(t_list *cmd_list, \
 
 	current_pidt = pidt[i];
 	ft_smart_free((void **)&pidt);
-	ft_execute_child(cmd_list, envp, current_pidt);
+	ft_pipex_execute_child(cmd_list, envp, current_pidt);
 	exit_value = ft_atoi(g_access.last_return);
 	free_global();
 	close(STDERR_FILENO);
@@ -561,8 +549,10 @@ static void	ft_pipex(int fd_s[2], char **envp, int **fd_d, pid_t *pidt)
 }
 
 /**
-	@brief Prepares system ressources for executions. Executes the 
-	commands in regards of their types and cleans system afterwards.
+	@brief Prepares system ressources for executions like initialization of
+		the stream file descriptor with terminal stdin and stdout.
+		Executes the commands in regards of their types and cleans
+		system afterwards.
 	@param envp System environmental variables to be passed to 
 		execution function for non-builtins as array of strings.
 	@return None.
@@ -576,8 +566,11 @@ void	ft_executor(char **envp)
 
 	fd_stream[0] = 0;
 	fd_stream[1] = 0;
+	if (dup2(STDIN_FILENO, fd_stream[0]))
+		ft_err_par(FT_ERROR_PIPEX_FD_DUP_FAIL, NULL, NULL, NULL);
+	if (dup2(STDOUT_FILENO, fd_stream[1]))
+		ft_err_par(FT_ERROR_PIPEX_FD_DUP_FAIL, NULL, NULL, NULL);
 	last_ind = ((t_command *)ft_lstlast(g_access.parser2exec)->content)->index;
-	ft_initialize_fds(fd_stream);
 	fd_docks = ft_heredoc_init(g_access.parser2exec, last_ind, fd_stream);
 	pidt = ft_calloc(last_ind + 1, sizeof(int *));
 	ft_pipex(fd_stream, envp, fd_docks, pidt);
