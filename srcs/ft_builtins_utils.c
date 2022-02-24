@@ -12,6 +12,11 @@
 
 #include "../incl/minishell.h"
 
+/**
+	@brief
+	@param content
+	@return None.
+ */
 void	delone(void *content)
 {
 	t_env_var	*env_var;
@@ -23,6 +28,11 @@ void	delone(void *content)
 }
 
 //FINDS THE EQUIVALENT VALUE OF A ENV VAR
+/**
+	@brief
+	@param name
+	@return *char.
+ */
 char	*env_value_finder(char *name)
 {
 	t_list	*ptr;
@@ -43,12 +53,9 @@ char	*env_value_finder(char *name)
 
 /**
 	@brief Functionality: ft_update_env.
-	@param shell -> structure formed out of command lines, paths,
-		anything read as input from user
 	@param to_search the string to be looked for inside the envp variable
 	@param to_replace the string that will replace 'to_search'
 	@return None.
-	@todo check if it really behives as intended
  */
 void	ft_update_env(char *to_search, char *to_replace)
 {
@@ -69,6 +76,12 @@ void	ft_update_env(char *to_search, char *to_replace)
 	}
 }
 
+/**
+	@brief
+	@param args
+	@param pid
+	@return None.
+ */
 void	ft_last_arg(char **args, pid_t pid)
 {
 	int	i;
@@ -81,6 +94,14 @@ void	ft_last_arg(char **args, pid_t pid)
 	ft_update_create_env("_", args[i - 1], pid);
 }
 
+/**
+	@brief 
+	@param args
+	@param pid
+	@param lreturn
+	@param mode
+	@return None.
+ */
 void	ft_set_lasts(char **args, int pid, int lreturn, int mode)
 {
 	if (mode == 1)

@@ -1,22 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_cd_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mamuller <mamuller@student.42wolfsburg>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/25 21:31:51 by mamuller          #+#    #+#             */
+/*   Updated: 2022/02/25 21:31:51 by mamuller         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../incl/minishell.h"
 
-//when UNSETTING PWD, this needs to have a special situation
-/* void	ft_update_create_OLDPWD(char **argv, t_list *ptr, pid_t pid)
-{
-	while (ptr != NULL)
-	{
-		if (ft_strncmp(((t_env_var *)(ptr->content))->name, "OLDPWD", 6) == 0) //IF OLDPWD EXISTS, WE UPDATE IT <------
-		{
-			ft_set_global_pwd(&(((t_env_var *)(ptr->content))->value));
-			return ;
-		}
-		ptr = ptr->next;
-	}
-	minishell_export(argv, pid); //if OLDPWD does not exist, we create it <-------------
-	return ;
-} */
-
-
+/**
+	@brief
+	@param env
+	@param value
+	@param pid
+	@return None.
+ */
 void	ft_update_create_env(char *env, char *value, pid_t pid)
 {
 	t_list *ptr;
@@ -49,14 +51,8 @@ void	ft_update_create_env(char *env, char *value, pid_t pid)
 	 @brief Bultin command support function: updates PWD
 	 @param path The path towards the directory, as imputted by user
 	 @return void functions;
-	 @todo add "//" situation, where the chdir takes us to "/", but pwd should be updated as "//". Any other number of slashes must
-	 		result in a single "/"
-	 @todo modify PATH as imputted by user; example: we have Minishell; user imputs "minishell"; chdir works and path is 
-	 		'....user/minishell' instead of '......user/Minishell'
-	 @todo if we use cd "/etc" (or any variant of any below-mounting-point value), 
-	 	instead of updating PWD to private/etc, we must update it to /etc (or any below mounting-point folder used)
  */
-void	ft_update_PWD(void)
+/* void	ft_update_PWD(void)
 {
 	char *path;
 
@@ -68,48 +64,9 @@ void	ft_update_PWD(void)
 		ft_update_env("PWD=", path);
 	if (path != NULL)
 		free(path);
-}
+} */
 
-// char	*ft_handle_cd(char *address, t_list *ptr, pid_t pid)
-// {
-// 	if (address == NULL)
-// 		return (env_value_finder("HOME"));
-// 	else if ((!ft_strncmp(address, "~", 1) && ft_strlen(address) < 2)|| (!ft_strncmp(address, "--", 2) && ft_strlen(address) < 3))
-// 	{
-// 		if (env_value_finder("HOME") == NULL && (!ft_strncmp(address, "~", 1) && ft_strlen(address) < 2))
-// 			return(g_access.home);
-// 		else
-// 			return (env_value_finder("HOME"));
-// 	}
-// 	else if (!ft_strncmp(address, "-", 1) && ft_strlen(address) < 2)
-// 	{
-// 		while (ptr != NULL)
-// 		{
-// 			if (ft_strncmp(((t_env_var *)(ptr->content))->name, "OLDPWD", 6) == 0) //IF OLDPWD EXISTS, WE RETURN env_value_finder("OLDPWD") <------
-// 			{
-// 				if (pid == 0)
-// 				{
-// 					write(1, env_value_finder("OLDPWD"), ft_strlen(env_value_finder("OLDPWD")));
-// 					write(1, "\n", 1);
-// 				}
-// 				return (env_value_finder("OLDPWD"));
-// 			}
-// 			ptr = ptr->next;
-// 		}
-// 		return (";");
-// 	}
-// 	if (!ft_strncmp(address, "---", 3))
-// 	{
-// 		return ("L");
-// 	}
-// 	else if (!ft_strncmp(address, "---", 3) && ft_strlen(address) > 3)
-// 	{
-// 		return ("L");
-// 	}
-// 	return (address);
-// }
-
-int ft_cd_error_handler(char *str, pid_t pid, char **path, char **temp)
+/* int ft_cd_error_handler(char *str, pid_t pid, char **path, char **temp)
 {
 	if (pid == 0)
 		write(2, str, ft_strlen(str));
@@ -123,9 +80,9 @@ int ft_cd_error_handler(char *str, pid_t pid, char **path, char **temp)
 	free(g_access.last_return);
 	g_access.last_return = ft_itoa(1);
 	return (1);
-}
+} */
 
-void ft_update_dir(char *arg1, char *path)
+/* void ft_update_dir(char *arg1, char *path)
 {
 	struct stat *buf;
 	char *symlink;
@@ -167,38 +124,47 @@ void ft_update_dir(char *arg1, char *path)
 		g_access.last_return = ft_itoa(1);
 	}
 	free(buf);
-}
+} */
 
 /**************************************************/
 
-void ft_rtoa_path(char *rel_path, char **abs_path)
+/**
+	@brief
+	@param rel_path
+	@param abs_path
+	@return None.
+ */
+void	ft_rtoa_path(char *rel_path, char **abs_path)
 {
-	char *path_helper;
-	char **arg_split;
-	char **split_ptr;
-	char *path_ptr;
-	char *path_helper_free;
-	char *buf;
-	int i = 0;
+	char	*path_helper;
+	char	**arg_split;
+	char	**split_ptr;
+	char	*path_ptr;
+	char	*path_helper_free;
+	char	*buf;
+	int		i;
 
+	i = 0;
 	buf = NULL;
 	if (ft_strnstr(rel_path, ".", ft_strlen(rel_path)) == NULL)
 	{
 		if (rel_path[0] == '/')
 		{
 			*abs_path = ft_strdup(rel_path);
-			return;
+			return ;
 		}
 		if (g_access.dp == NULL)
 		{
 			buf = getcwd(NULL, 0);
-			while(getcwd(buf, i) == NULL)
+			while (getcwd(buf, i) == NULL)
 				i++;
-			*abs_path = ft_strjoin_with_free(ft_strjoin_with_free(buf, "/"), rel_path);
+			*abs_path = ft_strjoin_with_free(ft_strjoin_with_free(buf, \
+				"/"), rel_path);
 		}
 		else
-			*abs_path = ft_strjoin_with_free(ft_strjoin(g_access.dp, "/"), rel_path);
-		return;
+			*abs_path = ft_strjoin_with_free(ft_strjoin(g_access.dp, \
+				"/"), rel_path);
+		return ;
 	}
 	path_helper = NULL;
 	if (g_access.dp != NULL)
@@ -209,40 +175,41 @@ void ft_rtoa_path(char *rel_path, char **abs_path)
 		ft_set_global_pwd(&path_helper);
 	arg_split = ft_split(rel_path, '/');
 	split_ptr = arg_split;
-	while(*split_ptr != NULL)
+	while (*split_ptr != NULL)
 	{
-		if(!ft_strncmp(*split_ptr, "..", 2) && ft_strlen(*split_ptr) == 2)
+		if (!ft_strncmp(*split_ptr, "..", 2) && ft_strlen(*split_ptr) == 2)
 		{
 			path_ptr = ft_strrchr(path_helper, '/');
-			if(path_ptr != NULL)
+			if (path_ptr != NULL)
 			{
 				path_helper_free = path_helper;
-				path_helper = ft_substr(path_helper, 0, ft_strlen(path_helper) - ft_strlen(path_ptr));
+				path_helper = ft_substr(path_helper, 0, \
+					ft_strlen(path_helper) - ft_strlen(path_ptr));
 				if (ft_strlen(path_helper) == 0)
 				{
 					path_helper = ft_strjoin_with_free(path_helper, "/");
-					if(path_helper_free)
+					if (path_helper_free)
 					{
 						free(path_helper_free);
 						path_helper_free = NULL;
 					}
-					break;
+					break ;
 				}
 				if (path_helper_free)
 				{
 					free(path_helper_free);
 					path_helper_free = NULL;
 				}
-
 			}
 		}
 		else if (!ft_strncmp(*split_ptr, ".", 1) && ft_strlen(*split_ptr) == 1)
 		{
 			split_ptr++;
-			continue;
+			continue ;
 		}
 		else
-			path_helper = ft_strjoin_with_dfree(path_helper, ft_strjoin("/", *split_ptr));
+			path_helper = ft_strjoin_with_dfree(path_helper, \
+				ft_strjoin("/", *split_ptr));
 		split_ptr++;
 	}
 	ft_free_split(arg_split);

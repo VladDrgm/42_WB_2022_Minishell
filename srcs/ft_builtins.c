@@ -15,6 +15,7 @@
 /**
 	 @brief Bultin command: env.
 	 @param args List of args
+	 @param pid
 	 @return Always returns 1, to continue executing.
  */
 int	minishell_env(char **args, pid_t pid)
@@ -46,6 +47,12 @@ int	minishell_env(char **args, pid_t pid)
 	return (1);
 }
 
+/**
+	@brief
+	@param i
+	@param args
+	@return None.
+ */
 static void	ft_exit_multiple_child_handler(int *i, char **args)
 {
 	long long int	nb;
@@ -75,6 +82,11 @@ static void	ft_exit_multiple_child_handler(int *i, char **args)
 	ft_child_exit(2);
 }
 
+/**
+	@brief
+	@param args
+	@return None.
+ */
 static void	ft_exit_value_cast(char **args)
 {
 	long long int	num_arg;
@@ -97,6 +109,12 @@ static void	ft_exit_value_cast(char **args)
 	}
 }
 
+/**
+	@brief
+	@param i
+	@param args
+	@return None.
+ */
 static void	ft_exit_parent_handler(int *i, char **args)
 {
 	while (args[*i] != NULL)
@@ -121,8 +139,8 @@ static void	ft_exit_parent_handler(int *i, char **args)
 /**
 	 @brief Builtin command: exit.
 	 @param args List of args.	Not examined.
+	 @param pid
 	 @return Always returns 0, to terminate execution.
-	 @todo free linked lists etc properly; fix arguments that need to be passed!
  */
 int	minishell_exit(char **args, pid_t pid)
 {
@@ -152,6 +170,7 @@ int	minishell_exit(char **args, pid_t pid)
 /**
 	@brief Builtin command: pwd.
 	@param args List of args.	Not examined. (and no need to)
+	@param pid
 	@return Always returns 1, to continue execution.
  */
 int	minishell_pwd(char **args, pid_t pid)
@@ -180,6 +199,12 @@ int	minishell_pwd(char **args, pid_t pid)
 	return (1);
 }
 
+/**
+	@brief
+	@param mes_type
+	@param args_word
+	@return None.
+ */
 static void	ft_env_name_check_error_print(int mes_type, char *args_word)
 {
 	if (mes_type == FT_EXPORT_MES_TYPE)
@@ -190,6 +215,14 @@ static void	ft_env_name_check_error_print(int mes_type, char *args_word)
 	write(2, "': not a valid identifier\n", 26);
 }
 
+/**
+	@brief
+	@param args_word
+	@param valid
+	@param pid
+	@param mes_type
+	@return None.
+ */
 int	ft_env_name_check(char *args_word, int *valid, pid_t pid, int mes_type)
 {
 	int	j;
@@ -215,6 +248,14 @@ int	ft_env_name_check(char *args_word, int *valid, pid_t pid, int mes_type)
 	return (j);
 }
 
+/**
+	@brief Functionality: ft_update_env.
+	@param args
+	@param i
+	@param j
+	@param valid
+	@return None.
+ */
 static void	ft_export_add_env(char **args, int i, int j, int valid)
 {
 	t_env_var	*env_var;
@@ -240,6 +281,7 @@ static void	ft_export_add_env(char **args, int i, int j, int valid)
 /**
 	@brief Builtin command: export.
 	@param args List of args.	Not examined. (and no need to)
+	@param pid
 	@return Always returns 1, to continue execution.
  */
 int	minishell_export(char **args, pid_t pid)
@@ -270,6 +312,14 @@ int	minishell_export(char **args, pid_t pid)
 	return (1);
 }
 
+/**
+	@brief
+	@param ptr
+	@param args
+	@param i
+	@param valid
+	@return None.
+ */
 static void	ft_unset_first_node(t_list *ptr, char **args, int i, int valid)
 {
 	if (ft_strlen(args[i]) == \
@@ -287,6 +337,13 @@ static void	ft_unset_first_node(t_list *ptr, char **args, int i, int valid)
 	}
 }
 
+/**
+	@brief
+	@param ptr
+	@param i
+	@param args
+	@return None.
+ */
 static void	ft_unset_middle_node(t_list *ptr, int i, char **args)
 {
 	t_list	*temp;
@@ -299,6 +356,12 @@ static void	ft_unset_middle_node(t_list *ptr, int i, char **args)
 	}
 }
 
+/**
+	@brief
+	@param ptr
+	@param args
+	@return None.
+ */
 static void	ft_unset_last_node(t_list *ptr, int i, char **args)
 {
 	if (ft_strncmp(args[i], "_", 1))
@@ -308,6 +371,14 @@ static void	ft_unset_last_node(t_list *ptr, int i, char **args)
 	}
 }
 
+/**
+	@brief Functionality: ft_update_env.
+	@param ptr
+	@param i
+	@param args
+	@param valid
+	@return None.
+ */
 static void	ft_unset_nonfirst_node_handler(t_list *ptr, int i, \
 	char **args, int valid)
 {
@@ -333,6 +404,7 @@ static void	ft_unset_nonfirst_node_handler(t_list *ptr, int i, \
 /**
 	@brief Builtin command: unset.
 	@param args List of args.	Not examined. (and no need to)
+	@param pid
 	@return Always returns 1, to continue execution.
  */
 int	minishell_unset(char **args, pid_t pid)

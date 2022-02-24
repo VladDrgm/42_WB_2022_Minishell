@@ -12,6 +12,13 @@
 
 #include "../incl/minishell.h"
 
+/**
+	@brief
+	@param env_cpy
+	@param ptr_cpy
+	@param en_var
+	@return None.
+ */
 static void	ft_copy_env_big_list_handler(t_list *env_cpy, \
 	t_list *ptr_cpy, t_env_var *env_var)
 {
@@ -48,6 +55,10 @@ static void	ft_copy_env_env_var_creation(t_env_var **env_var, t_list *ptr_env)
 	(*env_var)->value = ft_strdup(((t_env_var *)(ptr_env->content))->value);
 }
 
+/**
+	@brief
+	@return t_list.
+ */
 t_list	*ft_copy_env(void)
 {
 	t_list		*env_cpy;
@@ -77,6 +88,11 @@ t_list	*ft_copy_env(void)
 	return (env_cpy);
 }
 
+/**
+	@brief
+	@param ptr
+	@return None.
+ */
 static void	ft_print_sorted_copy_value(t_list *ptr)
 {
 	int	i;
@@ -97,6 +113,11 @@ static void	ft_print_sorted_copy_value(t_list *ptr)
 	}
 }
 
+/**
+	@brief
+	@param env_cpy
+	@return None.
+ */
 void	ft_print_sorted_copy(t_list *env_cpy)
 {
 	t_list	*ptr;
@@ -116,6 +137,10 @@ void	ft_print_sorted_copy(t_list *env_cpy)
 	}
 }
 
+/**
+	@brief
+	@return Int.
+ */
 int	ft_single_export(void)
 {
 	t_list	*env_cpy;
@@ -127,6 +152,11 @@ int	ft_single_export(void)
 	return (1);
 }
 
+/**
+	@brief
+	@param env_var
+	@return Int.
+ */
 int	ft_check_existing_env(t_env_var **env_var)
 {
 	t_list	*ptr;

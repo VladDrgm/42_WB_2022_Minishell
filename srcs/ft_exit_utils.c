@@ -12,6 +12,11 @@
 
 #include "../incl/minishell.h"
 
+/**
+	@brief
+	@param argv
+	@return Int.
+ */
 int	ft_digit_check(char *argv)
 {
 	int	i;
@@ -31,6 +36,13 @@ int	ft_digit_check(char *argv)
 	return (0);
 }
 
+/**
+	@brief
+	@param str
+	@param i
+	@param j
+	@return None.
+ */
 static void	ft_atoll_sign_checker(const char *str, int *i, int *j)
 {
 	if (str[*i] == '-' || str[*i] == '+')
@@ -41,6 +53,12 @@ static void	ft_atoll_sign_checker(const char *str, int *i, int *j)
 	}
 }
 
+/**
+	@brief
+	@param str
+	@param out
+	@return Int.
+ */
 int	ft_atoll(const char *str, long long int *out)
 {
 	int				i;
@@ -67,6 +85,10 @@ int	ft_atoll(const char *str, long long int *out)
 	return (0);
 }
 
+/**
+	@brief
+	@return Int.
+ */
 int	ft_get_index(void)
 {
 	t_list	*ptr;
@@ -82,6 +104,14 @@ int	ft_get_index(void)
 	return (index);
 }
 
+/**
+	@brief
+	@param str1
+	@param str2
+	@param str3
+	@param exit_value
+	@return None.
+ */
 int	ft_exit_error_handler(char *str1, char *str2, char *str3, int exit_value)
 {
 	if (ft_strncmp(str1, "exit\n", ft_strlen(str1)))
@@ -95,6 +125,11 @@ int	ft_exit_error_handler(char *str1, char *str2, char *str3, int exit_value)
 	exit(exit_value);
 }
 
+/**
+	@brief
+	@param exit_value
+	@return None.
+ */
 void	ft_child_exit(int exit_value)
 {
 	free_global();
