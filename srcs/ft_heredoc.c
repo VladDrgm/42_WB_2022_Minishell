@@ -13,12 +13,34 @@
 #include "../incl/minishell.h"
 
 /**
+	@brief Initiates and allocates memory for  the heredoc file desriptors and
+		creates the pipe on them for heredoc execution.
+	@param fd_docks Pointer to file descriptors from heredocs.
+	@param fd_stream File descprictors for terminal streams.
+	@param index Index in command list of the command to be executed.
+	@return None.
+	@exception If heredoc file descriptors already exist they are first closed
+		and free befor created again.
+*/
+void	ft_heredoc_pipe_init(int **fd_docks, int fd_stream[2], int index)
+{
+	if (fd_docks[index] != NULL)
+	{
+		close(fd_docks[index][0]);
+		free(fd_docks[index]);
+	}
+	fd_docks[index] = (int *)malloc(sizeof(int) * 2);
+	if (pipe(fd_docks[index]) == -1)
+		ft_err_par(FT_ERROR_PIPEX_PIPE_FAIL, fd_docks, fd_stream, NULL);
+}
+
+/**
 	@brief Parent process of heredoc that waits for child process to finish. 
 	@param fd Pointer to file descriptor.
 	@param pid Process Id.
 	@return None.
 */
-void	heredoc_parent(int *fd, pid_t pid)
+void	ft_heredoc_parent(int *fd, pid_t pid)
 {
 	waitpid(pid, NULL, 0);
 	close(fd[1]);
@@ -79,7 +101,7 @@ static int	ft_heredoc_input_sw_check(char *out, char *stop_word, \
 		readline call.
 	@return None.
 */
-void	heredoc(char *stop_word, int fd_stream[2], int fd_out, char *keyword)
+void	ft_heredoc(char *stop_word, int fd_stream[2], int fd_out, char *keyword)
 {
 	char	*out;
 	int		flag;
@@ -105,23 +127,6 @@ void	heredoc(char *stop_word, int fd_stream[2], int fd_out, char *keyword)
 }
 
 /**
-	@brief Handles signals for heredocs and closes standard
-		file descriptors of the system.
-	@param signum Signal number.
-	@return None.
-*/
-void	handle_sigterm_heredoc(int signum)
-{
-	if (signum == SIGINT)
-	{
-		write(1, "\n", 1);
-		close(STDIN_FILENO);
-		close(STDOUT_FILENO);
-		close(STDERR_FILENO);
-	}
-}
-
-/**
 	@brief Heredoc child process that inititates signal handling,
 		closes unused file descriptor and call main part of heredoc
 		execution.
@@ -136,36 +141,7 @@ void	handle_sigterm_heredoc(int signum)
 */
 void	ft_hd_ch(int *fd, int *fd_stream, char *stop_word, char *keyword)
 {
-	signal(SIGINT, handle_sigterm_heredoc);
+	signal(SIGINT, ft_handle_sigterm_heredoc);
 	close(fd[0]);
-	heredoc(stop_word, fd_stream, fd[1], keyword);
-}
-
-/**
-	@brief Closes and frees all heredoc filedescriptors if they are
-		existent.
-	@param fd_docks Pointer to file descriptors from heredocs.
-	@return None.
-*/
-void	ft_free_heredoc_fds(int **fd_docks)
-{
-	int	i;
-	int	last_index;
-
-	if (fd_docks == NULL)
-		return ;
-	i = 0;
-	last_index = \
-		((t_command *)ft_lstlast(g_access.parser2exec)->content)->index;
-	while (i <= last_index)
-	{
-		if (fd_docks[i] != NULL)
-		{
-			close(fd_docks[i][0]);
-			free(fd_docks[i]);
-		}
-		i++;
-	}
-	if (fd_docks != NULL)
-		free(fd_docks);
+	ft_heredoc(stop_word, fd_stream, fd[1], keyword);
 }
