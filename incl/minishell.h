@@ -71,6 +71,13 @@
 # define FT_ERROR_PARSER_UNEX_TOKEN_PIPE "minishell: syntax error near unexpected token `|'\n"
 # define FT_ERROR_PARSER_UNEX_TOKEN_NL "minshell: syntax error near unexpected token `newline'\n"
 
+# define FT_LAST_ARG_MODE 1
+# define FT_LAST_RETURN_MODE 2
+# define FT_LAST_FULL_MODE 3
+
+# define FT_UNSET_MES_TYPE 0
+# define FT_EXPORT_MES_TYPE 1
+
 typedef struct s_word
 {
 	char	*address;

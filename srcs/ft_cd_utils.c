@@ -70,44 +70,44 @@ void	ft_update_PWD(void)
 		free(path);
 }
 
-char	*ft_handle_cd(char *address, t_list *ptr, pid_t pid)
-{
-	if (address == NULL)
-		return (env_value_finder("HOME"));
-	else if ((!ft_strncmp(address, "~", 1) && ft_strlen(address) < 2)|| (!ft_strncmp(address, "--", 2) && ft_strlen(address) < 3))
-	{
-		if (env_value_finder("HOME") == NULL && (!ft_strncmp(address, "~", 1) && ft_strlen(address) < 2))
-			return(g_access.home);
-		else
-			return (env_value_finder("HOME"));
-	}
-	else if (!ft_strncmp(address, "-", 1) && ft_strlen(address) < 2)
-	{
-		while (ptr != NULL)
-		{
-			if (ft_strncmp(((t_env_var *)(ptr->content))->name, "OLDPWD", 6) == 0) //IF OLDPWD EXISTS, WE RETURN env_value_finder("OLDPWD") <------
-			{
-				if (pid == 0)
-				{
-					write(1, env_value_finder("OLDPWD"), ft_strlen(env_value_finder("OLDPWD")));
-					write(1, "\n", 1);
-				}
-				return (env_value_finder("OLDPWD"));
-			}
-			ptr = ptr->next;
-		}
-		return (";");
-	}
-	if (!ft_strncmp(address, "---", 3))
-	{
-		return ("L");
-	}
-	else if (!ft_strncmp(address, "---", 3) && ft_strlen(address) > 3)
-	{
-		return ("L");
-	}
-	return (address);
-}
+// char	*ft_handle_cd(char *address, t_list *ptr, pid_t pid)
+// {
+// 	if (address == NULL)
+// 		return (env_value_finder("HOME"));
+// 	else if ((!ft_strncmp(address, "~", 1) && ft_strlen(address) < 2)|| (!ft_strncmp(address, "--", 2) && ft_strlen(address) < 3))
+// 	{
+// 		if (env_value_finder("HOME") == NULL && (!ft_strncmp(address, "~", 1) && ft_strlen(address) < 2))
+// 			return(g_access.home);
+// 		else
+// 			return (env_value_finder("HOME"));
+// 	}
+// 	else if (!ft_strncmp(address, "-", 1) && ft_strlen(address) < 2)
+// 	{
+// 		while (ptr != NULL)
+// 		{
+// 			if (ft_strncmp(((t_env_var *)(ptr->content))->name, "OLDPWD", 6) == 0) //IF OLDPWD EXISTS, WE RETURN env_value_finder("OLDPWD") <------
+// 			{
+// 				if (pid == 0)
+// 				{
+// 					write(1, env_value_finder("OLDPWD"), ft_strlen(env_value_finder("OLDPWD")));
+// 					write(1, "\n", 1);
+// 				}
+// 				return (env_value_finder("OLDPWD"));
+// 			}
+// 			ptr = ptr->next;
+// 		}
+// 		return (";");
+// 	}
+// 	if (!ft_strncmp(address, "---", 3))
+// 	{
+// 		return ("L");
+// 	}
+// 	else if (!ft_strncmp(address, "---", 3) && ft_strlen(address) > 3)
+// 	{
+// 		return ("L");
+// 	}
+// 	return (address);
+// }
 
 int ft_cd_error_handler(char *str, pid_t pid, char **path, char **temp)
 {
@@ -242,9 +242,7 @@ void ft_rtoa_path(char *rel_path, char **abs_path)
 			continue;
 		}
 		else
-		{
 			path_helper = ft_strjoin_with_dfree(path_helper, ft_strjoin("/", *split_ptr));
-		}
 		split_ptr++;
 	}
 	ft_free_split(arg_split);

@@ -1,8 +1,16 @@
-#include "../incl/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_builtins.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbanfi <dbanfi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/25 16:20:24 by dbanfi            #+#    #+#             */
+/*   Updated: 2022/02/25 16:20:24 by dbanfi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-# define FT_LAST_ARG_MODE 1
-# define FT_LAST_RETURN_MODE 2
-# define FT_LAST_FULL_MODE 3
+#include "../incl/minishell.h"
 
 /**
 	 @brief Bultin command: env.
@@ -11,7 +19,7 @@
  */
 int	minishell_env(char **args, pid_t pid)
 {
-	t_list *ptr;
+	t_list	*ptr;
 
 	ft_set_lasts(args, pid, 0, FT_LAST_FULL_MODE);
 	if (ft_strncmp(args[0], "env", 3))
@@ -21,18 +29,18 @@ int	minishell_env(char **args, pid_t pid)
 	{
 		while (ptr != NULL)
 		{
-			if (((t_env_var*)(ptr->content))->value != NULL)
+			if (((t_env_var *)(ptr->content))->value != NULL)
 			{
-				write(1, ((t_env_var*)(ptr->content))->name, \
-					ft_strlen(((t_env_var*)(ptr->content))->name));
-				write(1, ((t_env_var*)(ptr->content))->value, \
-					ft_strlen(((t_env_var*)(ptr->content))->value));
+				write(1, ((t_env_var *)(ptr->content))->name, \
+					ft_strlen(((t_env_var *)(ptr->content))->name));
+				write(1, ((t_env_var *)(ptr->content))->value, \
+					ft_strlen(((t_env_var *)(ptr->content))->value));
 				write(1, "\n", 1);
 			}
 			if (ptr->next != NULL)
 				ptr = ptr->next;
 			else
-				break;
+				break ;
 		}
 	}
 	return (1);
@@ -40,7 +48,7 @@ int	minishell_env(char **args, pid_t pid)
 
 static void	ft_exit_multiple_child_handler(int *i, char **args)
 {
-	long long int num_arg;
+	long long int	nb;
 
 	while (args[*i] != NULL)
 		(*i)++;
@@ -50,17 +58,16 @@ static void	ft_exit_multiple_child_handler(int *i, char **args)
 		ft_child_exit(ft_atoi(g_access.last_return));
 	else if (!ft_digit_check(args[1]))
 	{
-		if (ft_atoll(args[1], &num_arg))
+		if (ft_atoll(args[1], &nb))
 			ft_child_exit(255);
-		if (!((num_arg < 0 && args[1][0] != '-') || \
-			(num_arg > 0 && args[1][0] == '-')))
+		if (!((nb < 0 && args[1][0] != '-') || (nb > 0 && args[1][0] == '-')))
 		{
-			if (num_arg >=0 && num_arg <= 255)
-				ft_child_exit(num_arg);
-			else if (num_arg > 255)
-				ft_child_exit(num_arg % 256);
-			else if (num_arg < 0)
-				ft_child_exit(256 - ((num_arg * -1) % 256));
+			if (nb >= 0 && nb <= 255)
+				ft_child_exit(nb);
+			else if (nb > 255)
+				ft_child_exit(nb % 256);
+			else if (nb < 0)
+				ft_child_exit(256 - ((nb * -1) % 256));
 		}
 	}
 	else if (*i >= 2)
@@ -68,43 +75,47 @@ static void	ft_exit_multiple_child_handler(int *i, char **args)
 	ft_child_exit(2);
 }
 
-static void ft_exit_value_cast(char **args)
+static void	ft_exit_value_cast(char **args)
 {
-	long long int num_arg;
-	int	err;
+	long long int	num_arg;
+	int				err;
 
 	err = ft_atoll(args[1], &num_arg);
-	if(err)
-		ft_exit_error_handler("exit\nminishell: exit: ", args[1], ": numeric argument required\n", 255);
+	if (err)
+		ft_exit_error_handler("exit\nminishell: exit: ", \
+			args[1], ": numeric argument required\n", 255);
 	if (!((num_arg < 0 && args[1][0] != '-') || \
 		(num_arg > 0 && args[1][0] == '-')))
 	{
-		if (num_arg >=0 && num_arg <= 255)
+		if (num_arg >= 0 && num_arg <= 255)
 			ft_exit_error_handler("exit\n", NULL, NULL, num_arg);
 		else if (num_arg > 255)
 			ft_exit_error_handler("exit\n", NULL, NULL, num_arg % 256);
 		else if (num_arg < 0)
-			ft_exit_error_handler("exit\n", NULL, NULL, 256 - ((num_arg * -1) % 256));
+			ft_exit_error_handler("exit\n", NULL, NULL, \
+				256 - ((num_arg * -1) % 256));
 	}
 }
 
 static void	ft_exit_parent_handler(int *i, char **args)
 {
-		while (args[*i] != NULL)
-			(*i)++;
-		if (*i > 2 && !ft_digit_check(args[1]))
-		{
-			write(2, "minishell: exit: too many arguments\n", 36);
-			ft_set_lasts(NULL, 0, 1, FT_LAST_RETURN_MODE);
-			return ;
-		}
-		else if (*i == 1)
-			ft_exit_error_handler("exit\n", NULL, NULL, ft_atoi(g_access.last_return));
-		else if (!ft_digit_check(args[1]))
-			ft_exit_value_cast(args);
-		else if (*i >= 2)
-			ft_exit_error_handler("exit\nminishell: exit: ", args[1], ": numeric argument required\n", 255);
-		exit(4);
+	while (args[*i] != NULL)
+		(*i)++;
+	if (*i > 2 && !ft_digit_check(args[1]))
+	{
+		write(2, "minishell: exit: too many arguments\n", 36);
+		ft_set_lasts(NULL, 0, 1, FT_LAST_RETURN_MODE);
+		return ;
+	}
+	else if (*i == 1)
+		ft_exit_error_handler("exit\n", NULL, NULL, \
+		ft_atoi(g_access.last_return));
+	else if (!ft_digit_check(args[1]))
+		ft_exit_value_cast(args);
+	else if (*i >= 2)
+		ft_exit_error_handler("exit\nminishell: exit: ", \
+			args[1], ": numeric argument required\n", 255);
+	exit(4);
 }
 
 /**
@@ -115,8 +126,8 @@ static void	ft_exit_parent_handler(int *i, char **args)
  */
 int	minishell_exit(char **args, pid_t pid)
 {
-	int i;
-	int counter;
+	int	i;
+	int	counter;
 
 	i = 0;
 	ft_set_lasts(args, pid, 0, FT_LAST_ARG_MODE);
@@ -133,7 +144,7 @@ int	minishell_exit(char **args, pid_t pid)
 		if (i > 2 && !ft_digit_check(args[1]))
 			ft_child_exit(1);
 	}
-	else if(counter != 0 && pid == 0)
+	else if (counter != 0 && pid == 0)
 		ft_exit_multiple_child_handler(&i, args);
 	return (0);
 }
@@ -143,11 +154,12 @@ int	minishell_exit(char **args, pid_t pid)
 	@param args List of args.	Not examined. (and no need to)
 	@return Always returns 1, to continue execution.
  */
-int minishell_pwd(char **args, pid_t pid)
+int	minishell_pwd(char **args, pid_t pid)
 {
-	char *buf;
-	int i = 1;
+	char	*buf;
+	int		i;
 
+	i = 1;
 	ft_set_lasts(args, pid, 0, FT_LAST_FULL_MODE);
 	if (args[0] == NULL)
 		return (0);
@@ -156,7 +168,7 @@ int minishell_pwd(char **args, pid_t pid)
 		if (g_access.dp == NULL)
 		{
 			buf = getcwd(NULL, 0);
-			while(getcwd(buf, i) == NULL)
+			while (getcwd(buf, i) == NULL)
 				i++;
 			write(1, buf, ft_strlen(buf));
 			free(buf);
@@ -168,12 +180,19 @@ int minishell_pwd(char **args, pid_t pid)
 	return (1);
 }
 
-#define FT_UNSET_MES_TYPE 0
-#define FT_EXPORT_MES_TYPE 1
+static void	ft_env_name_check_error_print(int mes_type, char *args_word)
+{
+	if (mes_type == FT_EXPORT_MES_TYPE)
+		write(2, "minishell: export: `", 20);
+	else if (mes_type == FT_UNSET_MES_TYPE)
+		write(2, "minishell: unset: `", 19);
+	write(2, args_word, ft_strlen(args_word));
+	write(2, "': not a valid identifier\n", 26);
+}
 
 int	ft_env_name_check(char *args_word, int *valid, pid_t pid, int mes_type)
 {
-	int j;
+	int	j;
 
 	j = 0;
 	*valid = 1;
@@ -187,27 +206,18 @@ int	ft_env_name_check(char *args_word, int *valid, pid_t pid, int mes_type)
 		{
 			*valid = 0;
 			if (pid == 0)
-			{
-				if (mes_type == FT_EXPORT_MES_TYPE)
-					write(2, "minishell: export: `", 20);
-				else if (mes_type == FT_UNSET_MES_TYPE)
-					write(2, "minishell: unset: `", 19);
-				write(2 , args_word, ft_strlen(args_word));
-				write(2, "': not a valid identifier\n", 26);
-			}
-			free(g_access.last_return);
-			g_access.last_return = ft_itoa(1);
-			break;
+				ft_env_name_check_error_print(mes_type, args_word);
+			ft_set_lasts(NULL, 0, 1, FT_LAST_RETURN_MODE);
+			break ;
 			j++;
 		}
 	}
-	return j;
+	return (j);
 }
 
-
-static void ft_export_add_env(char **args, int i, int j, int valid)
+static void	ft_export_add_env(char **args, int i, int j, int valid)
 {
-	t_env_var *env_var;
+	t_env_var	*env_var;
 
 	if ((args[i][j] == '=' || args[i][j] == '\0') && valid)
 	{
@@ -231,14 +241,13 @@ static void ft_export_add_env(char **args, int i, int j, int valid)
 	@brief Builtin command: export.
 	@param args List of args.	Not examined. (and no need to)
 	@return Always returns 1, to continue execution.
-	@todo Check for export directly after minishell execution on MAC. Is OLDPWD printed? If yes, insert exception.
  */
-int minishell_export(char **args, pid_t pid)
+int	minishell_export(char **args, pid_t pid)
 {
-	int len;
-	int j;
-	int i;
-	int valid;
+	int	len;
+	int	j;
+	int	i;
+	int	valid;
 
 	len = 0;
 	while (args[len] != 0)
@@ -261,11 +270,13 @@ int minishell_export(char **args, pid_t pid)
 	return (1);
 }
 
-static void ft_unset_first_node(t_list *ptr, char **args, int i, int valid)
+static void	ft_unset_first_node(t_list *ptr, char **args, int i, int valid)
 {
-	if (ft_strlen(args[i]) == ft_strlen(((t_env_var*)(ptr->content))->name) - 1 && valid)
+	if (ft_strlen(args[i]) == \
+		ft_strlen(((t_env_var *)(ptr->content))->name) - 1 && valid)
 	{
-		if (!ft_strncmp(args[i], ((t_env_var*)(ptr->content))->name, ft_strlen(args[i])))
+		if (!ft_strncmp(args[i], ((t_env_var *)(ptr->content))->name, \
+			ft_strlen(args[i])))
 		{
 			if (ft_strncmp(args[i], "_", ft_strlen(args[i])))
 			{
@@ -276,9 +287,9 @@ static void ft_unset_first_node(t_list *ptr, char **args, int i, int valid)
 	}
 }
 
-static void ft_unset_middle_node(t_list *ptr, int i, char **args)
+static void	ft_unset_middle_node(t_list *ptr, int i, char **args)
 {
-	t_list *temp;
+	t_list	*temp;
 
 	if (ft_strncmp(args[i], "_", 1))
 	{
@@ -288,7 +299,7 @@ static void ft_unset_middle_node(t_list *ptr, int i, char **args)
 	}
 }
 
-static void ft_unset_last_node(t_list *ptr, int i, char **args)
+static void	ft_unset_last_node(t_list *ptr, int i, char **args)
 {
 	if (ft_strncmp(args[i], "_", 1))
 	{
@@ -297,19 +308,22 @@ static void ft_unset_last_node(t_list *ptr, int i, char **args)
 	}
 }
 
-static void ft_unset_nonfirst_node_handler(t_list *ptr, int i, char **args, int valid)
+static void	ft_unset_nonfirst_node_handler(t_list *ptr, int i, \
+	char **args, int valid)
 {
-	while(ptr->next != NULL && valid)
+	while (ptr->next != NULL && valid)
 	{
-		if (ft_strlen(args[i]) == ft_strlen(((t_env_var*)(ptr->next->content))->name) - 1)
+		if (ft_strlen(args[i]) == \
+			ft_strlen(((t_env_var *)(ptr->next->content))->name) - 1)
 		{
-			if (!ft_strncmp(args[i], ((t_env_var*)(ptr->next->content))->name, ft_strlen(args[i])))
+			if (!ft_strncmp(args[i], \
+				((t_env_var *)(ptr->next->content))->name, ft_strlen(args[i])))
 			{
 				if (ptr->next->next != NULL)
 					ft_unset_middle_node(ptr, i, args);
 				else
 					ft_unset_last_node(ptr, i, args);
-				break;
+				break ;
 			}
 		}
 		ptr = ptr->next;
@@ -321,12 +335,12 @@ static void ft_unset_nonfirst_node_handler(t_list *ptr, int i, char **args, int 
 	@param args List of args.	Not examined. (and no need to)
 	@return Always returns 1, to continue execution.
  */
-int minishell_unset(char **args, pid_t pid)
+int	minishell_unset(char **args, pid_t pid)
 {
-	t_list *ptr;
-	int valid;
-	int len;
-	int i;
+	t_list	*ptr;
+	int		valid;
+	int		len;
+	int		i;
 
 	valid = 1;
 	ft_set_lasts(args, pid, 0, FT_LAST_FULL_MODE);
