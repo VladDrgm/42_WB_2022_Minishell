@@ -320,7 +320,7 @@ int	minishell_export(char **args, pid_t pid)
 	@param valid
 	@return None.
  */
-static void	ft_unset_first_node(t_list *ptr, char **args, int i, int valid)
+static int	ft_unset_first_node(t_list *ptr, char **args, int i, int valid)
 {
 	if (ft_strlen(args[i]) == \
 		ft_strlen(((t_env_var *)(ptr->content))->name) - 1 && valid)
@@ -332,9 +332,11 @@ static void	ft_unset_first_node(t_list *ptr, char **args, int i, int valid)
 			{
 				g_access.env = ptr->next;
 				ft_lstdelone(ptr, delone);
+				return (1);
 			}
 		}
 	}
+	return (0);
 }
 
 /**
@@ -426,8 +428,8 @@ int	minishell_unset(char **args, pid_t pid)
 		ft_env_name_check(args[i], &valid, pid, FT_UNSET_MES_TYPE);
 		if (!ft_strncmp(args[i], "PWD", ft_strlen(args[i])))
 			ft_smart_free((void **)&(g_access.pwd));
-		ft_unset_first_node(ptr, args, i, valid);
-		ft_unset_nonfirst_node_handler(ptr, i, args, valid);
+		if (!ft_unset_first_node(ptr, args, i, valid))
+			ft_unset_nonfirst_node_handler(ptr, i, args, valid);
 		i++;
 	}
 	return (1);

@@ -85,6 +85,9 @@
 # define FT_ERROR_PIPEX_OUTFILE_FAIL "minishell: error on opening output file"
 # define FT_ERROR_PIPEX_INFILE_FAIL "minishell: error on opening input file"
 
+# define CRED "\001\e[0;31m\002"
+# define RESET "\001\e[0m\002"
+# define FT_SHELL_NAME "minishe11-1.1$ "
 
 typedef struct s_word
 {

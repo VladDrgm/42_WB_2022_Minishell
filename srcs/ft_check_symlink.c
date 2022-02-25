@@ -6,7 +6,7 @@
 /*   By: mamuller <mamuller@student.42wolfsburg>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 15:12:48 by dbanfi            #+#    #+#             */
-/*   Updated: 2022/02/21 19:38:39 by mamuller         ###   ########.fr       */
+/*   Updated: 2022/02/26 21:37:29 by mamuller         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ static void	ft_next_sub_dir(struct stat **buf, char **path_substr)
 {
 	char	*str_ptr;
 	char	*path_substr_free;
+
 	path_substr_free = NULL;
 	str_ptr = NULL;
 	ft_smart_free((void **)buf);
@@ -79,6 +80,7 @@ int	ft_check_symlink(char *path, char *arg, pid_t pid)
 {
 	struct stat	*buf;
 	char		*path_substr;
+
 	path_substr = ft_strdup(path);
 	while (path_substr != NULL)
 	{

@@ -12,7 +12,6 @@
 
 #include "../incl/minishell.h"
 
-
 static int	ft_abs_path_handler(char *rel_path, char **abs_path)
 {
 	int	i;
@@ -72,7 +71,6 @@ static void	ft_rel_path_handler(char **path_helper, char *rel_path)
 	split_ptr = arg_split;
 	while (*split_ptr != NULL)
 	{
-		printf("current split : %s\n", *split_ptr);
 		if (!ft_strncmp(*split_ptr, "..", 2) && ft_strlen(*split_ptr) == 2)
 		{
 			if (ft_parent_dir_handler(path_helper))
@@ -87,7 +85,6 @@ static void	ft_rel_path_handler(char **path_helper, char *rel_path)
 			*path_helper = ft_strjoin_with_dfree(*path_helper, \
 				ft_strjoin("/", *split_ptr));
 		split_ptr++;
-		printf("child hlp : %s\n", *path_helper);
 	}
 	ft_free_split(arg_split);
 }

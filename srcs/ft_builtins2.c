@@ -112,6 +112,35 @@ static void	ft_cd_link_handler(char *abs_path, char *current_path, \
 	ft_smart_free((void **)&current_path);
 }
 
+static void	ft_path_cleaner(char **cp)
+{
+	char	*current_path_free;
+	int		i;
+	int		j;
+
+	i = 0;
+	while ((*cp)[i] != '\0')
+	{
+		j = i;
+		while ((*cp)[j] == '/')
+			j++;
+		if ((j != i && (*cp)[j] == '\0') || (j > i + 1))
+		{
+			if (!ft_strcmp(*cp, "/"))
+				break ;
+			current_path_free = *cp;
+			if ((*cp)[j] == '\0' && i != 0)
+				*cp = ft_strjoin_with_free(ft_substr(*cp, 0, i), &(*cp)[j]);
+			else
+				*cp = ft_strjoin_with_free(ft_substr(*cp, 0, i + 1), &(*cp)[j]);
+			ft_smart_free((void **)&current_path_free);
+			i = 0;
+			continue ;
+		}
+		i++;
+	}
+}
+
 /**
 	@brief
 	@param args
@@ -132,8 +161,10 @@ int	minishell_cd(char **args, pid_t pid)
 		return (1);
 	}
 	abs_path = NULL;
-	current_path = NULL;
-	ft_rtoa_path(args[1], &abs_path);
+	current_path = ft_strdup(args[1]);
+	ft_path_cleaner(&current_path);
+	ft_rtoa_path(current_path, &abs_path);
+	ft_smart_free((void **)&current_path);
 	if (ft_cd_open_dir_checker(abs_path, pid, args))
 		return (1);
 	if (g_access.dp != NULL)

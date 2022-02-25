@@ -46,19 +46,6 @@ void	ft_set_global_pwd(char **env)
 		i++;
 }
 
-int	ft_count_arguments(t_list *cmd_list)//___________________________________change for ft_lst_size
-{
-	int	counter;
-
-	counter = 0;
-	while (cmd_list != NULL)
-	{
-		counter++;
-		cmd_list = cmd_list->next;
-	}
-	return (counter);
-}
-
 /**
 	@brief Frees and sets pointer to NULL. Is NULL protected.
 	@param s1: Pointer to a pointer to be freed.

@@ -19,16 +19,16 @@
 	@param en_var
 	@return None.
  */
-static void	ft_copy_env_big_list_handler(t_list *env_cpy, \
+static void	ft_copy_env_big_list_handler(t_list **env_cpy, \
 	t_list *ptr_cpy, t_env_var *env_var)
 {
 	t_list	*tmp;
 
 	if (ft_strcmp(env_var->name, ((t_env_var *)(ptr_cpy->content))->name) < 0)
-		ft_lstadd_front(&(env_cpy), ft_lstnew(env_var));
+		ft_lstadd_front(env_cpy, ft_lstnew(env_var));
 	else if (ft_strcmp(env_var->name, \
-		((t_env_var *)(ft_lstlast(env_cpy)->content))->name) > 0)
-		ft_lstadd_back(&(env_cpy), ft_lstnew(env_var));
+		((t_env_var *)(ft_lstlast(*env_cpy)->content))->name) > 0)
+		ft_lstadd_back(env_cpy, ft_lstnew(env_var));
 	else
 	{
 		while (ptr_cpy->next != NULL)
@@ -48,7 +48,7 @@ static void	ft_copy_env_big_list_handler(t_list *env_cpy, \
 	}
 }
 
-static void	ft_copy_env_env_var_creation(t_env_var **env_var, t_list *ptr_env)
+static void	ft_copy_env_var_creation(t_env_var **env_var, t_list *ptr_env)
 {
 	*env_var = (t_env_var *)malloc(sizeof(t_env_var));
 	(*env_var)->name = ft_strdup(((t_env_var *)(ptr_env->content))->name);
@@ -71,7 +71,7 @@ t_list	*ft_copy_env(void)
 	while (ptr_env)
 	{
 		p_cp = env_cpy;
-		ft_copy_env_env_var_creation(&env, ptr_env);
+		ft_copy_env_var_creation(&env, ptr_env);
 		if (ft_lstsize(env_cpy) == 0)
 			ft_lstadd_back(&(env_cpy), ft_lstnew(env));
 		else if (ft_lstsize(env_cpy) == 1)
@@ -82,7 +82,7 @@ t_list	*ft_copy_env(void)
 				ft_lstadd_front(&(env_cpy), ft_lstnew(env));
 		}
 		else
-			ft_copy_env_big_list_handler(env_cpy, p_cp, env);
+			ft_copy_env_big_list_handler(&env_cpy, p_cp, env);
 		ptr_env = ptr_env->next;
 	}
 	return (env_cpy);
