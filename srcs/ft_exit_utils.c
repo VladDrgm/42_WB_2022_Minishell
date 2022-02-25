@@ -19,11 +19,12 @@ int	ft_digit_check(char *argv)
 	return (0);
 }
 
-long long int	ft_atoll(const char *str)
+int	ft_atoll(const char *str, long long int *out)
 {
 	int	i;
 	int	j;
 	long long int	k;
+	long long int	old_k;
 
 	i = 0;
 	j = 1;
@@ -39,9 +40,13 @@ long long int	ft_atoll(const char *str)
 	while (str[i] != '\0' && (str[i] > 47 && str[i] < 58))
 	{
 		k = k * 10 + (str[i] - 48);
+		if (k < old_k)
+			return (1);
+		old_k = k;
 		i++;
 	}
-	return (k * j);
+	*out = k * j;
+	return (0);
 }
 
 int ft_get_index()

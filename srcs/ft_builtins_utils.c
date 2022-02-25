@@ -66,7 +66,19 @@ void ft_last_arg(char **args, pid_t pid)
 	ft_update_create_env("_", args[i - 1], pid);
 }
 
-// void ft_update_create_(char *to_update)
-// {
-
-// }
+void	ft_set_lasts(char **args, int pid, int lreturn, int mode)
+{
+	if (mode == 1)
+		ft_last_arg(args, pid);
+	else if (mode == 2)
+	{
+		ft_smart_free((void **)&(g_access.last_return));
+		g_access.last_return = ft_itoa(lreturn);
+	}
+	else if (mode == 3)
+	{
+		ft_smart_free((void **)&(g_access.last_return));
+		g_access.last_return = ft_itoa(lreturn);
+		ft_last_arg(args, pid);
+	}
+}

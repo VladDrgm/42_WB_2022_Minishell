@@ -142,6 +142,7 @@ void	ft_update_env(char *to_search, char *to_replace); //check if value finder f
 char	*env_value_finder(char *name);
 void	delone(void *content);
 void	ft_last_arg(char **args, pid_t pid);
+void	ft_set_lasts(char **args, int pid, int lreturn, int mode);
 // ECHO UTILS
 void	echo_print(char **str, int starter, int size, int flag);
 int		echo_flag(char *str);
@@ -155,7 +156,7 @@ void	ft_rtoa_path(char *rel_path, char **abs_path);
 
 // EXIT UTILS
 int		ft_digit_check(char *argv);
-long long int	ft_atoll(const char *str);
+int		ft_atoll(const char *str, long long int *out);
 int		ft_get_index();
 int		ft_exit_error_handler(char *str1, char *str2, char *str3, int exit_value);
 void	ft_child_exit(int exit_value);
