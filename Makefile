@@ -9,22 +9,24 @@ UNAME = $(shell uname)
 
 ifeq ($(UNAME), Linux)
 
-SRC			=  main.c ft_lexor.c ft_parser.c ft_initiator.c ft_echo_utils.c ft_builtins2.c ft_builtins.c ft_globlal_fun.c \
-				ft_builtins_utils.c ft_cd_utils.c ft_lexor_utils.c ft_lexor_utils2.c ft_lexor_handlers.c ft_parser_utils.c ft_utils.c \
-				ft_free_linked_list.c ft_exit_utils.c ft_export_utils.c get_next_line.c get_next_line_utils.c ft_init_utils.c \
-				ft_pipex.c ft_heredoc.c ft_signal_handler.c ft_check_path_env_linux.c ft_check_symlink.c ft_env_check.c \
-				ft_parser_handler.c ft_path_finder.c ft_executor.c ft_pipex_utils.c ft_heredoc_utils.c \
-				ft_pipex_error_handling.c ft_pipex_filecheck.c ft_utils_join.c
+SRC			=	ft_builtin_cd.c ft_builtin_echo.c ft_builtin_env.c ft_builtin_exit.c ft_builtin_exit_utils.c ft_builtin_export.c \
+				ft_builtin_export_utils.c ft_builtin_pwd.c ft_builtin_unset.c ft_builtin_utils.c ft_builtin_utils_env.c \
+				ft_check_path_env_linux.c ft_check_symlink.c ft_env_check.c ft_executor.c ft_free_linked_list.c \
+				ft_globlal_fun.c ft_heredoc.c ft_heredoc_utils.c ft_init_utils.c ft_initiator.c ft_lexor.c ft_lexor_handlers.c \
+				ft_lexor_utils.c ft_lexor_utils2.c ft_parser.c ft_parser_handler.c ft_parser_utils.c ft_path_finder.c ft_pipex.c \
+				ft_pipex_error_handling.c ft_pipex_filecheck.c ft_pipex_utils.c ft_rtoa_path.c ft_signal_handler.c ft_utils.c \
+				ft_utils_join.c ft_utils_num.c get_next_line.c get_next_line_utils.c main.c
 
 endif
 
 ifeq ($(UNAME), Darwin)
-SRC			=  main.c ft_lexor.c ft_parser.c ft_initiator.c ft_echo_utils.c ft_builtins2.c ft_builtins.c ft_globlal_fun.c \
-				ft_builtins_utils.c ft_cd_utils.c ft_lexor_utils.c ft_lexor_utils2.c ft_lexor_handlers.c ft_parser_utils.c ft_utils.c \
-				ft_free_linked_list.c ft_exit_utils.c ft_export_utils.c get_next_line.c get_next_line_utils.c ft_init_utils.c \
-				ft_pipex.c ft_heredoc.c ft_signal_handler.c ft_check_path_env_mac.c ft_check_symlink.c ft_env_check.c \
-				ft_parser_handler.c ft_path_finder.c ft_executor.c ft_pipex_utils.c ft_heredoc_utils.c \
-				ft_pipex_error_handling.c ft_pipex_filecheck.c ft_utils_join.c
+SRC			=	ft_builtin_cd.c ft_builtin_echo.c ft_builtin_env.c ft_builtin_exit.c ft_builtin_exit_utils.c ft_builtin_export.c \
+				ft_builtin_export_utils.c ft_builtin_pwd.c ft_builtin_unset.c ft_builtin_utils.c ft_builtin_utils_env.c \
+				ft_check_path_env_mac.c ft_check_symlink.c ft_env_check.c ft_executor.c ft_free_linked_list.c\
+				ft_globlal_fun.c ft_heredoc.c ft_heredoc_utils.c ft_init_utils.c ft_initiator.c ft_lexor.c ft_lexor_handlers.c \
+				ft_lexor_utils.c ft_lexor_utils2.c ft_parser.c ft_parser_handler.c ft_parser_utils.c ft_path_finder.c ft_pipex.c \
+				ft_pipex_error_handling.c ft_pipex_filecheck.c ft_pipex_utils.c ft_rtoa_path.c ft_signal_handler.c ft_utils.c \
+				ft_utils_join.c ft_utils_num.c get_next_line.c get_next_line_utils.c main.c
 endif
 
 

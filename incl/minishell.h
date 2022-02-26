@@ -170,8 +170,6 @@ void	delone(void *content);
 void	ft_last_arg(char **args, pid_t pid);
 void	ft_set_lasts(char **args, int pid, int lreturn, int mode);
 // ECHO UTILS
-void	echo_print(char **str, int starter, int size, int flag);
-int		echo_flag(char *str);
 // CD UTILS
 void	ft_update_create_env(char *env, char *value, pid_t pid);
 void	ft_update_PWD(void);
@@ -187,10 +185,8 @@ int		ft_get_index();
 void	ft_exit_error_handler(char *str1, char *str2, char *str3, int exit_value);
 void	ft_child_exit(int exit_value);
 //EXPORT UTILS
-t_list *ft_copy_env(void);
 void ft_print_sorted_copy(t_list *env_cpy);
-int ft_single_export(void);
-int ft_check_existing_env(t_env_var **env_var);
+t_list	*ft_copy_env(void);
 
 // LEXOR UTILS
 char	*join2current_str(char* current_str, char* add_on);
@@ -314,5 +310,6 @@ void	ft_signal_setup(void);
 
 void	del_env_var(void *tmp);
 void	ft_path_cleaner(char **cp);
+int	ft_env_name_check(char *args_word, int *valid, pid_t pid, int mes_type);
 
 #endif

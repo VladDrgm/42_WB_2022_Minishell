@@ -66,7 +66,7 @@ static void	ft_copy_env_var_creation(t_env_var **env_var, t_list *ptr_env)
 	@brief Creates a copy of env var list with alphabetical order.
 	@return Sorted copy of env var list.
  */
-static t_list	*ft_copy_env(void)
+t_list	*ft_copy_env(void)
 {
 	t_list		*env_cpy;
 	t_list		*ptr_env;
