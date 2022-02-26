@@ -12,121 +12,85 @@
 
 #include "../incl/minishell.h"
 
-/**
-	@brief
-	@param env
-	@param value
-	@param pid
-	@return None.
- */
-void	ft_update_create_env(char *env, char *value, pid_t pid)
-{
-	t_list *ptr;
-	char *args[3];
 
-	ptr = g_access.env;
-	while (ptr != NULL)
+static int	ft_abs_path_handler(char *rel_path, char **abs_path)
+{
+	int	i;
+
+	i = 0;
+	if (ft_strnstr(rel_path, ".", ft_strlen(rel_path)) == NULL)
 	{
-		if (ft_strncmp(((t_env_var *)(ptr->content))->name, env, ft_strlen(env)) == 0)
+		if (rel_path[0] == '/')
 		{
-			if ((ft_strlen(((t_env_var *)(ptr->content))->name) - 1) == ft_strlen(env))
-			{
-				if (((t_env_var *)(ptr->content))->value != NULL)
-					free(((t_env_var *)(ptr->content))->value);
-				((t_env_var *)(ptr->content))->value = ft_strdup(value);
-				return ;
-			}
+			*abs_path = ft_strdup(rel_path);
+			return (1);
 		}
-		ptr = ptr->next;
-	}
-	args[0] = "export";
-	args[1] = ft_strjoin_with_free(ft_strjoin(env, "="), value);
-	args[2] = NULL;
-	minishell_export(args, pid);
-	if (args[1] != NULL)
-		free(args[1]);
-}
-
-/**
-	 @brief Bultin command support function: updates PWD
-	 @param path The path towards the directory, as imputted by user
-	 @return void functions;
- */
-/* void	ft_update_PWD(void)
-{
-	char *path;
-
-	path = NULL;
-	ft_set_global_pwd(&path);
-	if (env_value_finder("PWD") == NULL)
-		ft_set_global_pwd(&g_access.pwd);
-	else
-		ft_update_env("PWD=", path);
-	if (path != NULL)
-		free(path);
-} */
-
-/* int ft_cd_error_handler(char *str, pid_t pid, char **path, char **temp)
-{
-	if (pid == 0)
-		write(2, str, ft_strlen(str));
-	if (*path != NULL)
-	{
-		free(*path);
-		*path = NULL;
-	}
-	free(temp[0]);
-	free(temp[1]);
-	free(g_access.last_return);
-	g_access.last_return = ft_itoa(1);
-	return (1);
-} */
-
-/* void ft_update_dir(char *arg1, char *path)
-{
-	struct stat *buf;
-	char *symlink;
-	char *symlink_dir;
-
-	if (arg1 == NULL)
-		return;
-	if (!ft_strncmp(arg1, "-", ft_strlen(arg1)))
-		arg1 = env_value_finder("PWD");	//needs to be adjusted for symlink!
-	buf = ft_calloc(sizeof(struct stat), 1);
-	symlink = ft_strrchr(arg1, '/');
-	if (lstat(arg1, buf) == -1)
-		perror("minishell");
-	if (S_ISLNK(buf->st_mode))
-	{
-		if (symlink == NULL)
+		if (g_access.dp == NULL)
 		{
-			ft_set_global_pwd(&g_access.dp);
-			g_access.dp = ft_strjoin(g_access.dp,ft_strjoin("/", arg1));
+			*abs_path = getcwd(NULL, 0);
+			while (getcwd(*abs_path, i) == NULL)
+				i++;
+			*abs_path = ft_strjoin_with_free(ft_strjoin_with_free(*abs_path, \
+				"/"), rel_path);
 		}
 		else
-		{
-			symlink_dir = ft_substr(arg1, 0, symlink - arg1);
-			chdir(symlink_dir);
-			ft_set_global_pwd(&symlink_dir);
-			free(g_access.dp);
-			g_access.dp = ft_strjoin(symlink_dir, symlink);
-		}
+			*abs_path = ft_strjoin_with_free(ft_strjoin(g_access.dp, \
+				"/"), rel_path);
+		return (1);
 	}
-	else
-	{
-		if(g_access.dp != NULL)
-			free(g_access.dp);
-		g_access.dp = NULL;
-	}
-	if (chdir(path) != 0)
-	{
-		free(g_access.last_return);
-		g_access.last_return = ft_itoa(1);
-	}
-	free(buf);
-} */
+	return (0);
+}
 
-/**************************************************/
+static int	ft_parent_dir_handler(char **path_helper)
+{
+	char	*path_ptr;
+	char	*path_helper_free;
+
+	path_ptr = ft_strrchr(*path_helper, '/');
+	if (path_ptr != NULL)
+	{
+		path_helper_free = *path_helper;
+		*path_helper = ft_substr(*path_helper, 0, \
+			ft_strlen(*path_helper) - ft_strlen(path_ptr));
+		if (ft_strlen(*path_helper) == 0)
+		{
+			*path_helper = ft_strjoin_with_free(*path_helper, "/");
+			ft_smart_free((void **)&path_helper_free);
+			return (1);
+		}
+		ft_smart_free((void **)&path_helper_free);
+	}
+	return (0);
+}
+
+static void	ft_rel_path_handler(char **path_helper, char *rel_path)
+{
+	char	**arg_split;
+	char	**split_ptr;
+
+	arg_split = ft_split(rel_path, '/');
+	split_ptr = arg_split;
+	while (*split_ptr != NULL)
+	{
+		printf("current split : %s\n", *split_ptr);
+		if (!ft_strncmp(*split_ptr, "..", 2) && ft_strlen(*split_ptr) == 2)
+		{
+			if (ft_parent_dir_handler(path_helper))
+				break ;
+		}
+		else if (!ft_strncmp(*split_ptr, ".", 1) && ft_strlen(*split_ptr) == 1)
+		{
+			split_ptr++;
+			continue ;
+		}
+		else
+			*path_helper = ft_strjoin_with_dfree(*path_helper, \
+				ft_strjoin("/", *split_ptr));
+		split_ptr++;
+		printf("child hlp : %s\n", *path_helper);
+	}
+	ft_free_split(arg_split);
+}
 
 /**
 	@brief
@@ -137,35 +101,9 @@ void	ft_update_create_env(char *env, char *value, pid_t pid)
 void	ft_rtoa_path(char *rel_path, char **abs_path)
 {
 	char	*path_helper;
-	char	**arg_split;
-	char	**split_ptr;
-	char	*path_ptr;
-	char	*path_helper_free;
-	char	*buf;
-	int		i;
 
-	i = 0;
-	buf = NULL;
-	if (ft_strnstr(rel_path, ".", ft_strlen(rel_path)) == NULL)
-	{
-		if (rel_path[0] == '/')
-		{
-			*abs_path = ft_strdup(rel_path);
-			return ;
-		}
-		if (g_access.dp == NULL)
-		{
-			buf = getcwd(NULL, 0);
-			while (getcwd(buf, i) == NULL)
-				i++;
-			*abs_path = ft_strjoin_with_free(ft_strjoin_with_free(buf, \
-				"/"), rel_path);
-		}
-		else
-			*abs_path = ft_strjoin_with_free(ft_strjoin(g_access.dp, \
-				"/"), rel_path);
+	if (ft_abs_path_handler(rel_path, abs_path))
 		return ;
-	}
 	path_helper = NULL;
 	if (g_access.dp != NULL)
 		path_helper = ft_strdup(g_access.dp);
@@ -173,45 +111,6 @@ void	ft_rtoa_path(char *rel_path, char **abs_path)
 		path_helper = ft_strdup(g_access.pwd);
 	else
 		ft_set_global_pwd(&path_helper);
-	arg_split = ft_split(rel_path, '/');
-	split_ptr = arg_split;
-	while (*split_ptr != NULL)
-	{
-		if (!ft_strncmp(*split_ptr, "..", 2) && ft_strlen(*split_ptr) == 2)
-		{
-			path_ptr = ft_strrchr(path_helper, '/');
-			if (path_ptr != NULL)
-			{
-				path_helper_free = path_helper;
-				path_helper = ft_substr(path_helper, 0, \
-					ft_strlen(path_helper) - ft_strlen(path_ptr));
-				if (ft_strlen(path_helper) == 0)
-				{
-					path_helper = ft_strjoin_with_free(path_helper, "/");
-					if (path_helper_free)
-					{
-						free(path_helper_free);
-						path_helper_free = NULL;
-					}
-					break ;
-				}
-				if (path_helper_free)
-				{
-					free(path_helper_free);
-					path_helper_free = NULL;
-				}
-			}
-		}
-		else if (!ft_strncmp(*split_ptr, ".", 1) && ft_strlen(*split_ptr) == 1)
-		{
-			split_ptr++;
-			continue ;
-		}
-		else
-			path_helper = ft_strjoin_with_dfree(path_helper, \
-				ft_strjoin("/", *split_ptr));
-		split_ptr++;
-	}
-	ft_free_split(arg_split);
+	ft_rel_path_handler(&path_helper, rel_path);
 	*abs_path = path_helper;
 }

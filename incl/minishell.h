@@ -269,8 +269,6 @@ int		ft_fc_error_exit(int error_flag, t_fd fd);
 void	ft_heredoc_child_free(int **fd_docks);
 void	ft_heredoc_parent(int *fd, pid_t pid);
 
-
-
 /*exit_handler.c*/
 void	ft_close_fd(void);
 void	ft_free_split(char **split);
