@@ -71,21 +71,20 @@
 # define FT_ERROR_PARSER_UNEX_TOKEN_PIPE "minishell: syntax error near unexpected token `|'\n"
 # define FT_ERROR_PARSER_UNEX_TOKEN_NL "minshell: syntax error near unexpected token `newline'\n"
 
-<<<<<<< HEAD
 # define FT_LAST_ARG_MODE 1
 # define FT_LAST_RETURN_MODE 2
 # define FT_LAST_FULL_MODE 3
 
 # define FT_UNSET_MES_TYPE 0
 # define FT_EXPORT_MES_TYPE 1
-=======
+
 # define FT_ERROR_PIPEX_EXEC_FAIL "minishell: command execution failed"
 # define FT_ERROR_PIPEX_FD_DUP_FAIL "minishell: file descriptor duplication failed"
 # define FT_ERROR_PIPEX_PIPE_FAIL "minishell: pipe creation failed"
 # define FT_ERROR_PIPEX_FORK_FAIL "minishell: fork creation failed"
 # define FT_ERROR_PIPEX_OUTFILE_FAIL "minishell: error on opening output file"
 # define FT_ERROR_PIPEX_INFILE_FAIL "minishell: error on opening input file"
->>>>>>> overmind
+
 
 typedef struct s_word
 {
