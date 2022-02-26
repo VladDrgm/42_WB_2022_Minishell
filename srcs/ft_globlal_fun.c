@@ -1,33 +1,38 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_globlal_fun.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbanfi <dbanfi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/26 13:27:45 by dbanfi            #+#    #+#             */
+/*   Updated: 2022/02/26 13:27:45 by dbanfi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../incl/minishell.h"
 
-void free_global(void)
+/**
+	@brief Frees globly used variables. Frees global structute g_access
+		and readline history.
+	@return None.
+	@exception Insert "rl_clear_history();" on line 38 to free readline
+		history works only with linux readline libraries.
+*/
+void	free_global(void)
 {
 	if (g_access.env)
 		ft_free_linked_list(&(g_access.env), FT_LIST_TYPE_ENV_VAR, 1);
-	g_access.env = NULL;
 	if (g_access.builtins)
-		ft_free_linked_list(&(g_access.builtins), FT_LIST_TYPE_BUILTIN_CONTENT, 1);
-	g_access.builtins = NULL;
-	if (g_access.last_return)
-		free(g_access.last_return);
-	g_access.last_return = NULL;
+		ft_free_linked_list(&(g_access.builtins), \
+			FT_LIST_TYPE_BUILTIN_CONTENT, 1);
+	ft_smart_free((void **)&g_access.last_return);
 	if (g_access.lexor2parser)
 		ft_free_linked_list(&(g_access.lexor2parser), FT_LIST_TYPE_WORD, 1);
-	g_access.lexor2parser = NULL;
 	if (g_access.parser2exec)
 		ft_free_linked_list(&(g_access.parser2exec), FT_LIST_TYPE_COMMAND, 1);
-	g_access.parser2exec = NULL;
-	if (g_access.read_line2lexor)
-		free(g_access.read_line2lexor);
-	g_access.read_line2lexor = NULL;
-	if (g_access.home)
-		free(g_access.home);
-	g_access.home = NULL;
-	if (g_access.pwd)
-		free(g_access.pwd);
-	g_access.pwd = NULL;
-	if (g_access.dp)
-		free(g_access.dp);
-	g_access.dp = NULL;
-	// rl_clear_history();
+	ft_smart_free((void **)&g_access.read_line2lexor);
+	ft_smart_free((void **)&g_access.home);
+	ft_smart_free((void **)&g_access.pwd);
+	ft_smart_free((void **)&g_access.dp);
 }
