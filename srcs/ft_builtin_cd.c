@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_builtin_cd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dbanfi <dbanfi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mamuller <mamuller@student.42wolfsburg>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/25 21:26:00 by mamuller          #+#    #+#             */
-/*   Updated: 2022/02/27 12:39:37 by dbanfi           ###   ########.fr       */
+/*   Updated: 2022/02/27 14:34:12 by mamuller         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 	@return None.
 	@exception If PWD doesn't exists the OLDPWD is set to empty string.
  */
-void	ft_cd_symlink_handler(char *abs_path, char *current_path, int pid)
+static void	ft_cd_symlink_handler(char *abs_path, char *current_path, int pid)
 {
 	if (env_value_finder("PWD") == NULL || \
 		ft_strlen(env_value_finder("PWD")) == 0)
@@ -45,7 +45,8 @@ void	ft_cd_symlink_handler(char *abs_path, char *current_path, int pid)
 	@return None.
 	@exception If PWD doesn't exists the OLDPWD is set to empty string.
  */
-void	ft_cd_not_symlink_handler(char *abs_path, char *current_path, int pid)
+static void	ft_cd_not_symlink_handler(char *abs_path, char *current_path, \
+	int pid)
 {
 	if (env_value_finder("PWD") == NULL || \
 		ft_strlen(env_value_finder("PWD")) == 0)

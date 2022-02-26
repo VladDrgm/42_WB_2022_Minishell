@@ -23,7 +23,7 @@
 	@return 2 on error else 0.
 	@exception If file is not existent it will be created.
 */
-int	out_redirect(char *filename, int type, int *fd)
+static int	out_redirect(char *filename, int type, int *fd)
 {
 	int	permissions;
 
@@ -48,7 +48,7 @@ int	out_redirect(char *filename, int type, int *fd)
 		between children.
 	@return 3 on error else 0.
 */
-int	in_redirect(char *filename, int type, int *fd)
+static int	in_redirect(char *filename, int type, int *fd)
 {
 	int	permissions;
 

@@ -102,7 +102,7 @@ static void	ft_check_empty_input(int *flag)
 	 @exception Removes comments.
 	 @exception Handles env variables ($).
  */
-int	lexor(void)
+int	ft_lexor(void)
 {
 	int		i;
 	int		start;

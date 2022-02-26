@@ -6,7 +6,7 @@
 /*   By: mamuller <mamuller@student.42wolfsburg>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 21:57:51 by mamuller          #+#    #+#             */
-/*   Updated: 2022/02/23 12:14:37 by mamuller         ###   ########.fr       */
+/*   Updated: 2022/02/27 15:00:05 by mamuller         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static int	ft_redirection_handler(t_list **lex_element, \
 		ft_smart_free((void **)&(cmd_line_red[0]));
 		free(cmd_line_red);
 		*return_flag = ft_parser_error_handler(&(g_access.parser2exec), \
-			&(g_access.lexor2parser), FT_ERROR_PARSER_UNEX_TOKEN_NL);
+			&(g_access.lexor2parser), FT_ERR_PR_TK_NL);
 		return (-1);
 	}
 	if (((t_word *)((*lex_element)->content))->type == FT_SPECIAL_CHAR_STRING)
@@ -43,7 +43,7 @@ static int	ft_redirection_handler(t_list **lex_element, \
 		ft_smart_free((void **)&(cmd_line_red[0]));
 		free(cmd_line_red);
 		*return_flag = ft_parser_error_handler(&(g_access.parser2exec), \
-			&(g_access.lexor2parser), FT_ERROR_PARSER_UNEX_TOKEN);
+			&(g_access.lexor2parser), FT_ERR_PR_TK);
 		return (-1);
 	}
 	cmd_line_red[1] = ft_strdup(((t_word *)((*lex_element)->content))->address);
@@ -63,13 +63,13 @@ static void	ft_pipe_handler(t_list **lex_element, int *return_flag, int cmd_len)
 {
 	if (cmd_len == 0)
 		*return_flag = ft_parser_error_handler(&(g_access.parser2exec), \
-			&(g_access.lexor2parser), FT_ERROR_PARSER_UNEX_TOKEN_PIPE);
+			&(g_access.lexor2parser), FT_ERR_PR_TK_PIPE);
 	else
 	{
 		*lex_element = (*lex_element)->next;
 		if (*lex_element == NULL)
 			*return_flag = ft_parser_error_handler(&(g_access.parser2exec), \
-				&(g_access.lexor2parser), FT_ERROR_PARSER_UNEX_TOKEN_PIPE);
+				&(g_access.lexor2parser), FT_ERR_PR_TK_PIPE);
 	}
 }
 
@@ -101,7 +101,7 @@ static int	ft_special_char_string_handler(t_list **lex_element, \
 	else
 	{
 		*return_flag = ft_parser_error_handler(&(g_access.parser2exec), \
-			&(g_access.lexor2parser), FT_ERROR_PARSER_UNEX_TOKEN);
+			&(g_access.lexor2parser), FT_ERR_PR_TK);
 		return (1);
 	}
 	return (0);

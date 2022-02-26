@@ -46,7 +46,7 @@ static void	ft_minishell(char **envp)
 		if (*(g_access.read_line2lexor) == 0)
 			continue ;
 		add_history(g_access.read_line2lexor);
-		temp = lexor();
+		temp = ft_lexor();
 		if (temp != -1)
 		{
 			temp = ft_parser();
