@@ -13,11 +13,13 @@
 #include "../incl/minishell.h"
 
 /**
-	@brief
-	@param abs_path
-	@param current_path
-	@param pid
+	@brief Handels updating env var list and current dir change.
+		In case there is symlink in the path.
+	@param abs_path Absolute path string.
+	@param current_path Current path string.
+	@param pid Proccess id.
 	@return None.
+	@exception If PWD doesn't exists the OLDPWD is set to empty string.
  */
 void	ft_cd_symlink_handler(char *abs_path, char *current_path, int pid)
 {
@@ -35,11 +37,13 @@ void	ft_cd_symlink_handler(char *abs_path, char *current_path, int pid)
 }
 
 /**
-	@brief
-	@param abs_path
-	@param current_path
-	@param pid
+	@brief Handels updating env var list and current dir change.
+		In case there is no symlink in the path.
+	@param abs_path Absolute path string.
+	@param current_path Current path string.
+	@param pid Proccess id.
 	@return None.
+	@exception If PWD doesn't exists the OLDPWD is set to empty string.
  */
 void	ft_cd_not_symlink_handler(char *abs_path, char *current_path, int pid)
 {
@@ -56,11 +60,11 @@ void	ft_cd_not_symlink_handler(char *abs_path, char *current_path, int pid)
 }
 
 /**
-	@brief
-	@param abs_path
-	@param pid
-	@param args
-	@return Int.
+	@brief Checks if directory can be opened.
+	@param abs_path Absolute path string.
+	@param pid Proccess id.
+	@param args List of args.
+	@return Returns 0 on success else 1.
  */
 static int	ft_cd_open_dir_checker(char *abs_path, int pid, char **args)
 {
@@ -85,11 +89,11 @@ static int	ft_cd_open_dir_checker(char *abs_path, int pid, char **args)
 }
 
 /**
-	@brief
-	@param abs_path
-	@param current_path
-	@param pid
-	@param args
+	@brief Handels all kinds of links.
+	@param abs_path Absolute path string.
+	@param current_path Current path string.
+	@param pid Proccess id.
+	@param args List of args.
 	@return None.
  */
 static void	ft_cd_link_handler(char *abs_path, char *current_path, \
@@ -112,6 +116,11 @@ static void	ft_cd_link_handler(char *abs_path, char *current_path, \
 	ft_smart_free((void **)&current_path);
 }
 
+/**
+	@brief Removes repeating slashes '/'.
+	@param cp String to be cleaned of slashes.
+	@return None.
+ */
 static void	ft_path_cleaner(char **cp)
 {
 	char	*current_path_free;
@@ -142,10 +151,11 @@ static void	ft_path_cleaner(char **cp)
 }
 
 /**
-	@brief
-	@param args
-	@param pid
-	@return None.
+	@brief Builtin command: cd. Changes current working directory and
+		updates env vars accordingly.
+	@param args List of args.
+	@param pid Proccess id.
+	@return Always returns 1, to continue execution.
  */
 int	minishell_cd(char **args, pid_t pid)
 {
@@ -177,9 +187,9 @@ int	minishell_cd(char **args, pid_t pid)
 }
 
 /**
-	@brief
-	@param args
-	@param len
+	@brief Handels printing of arguments and flag detection.
+	@param args List of args.
+	@param len Number of arguments.
 	@return None.
  */
 static void	echo_print_handler(char **args, int len)
@@ -203,14 +213,11 @@ static void	echo_print_handler(char **args, int len)
 }
 
 /**
-	 @brief Builtin command: echo.
-	 @param args List of args.	Not examined.
-	 @param pid
-	 @return Always returns 1, to continue execution.
-	 @todo edge case fetch -nnnnn -nnnn test / edge case 
-	 	echo $_ -> $_ must be implemented alongside history;
-		 	implemented -nnnnnnnn and also implemented -nnnnn -nnnn V.
-	 @todo fix flag -n try printing
+	 @brief Builtin command: echo. Handels printing of arguments.
+	 	With or without NL in the end. Flag -n is handled.
+	 @param args List of args.
+	 @param pid Proccess id.
+	 @return Always returns 1.
 */
 int	minishell_echo(char **args, pid_t pid)
 {

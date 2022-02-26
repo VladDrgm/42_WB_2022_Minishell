@@ -13,25 +13,9 @@
 #include "../incl/minishell.h"
 
 /**
-	@brief
-	@param content
-	@return None.
- */
-void	delone(void *content)
-{
-	t_env_var	*env_var;
-
-	env_var = (t_env_var *) content;
-	free(env_var->name);
-	free(env_var->value);
-	free(content);
-}
-
-//FINDS THE EQUIVALENT VALUE OF A ENV VAR
-/**
-	@brief
-	@param name
-	@return *char
+	@brief Finds the value of env var
+	@param name Serached key.
+	@return Value of found env var else NULL
  */
 char	*env_value_finder(char *name)
 {
@@ -52,9 +36,9 @@ char	*env_value_finder(char *name)
 }
 
 /**
-	@brief Functionality: ft_update_env.
-	@param to_search the string to be looked for inside the envp variable
-	@param to_replace the string that will replace 'to_search'
+	@brief Updates value of already exisisting env.
+	@param to_search The string to be looked for inside the env variable
+	@param to_replace The string that will replace 'to_search'
 	@return None.
  */
 void	ft_update_env(char *to_search, char *to_replace)
@@ -77,10 +61,11 @@ void	ft_update_env(char *to_search, char *to_replace)
 }
 
 /**
-	@brief
-	@param args
-	@param pid
+	@brief Updates _ env var with value of last argument of input.
+	@param args Array of arguments. 
+	@param pid Proccess id.
 	@return None.
+	@exception Sets env var _ to empty string.
  */
 void	ft_last_arg(char **args, pid_t pid)
 {
@@ -95,11 +80,11 @@ void	ft_last_arg(char **args, pid_t pid)
 }
 
 /**
-	@brief 
-	@param args
-	@param pid
-	@param lreturn
-	@param mode
+	@brief Updates _ env var and/or(depends on mode) exit value.
+	@param args Array of arguments. 
+	@param pid Proccess id.
+	@param lreturn Exit value.
+	@param mode Mode of the function call.
 	@return None.
  */
 void	ft_set_lasts(char **args, int pid, int lreturn, int mode)
@@ -120,10 +105,10 @@ void	ft_set_lasts(char **args, int pid, int lreturn, int mode)
 }
 
 /**
-	@brief
-	@param env
-	@param value
-	@param pid
+	@brief Updates already existing env var else creates new env var.
+	@param env Key of env var.
+	@param value New value of env var.
+	@param pid Proccess id.
 	@return None.
  */
 void	ft_update_create_env(char *env, char *value, pid_t pid)

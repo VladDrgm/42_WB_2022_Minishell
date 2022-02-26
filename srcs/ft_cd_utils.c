@@ -12,6 +12,13 @@
 
 #include "../incl/minishell.h"
 
+/**
+	@brief Handels absolute path value inside relative path and
+		subdirs of current working dir.
+	@param rel_path Relative path to be transformed.
+	@param abs_path Pointer to absolute path. (output value)
+	@return None.
+ */
 static int	ft_abs_path_handler(char *rel_path, char **abs_path)
 {
 	int	i;
@@ -40,6 +47,11 @@ static int	ft_abs_path_handler(char *rel_path, char **abs_path)
 	return (0);
 }
 
+/**
+	@brief Removes last level of dir from path value inside path_helper.
+	@param path_helper Pointer to a string with path value. To be manipulated.
+	@return Returns 1 if path value can't be changed(root dir) else return 0.
+ */
 static int	ft_parent_dir_handler(char **path_helper)
 {
 	char	*path_ptr;
@@ -62,6 +74,13 @@ static int	ft_parent_dir_handler(char **path_helper)
 	return (0);
 }
 
+/**
+	@brief Merges relative path and current working dir into absolute path.
+	@param rel_path Relative path to be transformed.
+	@param path_helper Pointer to a string with current working dir.
+		To be manipulated.
+	@return None.
+ */
 static void	ft_rel_path_handler(char **path_helper, char *rel_path)
 {
 	char	**arg_split;
@@ -90,9 +109,9 @@ static void	ft_rel_path_handler(char **path_helper, char *rel_path)
 }
 
 /**
-	@brief
-	@param rel_path
-	@param abs_path
+	@brief Transforms relative path to absolute path.
+	@param rel_path Relative path to be transformed.
+	@param abs_path Pointer to absolute path. (output value)
 	@return None.
  */
 void	ft_rtoa_path(char *rel_path, char **abs_path)

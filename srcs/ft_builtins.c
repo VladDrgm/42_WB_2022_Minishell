@@ -13,9 +13,9 @@
 #include "../incl/minishell.h"
 
 /**
-	 @brief Bultin command: env.
-	 @param args List of args
-	 @param pid
+	 @brief Bultin command: env. Prints all existing env variables.
+	 @param args List of arguments.
+	 @param pid Proccess id.
 	 @return Always returns 1, to continue executing.
  */
 int	minishell_env(char **args, pid_t pid)
@@ -48,9 +48,9 @@ int	minishell_env(char **args, pid_t pid)
 }
 
 /**
-	@brief
-	@param i
-	@param args
+	@brief Handels exit function called in pipeline. Errors are not printed.
+	@param i Number of arguments.
+	@param args List of arguments.
 	@return None.
  */
 static void	ft_exit_multiple_child_handler(int *i, char **args)
@@ -83,8 +83,9 @@ static void	ft_exit_multiple_child_handler(int *i, char **args)
 }
 
 /**
-	@brief
-	@param args
+	@brief Converts the first argument into a number. Checks if it is valid
+		and exits with correct value. Prints error if needed.
+	@param args List of arguments.
 	@return None.
  */
 static void	ft_exit_value_cast(char **args)
@@ -110,9 +111,10 @@ static void	ft_exit_value_cast(char **args)
 }
 
 /**
-	@brief
-	@param i
-	@param args
+	@brief Handels exit functio in parent when needed. Initiates argument check.
+		Prints error if needed.
+	@param i Number of arguments.
+	@param args List of arguments.
 	@return None.
  */
 static void	ft_exit_parent_handler(int *i, char **args)
@@ -121,7 +123,7 @@ static void	ft_exit_parent_handler(int *i, char **args)
 		(*i)++;
 	if (*i > 2 && !ft_digit_check(args[1]))
 	{
-		write(2, "minishell: exit: too many arguments\n", 36);
+		write(2, FT_ERROR_EXIT_ARGS_NUM, ft_strlen(FT_ERROR_EXIT_ARGS_NUM));
 		ft_set_lasts(NULL, 0, 1, FT_LAST_RETURN_MODE);
 		return ;
 	}
@@ -137,9 +139,9 @@ static void	ft_exit_parent_handler(int *i, char **args)
 }
 
 /**
-	 @brief Builtin command: exit.
-	 @param args List of args.	Not examined.
-	 @param pid
+	 @brief Builtin command: exit. Exits and/or changes exit value.
+	 @param args List of args.
+	 @param pid Proccess id.
 	 @return Always returns 0, to terminate execution.
  */
 int	minishell_exit(char **args, pid_t pid)
@@ -168,10 +170,11 @@ int	minishell_exit(char **args, pid_t pid)
 }
 
 /**
-	@brief Builtin command: pwd.
-	@param args List of args.	Not examined. (and no need to)
-	@param pid
+	@brief Builtin command: pwd. Prints current working directory.
+	@param args List of args.
+	@param pid Proccess id.
 	@return Always returns 1, to continue execution.
+	@exception Doesn't check arguments.
  */
 int	minishell_pwd(char **args, pid_t pid)
 {
@@ -200,9 +203,9 @@ int	minishell_pwd(char **args, pid_t pid)
 }
 
 /**
-	@brief
-	@param mes_type
-	@param args_word
+	@brief Prints the correct error message according to calling function.
+	@param mes_type Type of calling function for error message.
+	@param args_word String to be checked.
 	@return None.
  */
 static void	ft_env_name_check_error_print(int mes_type, char *args_word)
@@ -216,11 +219,11 @@ static void	ft_env_name_check_error_print(int mes_type, char *args_word)
 }
 
 /**
-	@brief
-	@param args_word
-	@param valid
-	@param pid
-	@param mes_type
+	@brief Checks if args_word is valid env var key.
+	@param args_word String to be checked.
+	@param valid Validity check flag of args_word.
+	@param pid Proccess id.
+	@param mes_type Type of calling function for error message.
 	@return None.
  */
 int	ft_env_name_check(char *args_word, int *valid, pid_t pid, int mes_type)
@@ -249,12 +252,14 @@ int	ft_env_name_check(char *args_word, int *valid, pid_t pid, int mes_type)
 }
 
 /**
-	@brief Functionality: ft_update_env.
-	@param args
-	@param i
-	@param j
-	@param valid
+	@brief Adds env var to the end of the env var list if argument is valid.
+	@param args List of args.
+	@param i Current argument.
+	@param j Delimiter between key and value of added env var.
+	@param valid Validity flag.
 	@return None.
+	@exception If there is no env var value sets value to NULL.
+		With or without =. With no = it is only visible with export.
  */
 static void	ft_export_add_env(char **args, int i, int j, int valid)
 {
@@ -279,9 +284,10 @@ static void	ft_export_add_env(char **args, int i, int j, int valid)
 }
 
 /**
-	@brief Builtin command: export.
-	@param args List of args.	Not examined. (and no need to)
-	@param pid
+	@brief Builtin command: export. Adds env var to list
+		or displays env var list in alphabedical order.
+	@param args List of args.
+	@param pid Proccess id.
 	@return Always returns 1, to continue execution.
  */
 int	minishell_export(char **args, pid_t pid)
@@ -313,11 +319,12 @@ int	minishell_export(char **args, pid_t pid)
 }
 
 /**
-	@brief
-	@param ptr
-	@param args
-	@param i
-	@param valid
+	@brief Removes env var if it is the first node
+		of the env var linked list.
+	@param ptr Pointer to the head of env var linked list.
+	@param i Index of current argument.
+	@param args List of args.
+	@param valid Validity flag.
 	@return None.
  */
 static int	ft_unset_first_node(t_list *ptr, char **args, int i, int valid)
@@ -331,7 +338,7 @@ static int	ft_unset_first_node(t_list *ptr, char **args, int i, int valid)
 			if (ft_strncmp(args[i], "_", ft_strlen(args[i])))
 			{
 				g_access.env = ptr->next;
-				ft_lstdelone(ptr, delone);
+				ft_lstdelone(ptr, del_env_var);
 				return (1);
 			}
 		}
@@ -340,10 +347,11 @@ static int	ft_unset_first_node(t_list *ptr, char **args, int i, int valid)
 }
 
 /**
-	@brief
-	@param ptr
-	@param i
-	@param args
+	@brief Removes env var if it is in the middle
+		of the env var linked list.
+	@param ptr Pointer to the head of env var linked list.
+	@param i Index of current argument.
+	@param args List of args.
 	@return None.
  */
 static void	ft_unset_middle_node(t_list *ptr, int i, char **args)
@@ -354,31 +362,34 @@ static void	ft_unset_middle_node(t_list *ptr, int i, char **args)
 	{
 		temp = ptr->next;
 		ptr->next = ptr->next->next;
-		ft_lstdelone(temp, delone);
+		ft_lstdelone(temp, del_env_var);
 	}
 }
 
 /**
-	@brief
-	@param ptr
-	@param args
+	@brief Removes env var if it is the last node
+		of the env var linked list.
+	@param ptr Pointer to the head of env var linked list.
+	@param i Index of current argument.
+	@param args List of args.
 	@return None.
  */
 static void	ft_unset_last_node(t_list *ptr, int i, char **args)
 {
 	if (ft_strncmp(args[i], "_", 1))
 	{
-		ft_lstdelone(ptr->next, delone);
+		ft_lstdelone(ptr->next, del_env_var);
 		ptr->next = NULL;
 	}
 }
 
 /**
-	@brief Functionality: ft_update_env.
-	@param ptr
-	@param i
-	@param args
-	@param valid
+	@brief Handels removing of env var if it isn't
+		in the first node of the env var linked list.
+	@param ptr Pointer to the head of env var linked list.
+	@param i Index of current argument.
+	@param args List of args.
+	@param valid Validity flag.
 	@return None.
  */
 static void	ft_unset_nonfirst_node_handler(t_list *ptr, int i, \
@@ -404,9 +415,9 @@ static void	ft_unset_nonfirst_node_handler(t_list *ptr, int i, \
 }
 
 /**
-	@brief Builtin command: unset.
-	@param args List of args.	Not examined. (and no need to)
-	@param pid
+	@brief Builtin command: unset. Removes env var from the env var list.
+	@param args List of args.
+	@param pid Proccess id.
 	@return Always returns 1, to continue execution.
  */
 int	minishell_unset(char **args, pid_t pid)

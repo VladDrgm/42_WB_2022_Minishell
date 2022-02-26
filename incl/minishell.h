@@ -85,6 +85,8 @@
 # define FT_ERROR_PIPEX_OUTFILE_FAIL "minishell: error on opening output file"
 # define FT_ERROR_PIPEX_INFILE_FAIL "minishell: error on opening input file"
 
+# define FT_ERROR_EXIT_ARGS_NUM "minishell: exit: too many arguments\n"
+
 # define CRED "\001\e[0;31m\002"
 # define RESET "\001\e[0m\002"
 # define FT_SHELL_NAME "minishe11-1.1$ "
@@ -309,5 +311,7 @@ void	heredoc_parent(int *fd, pid_t pid);
 // void ft_sigquit_handler(int sig);
 // void ft_sigint_handler(int sig);
 void	ft_signal_setup(void);
+
+void	del_env_var(void *tmp);
 
 #endif

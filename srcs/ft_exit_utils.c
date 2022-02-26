@@ -85,24 +85,6 @@ int	ft_atoll(const char *str, long long int *out)
 	return (0);
 }
 
-/**
-	@brief
-	@return Int.
- */
-int	ft_get_index(void)
-{
-	t_list	*ptr;
-	int		index;
-
-	index = 0;
-	ptr = g_access.parser2exec;
-	while (ptr)
-	{
-		index++;
-		ptr = ptr->next;
-	}
-	return (index);
-}
 
 /**
 	@brief
