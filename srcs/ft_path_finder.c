@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_path_finder.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mamuller <mamuller@student.42wolfsburg>    +#+  +:+       +#+        */
+/*   By: dbanfi <dbanfi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 21:57:51 by mamuller          #+#    #+#             */
-/*   Updated: 2022/02/23 11:22:37 by mamuller         ###   ########.fr       */
+/*   Updated: 2022/02/26 16:42:56 by dbanfi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ static int	ft_path_checker(char **split, char **cmd_path, char *str, char *tmp)
 		ft_free_split(split);
 	}
 	ft_smart_free((void **)&tmp);
+	errno = 0;
 	return (0);
 }
 
@@ -72,9 +73,13 @@ int	path_finder(char *str, char **cmd_path)
 		return (0);
 	}
 	path = env_value_finder("PATH");
-	split = ft_split(ft_strchr(path, '/'), ':');
-	if (ft_path_checker(split, cmd_path, str, temp_path))
-		return (0);
+	if (path != NULL)
+	{
+		split = ft_split(ft_strchr(path, '/'), ':');
+		if (split != NULL)
+			if (ft_path_checker(split, cmd_path, str, temp_path))
+				return (0);
+	}
 	write(2, "minishell: ", 12);
 	write(2, str, ft_strlen(str));
 	write(2, ": No such file or directory\n", 28);

@@ -1,63 +1,77 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbanfi <dbanfi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/26 13:20:12 by dbanfi            #+#    #+#             */
+/*   Updated: 2022/02/26 13:20:12 by dbanfi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../incl/minishell.h"
 
-#define CRED "\001\e[0;31m\002"
-#define RESET   "\001\e[0m\002"
+#define CRED "\001\e[0;31m\002"///////////////////////////////////////////////////////// put into h file
+#define RESET "\001\e[0m\002"
+#define FT_SHELL_NAME "minishe11-1.1$ "
 
-t_global g_access;
+t_global	g_access;
 
-int	main(int argc, char **argv, char**envp)
+/**
+	@brief Runs readline and enables and disables SIGINT signal.
+	@return None.
+*/
+static void	ft_readline(void)
 {
+	g_access.inter = 1;
+	g_access.read_line2lexor = readline(CRED FT_SHELL_NAME RESET);
+	g_access.inter = 0;
+}
 
+/**
+	@brief Minshell loop with lexor, parser and executor.
+	@param envp System environmental variables to be passed to
+		execution function for non-builtins as array of strings.
+	@return None.
+*/
+static void	ft_minishell(char **envp)
+{
+	int	temp;
 
-// ************************************Part 1******************************
- 	//char	*args;
-	//t_list	*lexer2parser_list;
-	//t_list	*parser2executor_list;
-	int		temp;
+	while (1)
+	{
+		ft_readline();
+		if (g_access.read_line2lexor == NULL)
+		{
+			write(1, "\b\bexit\n", 7);
+			break ;
+		}
+		if (*(g_access.read_line2lexor) == 0)
+			continue ;
+		add_history(g_access.read_line2lexor);
+		temp = lexor();
+		if (temp != -1)
+		{
+			temp = ft_parser();
+			if (temp == 2)
+				continue ;
+			ft_executor(envp);
+		}
+		else
+			continue ;
+	}
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	int	temp;
 
 	ft_signal_setup();
 	if (argc > 1)
 		printf("Invalid number of arguments for %s with %s\n", argv[0], envp[0]);
 	ft_initiator(envp, argv[0]);
-	temp = 0;
-	while (1)
-	{
-		temp = 0;
-		g_access.inter = 1;
-		// g_access.read_line2lexor = readline(">");
-		g_access.read_line2lexor = readline(CRED "minishe11 1.0> " RESET);
-		g_access.inter = 0;
-		if (g_access.read_line2lexor == NULL) //dealing with EOF (Ctrl + D)
-		{
-			write(1, "\b\bexit\n", 7);
-			break;
-		}
-		if (*(g_access.read_line2lexor) == 0) //dealing with Enter (empty input)
-			continue;
-		add_history(g_access.read_line2lexor);
-		//temp = lexor(&lexer2parser_list, args);
-		temp = lexor();
-		if (temp != -1)
-		{
-			//temp = parser(&lexer2parser_list, &parser2executor_list);
-			temp = ft_parser();
-			if (temp == 2)
-			{
-				continue;
-				// exit(1);
-			}
-
-			//g_access.parser2exec = &parser2executor_list;
-
-			// temp = minishell_execute();
-			ft_executor(envp);
-			//free(g_access.parser2exec); //This should be handled by executor at some point
-			//g_access.parser2exec = NULL;
-		}
-		else
-			continue;
-	}
-	// printf("before segfault5\n");
+	ft_minishell(envp);
 	temp = ft_atoi(g_access.last_return);
 	free_global();
 	exit (temp);
