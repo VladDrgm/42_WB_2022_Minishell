@@ -12,10 +12,6 @@
 
 #include "../incl/minishell.h"
 
-#define CRED "\001\e[0;31m\002"///////////////////////////////////////////////////////// put into h file
-#define RESET "\001\e[0m\002"
-#define FT_SHELL_NAME "minishe11-1.1$ "
-
 t_global	g_access;
 
 /**

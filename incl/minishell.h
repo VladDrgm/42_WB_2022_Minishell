@@ -71,12 +71,25 @@
 # define FT_ERROR_PARSER_UNEX_TOKEN_PIPE "minishell: syntax error near unexpected token `|'\n"
 # define FT_ERROR_PARSER_UNEX_TOKEN_NL "minshell: syntax error near unexpected token `newline'\n"
 
+# define FT_LAST_ARG_MODE 1
+# define FT_LAST_RETURN_MODE 2
+# define FT_LAST_FULL_MODE 3
+
+# define FT_UNSET_MES_TYPE 0
+# define FT_EXPORT_MES_TYPE 1
+
 # define FT_ERROR_PIPEX_EXEC_FAIL "minishell: command execution failed"
 # define FT_ERROR_PIPEX_FD_DUP_FAIL "minishell: file descriptor duplication failed"
 # define FT_ERROR_PIPEX_PIPE_FAIL "minishell: pipe creation failed"
 # define FT_ERROR_PIPEX_FORK_FAIL "minishell: fork creation failed"
 # define FT_ERROR_PIPEX_OUTFILE_FAIL "minishell: error on opening output file"
 # define FT_ERROR_PIPEX_INFILE_FAIL "minishell: error on opening input file"
+
+# define FT_ERROR_EXIT_ARGS_NUM "minishell: exit: too many arguments\n"
+
+# define CRED "\001\e[0;31m\002"
+# define RESET "\001\e[0m\002"
+# define FT_SHELL_NAME "minishe11-1.1$ "
 
 typedef struct s_word
 {
@@ -155,9 +168,8 @@ void	ft_update_env(char *to_search, char *to_replace); //check if value finder f
 char	*env_value_finder(char *name);
 void	delone(void *content);
 void	ft_last_arg(char **args, pid_t pid);
+void	ft_set_lasts(char **args, int pid, int lreturn, int mode);
 // ECHO UTILS
-void	echo_print(char **str, int starter, int size, int flag);
-int		echo_flag(char *str);
 // CD UTILS
 void	ft_update_create_env(char *env, char *value, pid_t pid);
 void	ft_update_PWD(void);
@@ -168,15 +180,13 @@ void	ft_rtoa_path(char *rel_path, char **abs_path);
 
 // EXIT UTILS
 int		ft_digit_check(char *argv);
-long long int	ft_atoll(const char *str);
+int		ft_atoll(const char *str, long long int *out);
 int		ft_get_index();
-int		ft_exit_error_handler(char *str1, char *str2, char *str3, int exit_value);
+void	ft_exit_error_handler(char *str1, char *str2, char *str3, int exit_value);
 void	ft_child_exit(int exit_value);
 //EXPORT UTILS
-t_list *ft_copy_env(void);
 void ft_print_sorted_copy(t_list *env_cpy);
-int ft_single_export(void);
-int ft_check_existing_env(t_env_var **env_var);
+t_list	*ft_copy_env(void);
 
 // LEXOR UTILS
 char	*join2current_str(char* current_str, char* add_on);
@@ -260,8 +270,6 @@ int		ft_fc_error_exit(int error_flag, t_fd fd);
 void	ft_heredoc_child_free(int **fd_docks);
 void	ft_heredoc_parent(int *fd, pid_t pid);
 
-
-
 /*exit_handler.c*/
 void	ft_close_fd(void);
 void	ft_free_split(char **split);
@@ -299,5 +307,9 @@ void	heredoc_parent(int *fd, pid_t pid);
 // void ft_sigquit_handler(int sig);
 // void ft_sigint_handler(int sig);
 void	ft_signal_setup(void);
+
+void	del_env_var(void *tmp);
+void	ft_path_cleaner(char **cp);
+int	ft_env_name_check(char *args_word, int *valid, pid_t pid, int mes_type);
 
 #endif

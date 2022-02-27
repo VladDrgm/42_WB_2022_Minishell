@@ -6,7 +6,7 @@
 /*   By: dbanfi <dbanfi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/26 13:32:17 by dbanfi            #+#    #+#             */
-/*   Updated: 2022/02/26 14:44:38 by dbanfi           ###   ########.fr       */
+/*   Updated: 2022/02/26 21:49:55 by dbanfi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static void	del_builtin_content(void *tmp)
 	@param tmp Void pointer to content of linked list node.
 	@return None.
 */
-static void	del_env_var(void *tmp)
+void	del_env_var(void *tmp)
 {
 	if (((t_env_var *)(tmp))->name != NULL)
 		free(((t_env_var *)(tmp))->name);
