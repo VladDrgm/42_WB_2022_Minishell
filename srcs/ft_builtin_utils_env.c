@@ -61,50 +61,6 @@ void	ft_update_env(char *to_search, char *to_replace)
 }
 
 /**
-	@brief Updates _ env var with value of last argument of input.
-	@param args Array of arguments. 
-	@param pid Proccess id.
-	@return None.
-	@exception Sets env var _ to empty string.
- */
-void	ft_last_arg(char **args, pid_t pid)
-{
-	int	i;
-
-	i = 0;
-	if (!*args)
-		ft_update_create_env("_", "", pid);
-	while (args[i] != NULL)
-		i++;
-	ft_update_create_env("_", args[i - 1], pid);
-}
-
-/**
-	@brief Updates _ env var and/or(depends on mode) exit value.
-	@param args Array of arguments. 
-	@param pid Proccess id.
-	@param lreturn Exit value.
-	@param mode Mode of the function call.
-	@return None.
- */
-void	ft_set_lasts(char **args, int pid, int lreturn, int mode)
-{
-	if (mode == 1)
-		ft_last_arg(args, pid);
-	else if (mode == 2)
-	{
-		ft_smart_free((void **)&(g_access.last_return));
-		g_access.last_return = ft_itoa(lreturn);
-	}
-	else if (mode == 3)
-	{
-		ft_smart_free((void **)&(g_access.last_return));
-		g_access.last_return = ft_itoa(lreturn);
-		ft_last_arg(args, pid);
-	}
-}
-
-/**
 	@brief Updates already existing env var else creates new env var.
 	@param env Key of env var.
 	@param value New value of env var.
@@ -137,4 +93,53 @@ void	ft_update_create_env(char *env, char *value, pid_t pid)
 	args[2] = NULL;
 	minishell_export(args, pid);
 	ft_smart_free((void **)&args[1]);
+}
+
+/**
+	@brief Prints the correct error message according to calling function.
+	@param mes_type Type of calling function for error message.
+	@param args_word String to be checked.
+	@return None.
+ */
+static void	ft_env_name_check_error_print(int mes_type, char *args_word)
+{
+	if (mes_type == FT_EXPORT_MES_TYPE)
+		write(2, "minishell: export: `", 20);
+	else if (mes_type == FT_UNSET_MES_TYPE)
+		write(2, "minishell: unset: `", 19);
+	write(2, args_word, ft_strlen(args_word));
+	write(2, "': not a valid identifier\n", 26);
+}
+
+/**
+	@brief Checks if args_word is valid env var key.
+	@param args_word String to be checked.
+	@param valid Validity check flag of args_word.
+	@param pid Proccess id.
+	@param mes_type Type of calling function for error message.
+	@return None.
+ */
+int	ft_env_name_check(char *args_word, int *valid, pid_t pid, int mes_type)
+{
+	int	j;
+
+	j = 0;
+	*valid = 1;
+	while (args_word[j] != '=' && args_word[j] != '\0')
+	{
+		if (j == 0 && (args_word[j] == '_' || ft_isalpha(args_word[j])))
+			j++;
+		else if (j > 0 && (args_word[j] == '_' || ft_isalnum(args_word[j])))
+			j++;
+		else
+		{
+			*valid = 0;
+			if (pid == 0)
+				ft_env_name_check_error_print(mes_type, args_word);
+			ft_set_lasts(NULL, 0, 1, FT_LAST_RETURN_MODE);
+			break ;
+			j++;
+		}
+	}
+	return (j);
 }

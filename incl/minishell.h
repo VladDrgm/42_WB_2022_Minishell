@@ -184,7 +184,7 @@ void	ft_rtoa_path(char *rel_path, char **abs_path);
 int		ft_digit_check(char *argv);
 int		ft_atoll(const char *str, long long int *out);
 int		ft_get_index();
-int		ft_exit_error_handler(char *str1, char *str2, char *str3, int exit_value);
+void	ft_exit_error_handler(char *str1, char *str2, char *str3, int exit_value);
 void	ft_child_exit(int exit_value);
 //EXPORT UTILS
 t_list *ft_copy_env(void);
@@ -313,5 +313,6 @@ void	heredoc_parent(int *fd, pid_t pid);
 void	ft_signal_setup(void);
 
 void	del_env_var(void *tmp);
+void	ft_path_cleaner(char **cp);
 
 #endif

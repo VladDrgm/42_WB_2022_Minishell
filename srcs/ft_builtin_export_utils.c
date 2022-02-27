@@ -13,10 +13,11 @@
 #include "../incl/minishell.h"
 
 /**
-	@brief
-	@param env_cpy
-	@param ptr_cpy
-	@param en_var
+	@brief Puts copied node in correct place in copied env var list. 
+		Used for copied list that is longer than 2 after adding current node.
+	@param env_cpy Sorted copy of env var linked list(not full).
+	@param ptr_cpy First element of copied list.
+	@param env_var Env var to be adde to copied list.
 	@return None.
  */
 static void	ft_copy_env_big_list_handler(t_list **env_cpy, \
@@ -48,6 +49,12 @@ static void	ft_copy_env_big_list_handler(t_list **env_cpy, \
 	}
 }
 
+/**
+	@brief Creates a copy of env var list node content.
+	@param env_var Pointer to copy of a node content.
+	@param ptr_var Node to be copied.
+	@return None.
+ */
 static void	ft_copy_env_var_creation(t_env_var **env_var, t_list *ptr_env)
 {
 	*env_var = (t_env_var *)malloc(sizeof(t_env_var));
@@ -56,10 +63,10 @@ static void	ft_copy_env_var_creation(t_env_var **env_var, t_list *ptr_env)
 }
 
 /**
-	@brief
-	@return t_list.
+	@brief Creates a copy of env var list with alphabetical order.
+	@return Sorted copy of env var list.
  */
-t_list	*ft_copy_env(void)
+static t_list	*ft_copy_env(void)
 {
 	t_list		*env_cpy;
 	t_list		*ptr_env;
@@ -89,8 +96,8 @@ t_list	*ft_copy_env(void)
 }
 
 /**
-	@brief
-	@param ptr
+	@brief Prints value of env var value in right format.
+	@param ptr Pointer to env var node.
 	@return None.
  */
 static void	ft_print_sorted_copy_value(t_list *ptr)
@@ -114,9 +121,11 @@ static void	ft_print_sorted_copy_value(t_list *ptr)
 }
 
 /**
-	@brief
+	@brief Printing sorted env var list with ALL variables.
+		Prints "declare -x " before every variable and puts value inside "".
 	@param env_cpy
 	@return None.
+	@exception _ env var isn't printed.
  */
 void	ft_print_sorted_copy(t_list *env_cpy)
 {
@@ -135,47 +144,4 @@ void	ft_print_sorted_copy(t_list *env_cpy)
 		}
 		ptr = ptr->next;
 	}
-}
-
-/**
-	@brief
-	@return Int.
- */
-int	ft_single_export(void)
-{
-	t_list	*env_cpy;
-
-	env_cpy = ft_copy_env();
-	ft_print_sorted_copy(env_cpy);
-	if (env_cpy)
-		ft_free_linked_list(&env_cpy, FT_LIST_TYPE_ENV_VAR, 1);
-	return (1);
-}
-
-/**
-	@brief
-	@param env_var
-	@return Int.
- */
-int	ft_check_existing_env(t_env_var **env_var)
-{
-	t_list	*ptr;
-
-	ptr = g_access.env;
-	while (ptr)
-	{
-		if (!ft_strncmp((*env_var)->name, \
-			((t_env_var *)(ptr->content))->name, ft_strlen((*env_var)->name)))
-		{
-			free(((t_env_var *)(ptr->content))->value);
-			((t_env_var *)(ptr->content))->value = ft_strdup((*env_var)->value);
-			free((*env_var)->name);
-			free((*env_var)->value);
-			free(*env_var);
-			*env_var = NULL;
-			return (1);
-		}
-		ptr = ptr->next;
-	}
-	return (0);
 }
